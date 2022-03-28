@@ -1,4 +1,4 @@
 apiVersion: v2
 name: exivity
-version: '0.1.0'
+version: '0.1.1'
 description: The chart to deploy Exivity to a kubernetes cluster
