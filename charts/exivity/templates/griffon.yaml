@@ -35,5 +35,3 @@ spec:
           mountPath: /exivity/home/log
       imagePullSecrets:
       - name: {{ .Values.imagePullSecret }}
----
-{{- include "exivity.config" (dict "Values" .Values) }}
