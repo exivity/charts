@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edify
+  labels:
+    app: exivity
+    component: edify
+spec:
+  selector:
+    matchLabels:
+      app: exivity
+      component: edify
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exivity
+        component: edify
+    spec:
+      volumes:
+      - name: config
+        configMap:
+          name: app-config-edify
+      - name: extracted
+        persistentVolumeClaim:
+          claimName: exivity-extracted
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-log
+      - name: report
+        persistentVolumeClaim:
+          claimName: exivity-report
+      containers:
+      - name: edify
+        image: ghcr.io/exivity/edify:{{ .Values.version.edify }}
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: extracted
+          mountPath: /exivity/home/system/extracted
+        - name: log
+          mountPath: /exivity/home/log
+        - name: report
+          mountPath: /exivity/home/system/report
+      imagePullSecrets:
+      - name: ghcr
+---
+{{- include "exivity.config" (dict "Values" .Values "appname" "edify" "path" "/bin/edify" "queue" "REPORT") }}

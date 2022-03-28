@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: use
+  labels:
+    app: exivity
+    component: use
+spec:
+  selector:
+    matchLabels:
+      app: exivity
+      component: use
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exivity
+        component: use
+    spec:
+      volumes:
+      - name: config
+        configMap:
+          name: app-config-use
+      - name: extracted
+        persistentVolumeClaim:
+          claimName: exivity-extracted
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-log
+      containers:
+      - name: use
+        image: exivity/use:{{ .Values.version.use }}
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: extracted
+          mountPath: /exivity/home/system/extracted
+        - name: log
+          mountPath: /exivity/home/log
+        env:
+        - name: EXIVITY_APP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: app_key
+        - name: RUN_DELAY
+          value: "10"
+      imagePullSecrets:
+      - name: {{ .Values.imagePullSecret }}
+---
+{{- include "exivity.config" (dict "Values" .Values "appname" "use" "path" "/bin/use" "queue" "EXTRACT") }}

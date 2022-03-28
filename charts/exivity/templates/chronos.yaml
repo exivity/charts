@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chronos
+  labels:
+    app: exivity
+    component: chronos
+spec:
+  selector:
+    matchLabels:
+      app: exivity
+      component: chronos
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exivity
+        component: chronos
+    spec:
+      volumes:
+      - name: config
+        configMap:
+          name: app-config-default
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-log
+      containers:
+      - name: chronos
+        image: exivity/chronos:{{ .Values.version.chronos }}
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: log
+          mountPath: /exivity/home/log
+      imagePullSecrets:
+      - name:
+          {{ .Values.imagePullSecret }}
+---
+{{- include "exivity.config" (dict "Values" .Values) }}

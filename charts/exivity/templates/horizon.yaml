@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: horizon
+  labels:
+    app: exivity
+    component: horizon
+spec:
+  selector:
+    matchLabels:
+      app: exivity
+      component: horizon
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exivity
+        component: horizon
+    spec:
+      volumes:
+      - name: config
+        configMap:
+          name: app-config-default
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-log
+      containers:
+      - name: horizon
+        image: exivity/horizon:{{ .Values.version.horizon }}
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: log
+          mountPath: /exivity/home/log
+      imagePullSecrets:
+      - name: {{ .Values.imagePullSecret }}
+---
+{{- include "exivity.config" (dict "Values" .Values) }}

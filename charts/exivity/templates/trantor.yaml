@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trantor
+  labels:
+    app: exivity
+    component: trantor
+spec:
+  selector:
+    matchLabels:
+      app: exivity
+      component: trantor
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exivity
+        component: trantor
+    spec:
+      volumes:
+      - name: config
+        configMap:
+          name: app-config-default
+      containers:
+      - name: trantor
+        image: exivity/trantor:{{ .Values.version.trantor }}
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8005
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+      imagePullSecrets:
+      - name: {{ .Values.imagePullSecret }}
+---
+{{- include "exivity.config" (dict "Values" .Values) }}

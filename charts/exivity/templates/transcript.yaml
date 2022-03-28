@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transcript
+  labels:
+    app: exivity
+    component: transcript
+spec:
+  selector:
+    matchLabels:
+      app: exivity
+      component: transcript
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exivity
+        component: transcript
+    spec:
+      volumes:
+        - name: log
+          persistentVolumeClaim:
+            claimName: exivity-log
+        - name: config
+          persistentVolumeClaim:
+            claimName: exivity-config
+        - name: report
+          persistentVolumeClaim:
+            claimName: exivity-report
+        - name: extracted
+          persistentVolumeClaim:
+            claimName: exivity-extracted
+      containers:
+        - name: transcript
+          image: exivity/transcript:{{ .Values.version.transcript }}
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: log
+              mountPath: /exivity/home/log
+            - name: config
+              mountPath: /exivity/home/system/config
+            - name: report
+              mountPath: /exivity/home/system/report
+            - name: extracted
+              mountPath: /exivity/home/system/extracted
+          env:
+            - name: EXIVITY_APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: exivity-secrets
+                  key: app_key
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret }}
+---
+{{- include "exivity.config" (dict "Values" .Values "appname" "transcript" "path" "bin/transcript" "queue" "TRANSFORM") }}

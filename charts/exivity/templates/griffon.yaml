@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: griffon
+  labels:
+    app: exivity
+    component: griffon
+spec:
+  selector:
+    matchLabels:
+      app: exivity
+      component: griffon
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exivity
+        component: griffon
+    spec:
+      volumes:
+      - name: config
+        configMap:
+          name: app-config-default
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-lo
+      containers:
+      - name: griffon
+        image: exivity/griffon:{{ .Values.version.griffon }}
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: log
+          mountPath: /exivity/home/log
+      imagePullSecrets:
+      - name: {{ .Values.imagePullSecret }}
+---
+{{- include "exivity.config" (dict "Values" .Values) }}

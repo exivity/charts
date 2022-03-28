@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: glass
+  labels:
+    app: exivity
+    component: glass
+spec:
+  selector:
+    matchLabels:
+      app: exivity
+      component: glass
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exivity
+        component: glass
+    spec:
+      containers:
+      - name: glass
+        image: exivity/glass:{{ .Values.version.glass }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 443
+      imagePullSecrets:
+      - name: {{ .Values.imagePullSecret }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: glass
+  labels:
+    app: exivity
+spec:
+  selector:
+    app: exivity
+    component: glass
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80

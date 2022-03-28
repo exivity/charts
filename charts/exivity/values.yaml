@@ -1,0 +1,43 @@
+# Private values that need to be configured
+licenseKey: <licence-key>
+appKey: <appKey>
+JWTSecret: <JWTSecret>
+
+imagePullSecret: regcred
+namespace: exivity
+host: localhost
+development: true
+
+# Database config
+database:
+  username: postgres
+  password: Password12!
+  dbname: exivity
+  host: db # only change when you have set useExternalDatabase to true
+  port: 5432 # only change when you have set useExternalDatabase to true
+  useExternalDatabase: false
+  recreateDatabase: true
+  createFakeData: true
+
+# RabbitMQ config
+rabbitMQ:
+  user: guest
+  password: guest
+  vhost: /
+  host: rabbit
+  port: 5672
+  useExternalServers: false
+
+version:
+  chronos: latest
+  db: latest
+  dummydata: docker
+  edify: k8s
+  glass: latest
+  griffon: latest
+  horizon: exvt-4756-docker
+  pigeon: exvt-4756-docker
+  proximity: exvt-4756-docker
+  transcript: exvt-4756-docker
+  trantor: latest
+  use: exvt-4756-docker

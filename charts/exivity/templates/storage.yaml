@@ -1,0 +1,176 @@
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: exivity-log
+# spec:
+#   storageClassName: manual
+#   accessModes:
+#     - ReadWriteOnce
+#   capacity:
+#     storage: 1Gi
+#   hostPath:
+#     path: /var/lib/data/exivity-log/
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: exivity-log
+#   labels:
+#     app: exivity
+# spec:
+#   storageClassName: manual
+#   accessModes:
+#     {{if .Values.development}}
+#     - ReadWriteOnce
+#     {{else}}
+#     - ReadWriteMany
+#     {{end}}
+#   volumeName: exivity-log
+#   resources:
+#     requests:
+#       storage: 1Gi
+# ---
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: exivity-config
+# spec:
+#   storageClassName: manual
+#   accessModes:
+#     - ReadWriteOnce
+#   capacity:
+#     storage: 1Gi
+#   hostPath:
+#     path: /var/lib/data/exivity-config/
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: exivity-config
+#   labels:
+#     app: exivity
+# spec:
+#   storageClassName: manual
+#   accessModes:
+#     {{if .Values.development}}
+#     - ReadWriteOnce
+#     {{else}}
+#     - ReadWriteMany
+#     {{end}}
+#   volumeName: exivity-config
+#   resources:
+#     requests:
+#       storage: 1Gi
+# ---
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: exivity-lookup
+# spec:
+#   storageClassName: manual
+#   accessModes:
+#     - ReadWriteOnce
+#   capacity:
+#     storage: 1Gi
+#   hostPath:
+#     path: /var/lib/data/exivity-lookup/
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: exivity-lookup
+#   labels:
+#     app: exivity
+# spec:
+#   storageClassName: manual
+#   accessModes:
+#     {{if .Values.development}}
+#     - ReadWriteOnce
+#     {{else}}
+#     - ReadWriteMany
+#     {{end}}
+#   volumeName: exivity-lookup
+#   resources:
+#     requests:
+#       storage: 1Gi
+# ---
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: exivity-report
+# spec:
+#   storageClassName: manual
+#   accessModes:
+#     - ReadWriteOnce
+#   capacity:
+#     storage: 1Gi
+#   hostPath:
+#     path: /var/lib/data/exivity-report/
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: exivity-report
+#   labels:
+#     app: exivity
+# spec:
+#   storageClassName: manual
+#   accessModes:
+#     {{if .Values.development}}
+#     - ReadWriteOnce
+#     {{else}}
+#     - ReadWriteMany
+#     {{end}}
+#   volumeName: exivity-report
+#   resources:
+#     requests:
+#       storage: 1Gi
+# ---
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: exivity-extracted
+# spec:
+#   storageClassName: manual
+#   accessModes:
+#     - ReadWriteOnce
+#   capacity:
+#     storage: 1Gi
+#   hostPath:
+#     path: /var/lib/data/exivity-extracted/
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: exivity-extracted
+#   labels:
+#     app: exivity
+# spec:
+#   storageClassName: manual
+#   accessModes:
+#     {{if .Values.development}}
+#     - ReadWriteOnce
+#     {{else}}
+#     - ReadWriteMany
+#     {{end}}
+#   volumeName: exivity-extracted
+#   resources:
+#     requests:
+#       storage: 1Gi
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: exivity-database
+#   labels:
+#     app: exivity
+# spec:
+#   accessModes:
+#     {{if .Values.development}}
+#     - ReadWriteOnce
+#     {{else}}
+#     - ReadWriteMany
+#     {{end}}
+#   resources:
+#     requests:
+#       storage: 10Gi

@@ -1,0 +1,160 @@
+{{if not .Values.database.useExternalDatabase}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  labels:
+    app: exivity
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+  clusterIP: None
+  selector:
+    app: exivity
+    component: database
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: exivity-database
+spec:
+  selector:
+    matchLabels:
+      app: exivity
+      component: database
+  serviceName: db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exivity
+        component: database
+    spec:
+      volumes:
+        - name: database
+          persistentVolumeClaim:
+            claimName: exivity-database
+      containers:
+        - name: exivity-database
+          image: exivity/postgresql-database:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: database
+              mountPath: /var/lib/postgresql/data
+          env:
+            - name: POSTGRES_DB
+              value: {{.Values.database.dbname}}
+            - name: POSTGRES_PASSWORD
+              value: {{.Values.database.password}}
+            - name: EXIVITY_CONFIG_mq__user
+              value: {{.Values.rabbitMQ.user}}
+            - name: EXIVITY_CONFIG_mq__password
+              value: {{.Values.rabbitMQ.password}}
+            - name: EXIVITY_CONFIG_mq__vhost
+              value: {{.Values.rabbitMQ.vhost}}
+            {{ range $index, $server := .Values.rabbitMQ.servers}}
+            - name: EXIVITY_CONFIG_mq__servers__{{$index}}__host
+              value: {{$server.host}}
+            - name: EXIVITY_CONFIG_mq__servers__{{$index}}__port
+              value: "{{$server.port}}"
+            {{end}}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret }}
+---
+{{end}}
+{{if .Values.database.recreateDatabase}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-up
+  labels:
+    app: exivity
+spec:
+  ttlSecondsAfterFinished: 0
+  template:
+    spec:
+      containers:
+        - name: db-up
+          image: exivity/db:{{ .Values.version.db }}
+          imagePullPolicy: Always
+          env:
+            - name: PGUSER
+              value: {{.Values.database.username}}
+            - name: PGPASSWORD
+              value: {{.Values.database.password}}
+      restartPolicy: Never
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret }}
+  backoffLimit: 4
+  completions: 1
+---
+{{end}}
+{{if .Values.database.createFakeData}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dummy-data
+  labels:
+    app: exivity
+spec:
+  ttlSecondsAfterFinished: 0
+  template:
+    spec:
+      volumes:
+        - name: lookup
+          persistentVolumeClaim:
+            claimName: exivity-lookup
+        - name: config
+          persistentVolumeClaim:
+            claimName: exivity-config
+        - name: report
+          persistentVolumeClaim:
+            claimName: exivity-report
+        - name: extracted
+          persistentVolumeClaim:
+            claimName: exivity-extracted
+      containers:
+        - name: dummy-data
+          image: exivity/dummy-data:{{ .Values.version.dummydata }}
+          imagePullPolicy: Always
+          env:
+            - name: EXIVITY_CONFIG_db__parameters__user
+              value: {{.Values.database.username}}
+            - name: EXIVITY_CONFIG_db__parameters__password
+              value: {{.Values.database.password}}
+            - name: EXIVITY_CONFIG_db__parameters__dbname
+              value: {{.Values.database.dbname}}
+            - name: EXIVITY_CONFIG_db__parameters__host
+              value: {{.Values.database.host}}
+            - name: EXIVITY_CONFIG_db__parameters__port
+              value: "{{.Values.database.port}}"
+            - name: EXIVITY_CONFIG_mq__user
+              value: {{.Values.rabbitMQ.user}}
+            - name: EXIVITY_CONFIG_mq__password
+              value: {{.Values.rabbitMQ.password}}
+            - name: EXIVITY_CONFIG_mq__vhost
+              value: {{.Values.rabbitMQ.vhost}}
+            {{ range $index, $server := .Values.rabbitMQ.servers}}
+            - name: EXIVITY_CONFIG_mq__servers__{{$index}}__host
+              value: {{$server.host}}
+            - name: EXIVITY_CONFIG_mq__servers__{{$index}}__port
+              value: "{{$server.port}}"
+            {{end}}
+          volumeMounts:
+            - name: config
+              mountPath: /exivity/home/system/config
+            - name: lookup
+              mountPath: /exivity/home/import/lookup
+            - name: report
+              mountPath: /exivity/home/system/report
+            - name: extracted
+              mountPath: /exivity/home/system/extracted
+      restartPolicy: Never
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret }}
+  backoffLimit: 4
+  completions: 1
+{{end}}

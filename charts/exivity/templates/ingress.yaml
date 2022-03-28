@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: exivity-ingress
+  annotations:
+    kubernetes.io/ingress.allow-http: 'false'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - {{ .Values.host }}
+    secretName: exivity-tls
+  rules:
+  - host: {{ .Values.host }}
+    http:
+      paths:
+        - path: '/v1'
+          pathType: Prefix
+          backend:
+            service:
+              name: proximity-api
+              port:
+                number: 80
+        - path: '/'
+          pathType: Prefix
+          backend:
+            service:
+              name: glass
+              port:
+                number: 80
