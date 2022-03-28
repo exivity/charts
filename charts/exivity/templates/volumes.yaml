@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-lookup
+  labels:
+    app: exivity
+spec:
+  accessModes:
+  {{- if .Values.singleNode }}
+  - ReadWriteOnce
+  {{- else }}
+  - ReadWriteMany
+  {{- end }}
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-extracted
+  labels:
+    app: exivity
+spec:
+  accessModes:
+  {{- if .Values.singleNode }}
+  - ReadWriteOnce
+  {{- else }}
+  - ReadWriteMany
+  {{- end }}
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-report
+  labels:
+    app: exivity
+spec:
+  accessModes:
+  {{- if .Values.singleNode }}
+  - ReadWriteOnce
+  {{- else }}
+  - ReadWriteMany
+  {{- end }}
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-etl-config
+  labels:
+    app: exivity
+spec:
+  accessModes:
+  {{- if .Values.singleNode }}
+  - ReadWriteOnce
+  {{- else }}
+  - ReadWriteMany
+  {{- end }}
+  resources:
+    requests:
+      storage: 1Gi

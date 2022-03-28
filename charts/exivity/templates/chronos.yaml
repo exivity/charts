@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chronos
+  labels:
+    app: exivity
+    component: chronos
+spec:
+  selector:
+    matchLabels:
+      app: exivity
+      component: chronos
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exivity
+        component: chronos
+    spec:
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: exivity-chronos-config
+      - name: config-file
+        configMap:
+          name: app-config-default
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-chronos-log
+      containers:
+      - name: chronos
+        image: {{ .Values.images.chronos }}
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: config-file
+          mountPath: /exivity/home/system
+        - name: log
+          mountPath: /exivity/home/log/chronos
+      imagePullSecrets:
+      - name: ghcr
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-chronos-config
+  labels:
+    app: exivity
+    component: chronos
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-chronos-log
+  labels:
+    app: exivity
+    component: chronos
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

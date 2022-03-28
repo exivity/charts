@@ -1,0 +1,8 @@
+apiVersion: v2
+name: exivity
+version: '0.2.1'
+description: The chart to deploy Exivity to a kubernetes cluster
+dependencies:
+- name: redis
+  repository: https://charts.bitnami.com/bitnami
+  version: '16.6.0'

@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proximity-cli
+  labels:
+    app: exivity
+    component: proximity-cli
+spec:
+  selector:
+    matchLabels:
+      app: exivity
+      component: proximity-cli
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exivity
+        component: proximity-cli
+    spec:
+      volumes:
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-proximity-cli-log
+      - name: config
+        persistentVolumeClaim:
+          claimName: exivity-etl-config
+      - name: config-file
+        configMap:
+          name: app-config-proximity-cli
+      - name: lookup
+        persistentVolumeClaim:
+          claimName: exivity-lookup
+      - name: report
+        persistentVolumeClaim:
+          claimName: exivity-report
+      - name: extracted
+        persistentVolumeClaim:
+          claimName: exivity-extracted
+      containers:
+      - name: proximity-cli
+        image: {{ .Values.images.proximity_cli }}
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: config-file
+          mountPath: /exivity/home/system
+        - name: extracted
+          mountPath: /exivity/home/system/extracted
+        - name: log
+          mountPath: /exivity/home/log/merlin
+        - name: log
+          mountPath: /exivity/home/log/proximity
+        - name: lookup
+          mountPath: /exivity/home/import/lookup
+        - name: report
+          mountPath: /exivity/home/system/report
+        env:
+        - name: EXIVITY_APP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: app_key
+        - name: EXIVITY_LICENSE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: license_key
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: jwt_secret
+      imagePullSecrets:
+      - name: ghcr
+---
+# add templated configmap providing the service with the required config.json
+{{- include "exivity.config" (dict "Values" .Values "appname" "proximity-cli" "path" "/usr/bin/php" "queue" "PROXIMITY") }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-proximity-cli-log
+  labels:
+    app: exivity
+    component: proximity-cli
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi

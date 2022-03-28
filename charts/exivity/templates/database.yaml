@@ -1,0 +1,106 @@
+{{ if not .Values.database.useExternalDatabase }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  labels:
+    app: exivity
+    component: database
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5432
+  clusterIP: None
+  selector:
+    app: exivity
+    component: database
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: exivity-database
+spec:
+  selector:
+    matchLabels:
+      app: exivity
+      component: database
+  serviceName: db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exivity
+        component: database
+    spec:
+      volumes:
+      - name: database
+        persistentVolumeClaim:
+          claimName: exivity-database
+      - name: config-file
+        configMap:
+          name: app-config-default
+      containers:
+      - name: exivity-database
+        image: postgres:12.10
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: database
+          mountPath: /var/lib/postgresql/data
+        - name: config-file
+          mountPath: /exivity/home/system
+        env:
+        - name: POSTGRES_DB
+          value: {{ .Values.database.dbname }}
+        - name: POSTGRES_USER
+          value: {{ .Values.database.username }}
+        - name: POSTGRES_PASSWORD
+          value: {{ .Values.database.password }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-database
+  labels:
+    app: exivity
+    component: database
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+{{ end }}
+---
+{{ if .Values.database.initialise }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: database-init
+  labels:
+    app: exivity
+    component: database
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      containers:
+      - name: database-init
+        image: {{ .Values.images.db_init }}
+        imagePullPolicy: Always
+        env:
+        - name: PGUSER
+          value: {{ .Values.database.username }}
+        - name: PGPASSWORD
+          value: {{ .Values.database.password }}
+      restartPolicy: Never
+      imagePullSecrets:
+      - name: ghcr
+  backoffLimit: 4
+  completions: 1
+{{ end }}

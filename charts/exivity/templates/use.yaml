@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: use
+  labels:
+    app: exivity
+    component: use
+spec:
+  selector:
+    matchLabels:
+      app: exivity
+      component: use
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exivity
+        component: use
+    spec:
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: exivity-etl-config
+      - name: config-file
+        configMap:
+          name: app-config-use
+      - name: extracted
+        persistentVolumeClaim:
+          claimName: exivity-extracted
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-use-log
+      containers:
+      - name: use
+        image: {{ .Values.images.use }}
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: config-file
+          mountPath: /exivity/home/system
+        - name: extracted
+          mountPath: /exivity/home/system/extracted
+        - name: log
+          mountPath: /exivity/home/log/merlin
+        - name: log
+          mountPath: /exivity/home/log/use
+        env:
+        - name: EXIVITY_APP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: app_key
+        - name: RUN_DELAY
+          value: "10"
+      imagePullSecrets:
+      - name: ghcr
+---
+# add templated configmap providing the service with the required config.json
+{{- include "exivity.config" (dict "Values" .Values "appname" "use" "path" "/bin/use" "queue" "EXTRACT") }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-use-log
+  labels:
+    app: exivity
+    component: use
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi

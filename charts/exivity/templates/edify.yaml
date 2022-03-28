@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edify
+  labels:
+    app: exivity
+    component: edify
+spec:
+  selector:
+    matchLabels:
+      app: exivity
+      component: edify
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exivity
+        component: edify
+    spec:
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: exivity-etl-config
+      - name: config-file
+        configMap:
+          name: app-config-edify
+      - name: extracted
+        persistentVolumeClaim:
+          claimName: exivity-extracted
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-edify-log
+      - name: report
+        persistentVolumeClaim:
+          claimName: exivity-report
+      containers:
+      - name: edify
+        image: {{ .Values.images.edify }}
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: config-file
+          mountPath: /exivity/home/system
+        - name: extracted
+          mountPath: /exivity/home/system/extracted
+        - name: log
+          mountPath: /exivity/home/log/edify
+        - name: log
+          mountPath: /exivity/home/log/merlin
+        - name: report
+          mountPath: /exivity/home/system/report
+      imagePullSecrets:
+      - name: ghcr
+---
+# add templated configmap providing the service with the required config.json
+{{- include "exivity.config" (dict "Values" .Values "appname" "edify" "path" "/bin/edify" "queue" "REPORT") }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-edify-log
+  labels:
+    app: exivity
+    component: edify
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi

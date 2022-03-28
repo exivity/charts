@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: horizon
+  labels:
+    app: exivity
+    component: horizon
+spec:
+  selector:
+    matchLabels:
+      app: exivity
+      component: horizon
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exivity
+        component: horizon
+    spec:
+      volumes:
+      - name: config
+        configMap:
+          name: app-config-horizon
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-horizon-log
+      containers:
+      - name: horizon
+        image: {{ .Values.images.horizon }}
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system
+        - name: log
+          mountPath: /exivity/home/log/merlin
+      imagePullSecrets:
+      - name: ghcr
+---
+# add templated configmap providing the service with the required config.json
+{{- include "exivity.config" (dict "Values" .Values "appname" "horizon" "path" "/bin/horizon" "queue" "BUDGET") }}
+---
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-horizon-log
+  labels:
+    app: exivity
+    component: horizon
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi

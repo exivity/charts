@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: griffon
+  labels:
+    app: exivity
+    component: griffon
+spec:
+  selector:
+    matchLabels:
+      app: exivity
+      component: griffon
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exivity
+        component: griffon
+    spec:
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: exivity-griffon-config
+      - name: config-file
+        configMap:
+          name: app-config-default
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-griffon-log
+      containers:
+      - name: griffon
+        image: {{ .Values.images.griffon }}
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        volumeMounts:
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: config-file
+          mountPath: /exivity/home/system
+        - name: log
+          mountPath: /exivity/home/log/griffon
+      imagePullSecrets:
+      - name: ghcr
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-griffon-config
+  labels:
+    app: exivity
+    component: griffon
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-griffon-log
+  labels:
+    app: exivity
+    component: griffon
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

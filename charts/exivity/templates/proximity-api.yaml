@@ -1,0 +1,150 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proximity-api
+  labels:
+    app: exivity
+    component: proximity-api
+spec:
+  selector:
+    matchLabels:
+      app: exivity
+      component: proximity-api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exivity
+        component: proximity-api
+    spec:
+      volumes:
+      - name: projected
+        projected:
+          sources:
+          - configMap:
+              name: app-config-default
+          - configMap:
+              name: exivity-license-pub
+          {{- if .Values.license }}
+          - configMap:
+              name: exivity-license-key
+          {{- end }}
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-proximity-api-log
+      - name: config
+        persistentVolumeClaim:
+          claimName: exivity-etl-config
+      - name: lookup
+        persistentVolumeClaim:
+          claimName: exivity-lookup
+      - name: report
+        persistentVolumeClaim:
+          claimName: exivity-report
+      - name: extracted
+        persistentVolumeClaim:
+          claimName: exivity-extracted
+      containers:
+      - name: proximity-api
+        image: {{ .Values.images.proximity_api }}
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        ports:
+        - containerPort: 8002
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: projected
+          mountPath: /exivity/home/system
+        - name: extracted
+          mountPath: /exivity/home/system/extracted
+        - name: log
+          mountPath: /exivity/home/log/proximity
+        - name: lookup
+          mountPath: /exivity/home/import/lookup
+        - name: report
+          mountPath: /exivity/home/system/report
+        env:
+        - name: EXIVITY_APP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: app_key
+        - name: EXIVITY_LICENSE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: license_key
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: jwt_secret
+        - name: REDIS_HOST
+          value: exivity-redis-master
+        - name: CACHE_DRIVER
+          value: redis
+        - name: QUEUE_DRIVER
+          value: redis
+      imagePullSecrets:
+      - name: ghcr
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proximity-api
+  labels:
+    app: exivity
+spec:
+  selector:
+    app: exivity
+    component: proximity-api
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-proximity-api-log
+  labels:
+    app: exivity
+    component: proximity-api
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: exivity-license-pub
+data:
+  license.pub: |-
+    -----BEGIN PUBLIC KEY-----
+    MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA7PQTdfCtqv7Ls+TZEItu
+    Si0suYMlW4Elt9RVYCC5E6iXLYuKZsT9LZruUaClff7qF6RHC7mfL/LsuZ6fXnjc
+    p+v4l/CTKtkhWQ749ZFOld4Z03oOPlbeeP+mMmHUSNp45ocMqIKg2JLQFAar/FC3
+    uR8nE87ZUACwoWNC4r5XEXZBmgRSp95czn47o2De0uIVuLrEI0sj2g6Tq8kukjue
+    p6vdF8EtnIVNAaqBf5xptwo5CxpYSp0djhT/bU4+A+xJbmwNHVPMMDwaG0yu/hAo
+    DvxLO8wiyNAMUtkl30kgkSOBBBBarURMU5KMD0ifPn+y5M9beqyAnNTD/YRmElJC
+    X/z+/btt8Hb5QaMBQ5ht7GVNHYmbEx+dewA8vL3wX7k5terEimGR/oLjQcXRIpFY
+    9+aEBzes9V5ullabbDVSitlzdewlP48MxkSe40wTnSpyIkt88wTmVeaCyhmGtf31
+    Hsc7hv8osgvCx4nAtEUNIOQeZRW2fz9mlUBwQzmkmFPmBueAx4ON/wctnBU/3s7O
+    NAwOxsx7he46BCNDk/ZKZz4fAsGOqSteUluKPYrSPOJBKuu5y486+iQthm04p/Bw
+    2g1z1jmVroQ2It26qK8XpbFyuV8gc+b3cc/HT8MCLGVCwjl/chmkz2doWPJPLaOh
+    BIy2eaNHtH2KDZCXVhQTB8MCAwEAAQ==
+    -----END PUBLIC KEY-----
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: exivity-license-key
+data:
+  license.key: {{ .Values.license }}

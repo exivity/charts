@@ -1,0 +1,51 @@
+{{if not .Values.rabbitMQ.useExternalServers}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbit
+  labels:
+    app: exivity
+    component: rabbit
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5672
+  clusterIP: None
+  selector:
+    app: exivity
+    component: rabbit
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: exivity-rabbit
+spec:
+  selector:
+    matchLabels:
+      app: exivity
+      component: rabbit
+  serviceName: rabbit
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exivity
+        component: rabbit
+    spec:
+      containers:
+      - name: exivity-rabbit
+        image: rabbitmq:latest
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        ports:
+        - containerPort: 5672
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: {{ .Values.rabbitMQ.user }}
+        - name: RABBITMQ_DEFAULT_PASS
+          value: {{ .Values.rabbitMQ.password }}
+        - name: RABBITMQ_DEFAULT_VHOST
+          value: {{ .Values.rabbitMQ.vhost }}
+{{end}}
