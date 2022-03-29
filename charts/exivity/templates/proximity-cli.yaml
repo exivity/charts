@@ -18,81 +18,86 @@ spec:
         component: proximity-cli
     spec:
       volumes:
-        - name: log
-          persistentVolumeClaim:
-            claimName: exivity-log
-        - name: config
-          persistentVolumeClaim:
-            claimName: exivity-config
-        - name: lookup
-          persistentVolumeClaim:
-            claimName: exivity-lookup
-        - name: report
-          persistentVolumeClaim:
-            claimName: exivity-report
-        - name: extracted
-          persistentVolumeClaim:
-            claimName: exivity-extracted
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-log
+      - name: config
+        persistentVolumeClaim:
+          claimName: exivity-config
+      - name: config-file
+        configMap:
+          name: app-config-default
+      - name: lookup
+        persistentVolumeClaim:
+          claimName: exivity-lookup
+      - name: report
+        persistentVolumeClaim:
+          claimName: exivity-report
+      - name: extracted
+        persistentVolumeClaim:
+          claimName: exivity-extracted
       containers:
-        - name: proximity-cli
-          image: exivity/proximity-cli:{{ .Values.version.proximity }}
-          imagePullPolicy: Always
-          volumeMounts:
-            - name: log
-              mountPath: /exivity/home/log
-            - name: config
-              mountPath: /exivity/home/system/config
-            - name: lookup
-              mountPath: /exivity/home/import/lookup
-            - name: report
-              mountPath: /exivity/home/system/report
-            - name: extracted
-              mountPath: /exivity/home/system/extracted
-          env:
-            - name: EXIVITY_APP_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: exivity-secrets
-                  key: app_key
-            - name: EXIVITY_LICENSE_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: exivity-secrets
-                  key: license_key
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: exivity-secrets
-                  key: jwt_secret
-            - name: REDIS_HOST
-              value: exivity-redis-master
-            - name: REDIS_PORT
-              value: '6379'
-            - name: CACHE_DRIVER
-              value: redis
-            - name: QUEUE_DRIVER
-              value: redis
-            - name: EXIVITY_CONFIG_db__parameters__user
-              value: {{.Values.database.username}}
-            - name: EXIVITY_CONFIG_db__parameters__password
-              value: {{.Values.database.password}}
-            - name: EXIVITY_CONFIG_db__parameters__dbname
-              value: {{.Values.database.dbname}}
-            - name: EXIVITY_CONFIG_db__parameters__host
-              value: {{.Values.database.host}}
-            - name: EXIVITY_CONFIG_db__parameters__port
-              value: "{{.Values.database.port}}"
-            - name: EXIVITY_CONFIG_mq__user
-              value: {{.Values.rabbitMQ.user}}
-            - name: EXIVITY_CONFIG_mq__password
-              value: {{.Values.rabbitMQ.password}}
-            - name: EXIVITY_CONFIG_mq__vhost
-              value: {{.Values.rabbitMQ.vhost}}
-            {{ range $index, $server := .Values.rabbitMQ.servers}}
-            - name: EXIVITY_CONFIG_mq__servers__{{$index}}__host
-              value: {{$server.host}}
-            - name: EXIVITY_CONFIG_mq__servers__{{$index}}__port
-              value: "{{$server.port}}"
-            {{end}}
+      - name: proximity-cli
+        image: exivity/proximity-cli:{{ .Values.version.proximity }}
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: config-file
+          mountPath: /exivity/home/system/temp
+        - name: extracted
+          mountPath: /exivity/home/system/extracted
+        - name: log
+          mountPath: /exivity/home/log
+        - name: lookup
+          mountPath: /exivity/home/import/lookup
+        - name: report
+          mountPath: /exivity/home/system/report
+        env:
+        - name: EXIVITY_APP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: app_key
+        - name: EXIVITY_LICENSE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: license_key
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: jwt_secret
+        - name: REDIS_HOST
+          value: exivity-redis-master
+        - name: REDIS_PORT
+          value: '6379'
+        - name: CACHE_DRIVER
+          value: redis
+        - name: QUEUE_DRIVER
+          value: redis
+        - name: EXIVITY_CONFIG_db__parameters__user
+          value: {{.Values.database.username}}
+        - name: EXIVITY_CONFIG_db__parameters__password
+          value: {{.Values.database.password}}
+        - name: EXIVITY_CONFIG_db__parameters__dbname
+          value: {{.Values.database.dbname}}
+        - name: EXIVITY_CONFIG_db__parameters__host
+          value: {{.Values.database.host}}
+        - name: EXIVITY_CONFIG_db__parameters__port
+          value: "{{.Values.database.port}}"
+        - name: EXIVITY_CONFIG_mq__user
+          value: {{.Values.rabbitMQ.user}}
+        - name: EXIVITY_CONFIG_mq__password
+          value: {{.Values.rabbitMQ.password}}
+        - name: EXIVITY_CONFIG_mq__vhost
+          value: {{.Values.rabbitMQ.vhost}}
+        {{ range $index, $server := .Values.rabbitMQ.servers}}
+        - name: EXIVITY_CONFIG_mq__servers__{{$index}}__host
+          value: {{$server.host}}
+        - name: EXIVITY_CONFIG_mq__servers__{{$index}}__port
+          value: "{{$server.port}}"
+        {{end}}
       imagePullSecrets:
         - name: {{ .Values.imagePullSecret }}

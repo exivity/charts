@@ -18,56 +18,34 @@ spec:
         component: pigeon
     spec:
       volumes:
-        - name: log
-          persistentVolumeClaim:
-            claimName: exivity-log
-        - name: config
-          persistentVolumeClaim:
-            claimName: exivity-config
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-log
+      - name: config
+        configMap:
+          name: app-config-default
       containers:
-        - name: pigeon
-          image: exivity/pigeon:{{ .Values.version.pigeon }}
-          imagePullPolicy: Always
-          volumeMounts:
-            - name: log
-              mountPath: /exivity/home/log
-            - name: config
-              mountPath: /exivity/home/system/config
-          env:
-            - name: EXIVITY_APP_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: exivity-secrets
-                  key: app_key
-            - name: REDIS_HOST
-              value: exivity-redis-master
-            - name: REDIS_PORT
-              value: '6379'
-            - name: CACHE_DRIVER
-              value: redis
-            - name: QUEUE_DRIVER
-              value: redis
-            - name: EXIVITY_CONFIG_db__parameters__user
-              value: {{.Values.database.username}}
-            - name: EXIVITY_CONFIG_db__parameters__password
-              value: {{.Values.database.password}}
-            - name: EXIVITY_CONFIG_db__parameters__dbname
-              value: {{.Values.database.dbname}}
-            - name: EXIVITY_CONFIG_db__parameters__host
-              value: {{.Values.database.host}}
-            - name: EXIVITY_CONFIG_db__parameters__port
-              value: "{{.Values.database.port}}"
-            - name: EXIVITY_CONFIG_mq__user
-              value: {{.Values.rabbitMQ.user}}
-            - name: EXIVITY_CONFIG_mq__password
-              value: {{.Values.rabbitMQ.password}}
-            - name: EXIVITY_CONFIG_mq__vhost
-              value: {{.Values.rabbitMQ.vhost}}
-            {{ range $index, $server := .Values.rabbitMQ.servers}}
-            - name: EXIVITY_CONFIG_mq__servers__{{$index}}__host
-              value: {{$server.host}}
-            - name: EXIVITY_CONFIG_mq__servers__{{$index}}__port
-              value: "{{$server.port}}"
-            {{end}}
+      - name: pigeon
+        image: exivity/pigeon:{{ .Values.version.pigeon }}
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: log
+          mountPath: /exivity/home/log
+        - name: config
+          mountPath: /exivity/home/system/temp
+        env:
+        - name: EXIVITY_APP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: app_key
+        - name: REDIS_HOST
+          value: exivity-redis-master
+        - name: REDIS_PORT
+          value: '6379'
+        - name: CACHE_DRIVER
+          value: redis
+        - name: QUEUE_DRIVER
+          value: redis
       imagePullSecrets:
-        - name: {{ .Values.imagePullSecret }}
+      - name: {{ .Values.imagePullSecret }}

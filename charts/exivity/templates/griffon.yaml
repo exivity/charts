@@ -23,14 +23,14 @@ spec:
           name: app-config-default
       - name: log
         persistentVolumeClaim:
-          claimName: exivity-lo
+          claimName: exivity-log
       containers:
       - name: griffon
         image: exivity/griffon:{{ .Values.version.griffon }}
         imagePullPolicy: Always
         volumeMounts:
         - name: config
-          mountPath: /exivity/home/system/config
+          mountPath: /exivity/home/system/temp
         - name: log
           mountPath: /exivity/home/log
       imagePullSecrets:

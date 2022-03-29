@@ -1,7 +1,7 @@
 # Private values that need to be configured
-licenseKey: <licence-key>
-appKey: <appKey>
-JWTSecret: <JWTSecret>
+licenseKey: 2JDuoQydtWcnLgZAOYtzstILiYHIuWG3ikm3fBvtpNAberAFyGDkZDfyMRA2N1Ua+eIAe+NlKNjTy281lsCxK+96PL8XZLM26xXfHNCQbqFddSDpXzFR69GathbzQcwgHAWHjd53e51tNfUyLkEj63tCcyvgsDZChQiYg/AOOgfO8f7RkleIKJzy/Gx97yOS17e934Md5VM8LNIiac36xZNqTWzmK0wJ4GScG8TohewpusFqd0b6P+tFdIggowHgDaQD2JzOEaVnObbdJOjyW0BxDSW5sOngLQM0wppYIaBqa+IzO7aCeGu3WSQEKOqQGZ3Rc4g17zvbZ4O9Avi8jpIa0Lw9EeUaEorDvUHgIOSaJOmFT0mMaGUnjSi+8n7d3h18/0mG8WQrsRZGwnoyFaB85mArSnZCbZ4uq+jVA6RAgRYUcUPQhebMIgrrMLZKvwLyeuDnNCX8Xm5F8pQeLHo5uWpwG2nvWclW/4uLEIC4txzhMIGfSV1ty0YAqgPa8+iko7bz35g4jwmNyvon2VYbtrd9QtQY1rWgzOwAoFwOMgnZHp025pPz6ShPNal/bZ4Ayhwv2V8w8WOH89EsglPhttjS/oBm+c4ysKC/NEFiDj0C+e/5u0NcKx43hYprAvoEBsimQBP6pWoX+IbGqRYlMRf2XD93lQeuECYDhAw=
+appKey: mo4ninlUeFFF1athvhqXz3Q9DovT3Dia
+JWTSecret: t5w0Zw7Kluz9CuwovP6muKeFqK+8XhFz
 
 imagePullSecret: regcred
 namespace: exivity
@@ -41,3 +41,7 @@ version:
   transcript: exvt-4756-docker
   trantor: latest
   use: exvt-4756-docker
+
+redis:
+  replica:
+    replicaCount: 1
