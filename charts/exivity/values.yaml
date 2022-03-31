@@ -29,7 +29,6 @@ rabbitMQ:
   useExternalServers: false
 
 version:
-  chronos: latest
   db: latest
   dummydata: docker
   glass: latest
@@ -37,7 +36,8 @@ version:
   proximity: exvt-4756-docker
 
 images:
-  edify: ghcr.io/exivity/edify:develop
+  chronos: ghcr.io/exivity/chronos:k8s
+  edify: ghcr.io/exivity/edify:k8s
   horizon: ghcr.io/exivity/horizon:k8s
   transcript: ghcr.io/exivity/transcript:k8s
   use: ghcr.io/exivity/use:k8s
