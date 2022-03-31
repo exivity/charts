@@ -30,7 +30,7 @@ spec:
         imagePullPolicy: Always
         volumeMounts:
         - name: config
-          mountPath: /exivity/home/system/temp
+          mountPath: /exivity/home/system
         - name: log
           mountPath: /exivity/home/log
       imagePullSecrets:
