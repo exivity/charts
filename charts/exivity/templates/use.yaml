@@ -47,6 +47,6 @@ spec:
         - name: RUN_DELAY
           value: "10"
       imagePullSecrets:
-      - name: {{ .Values.imagePullSecret }}
+      - name: ghcr
 ---
 {{- include "exivity.config" (dict "Values" .Values "appname" "use" "path" "/bin/use" "queue" "EXTRACT") }}

@@ -23,11 +23,11 @@ data:
       "db": {
         "driver": "postgres",
         "parameters": {
-          "host": {{ .Values.database.host }},
+          "host": "{{ .Values.database.host }}",
           "port": {{ .Values.database.port }},
-          "dbname": {{ .Values.database.dbname }},
-          "user": {{ .Values.database.username }},
-          "password": {{ .Values.database.password }},
+          "dbname": "{{ .Values.database.dbname }}",
+          "user": "{{ .Values.database.username }}",
+          "password": "{{ .Values.database.password }}",
           "connect_timeout": 10,
           "sslmode": "disable"
         }
@@ -39,30 +39,30 @@ data:
       "mq": {
         "servers": [
           {
-            "host": {{ .Values.rabbitMQ.host }},
+            "host": "{{ .Values.rabbitMQ.host }}",
             "port": {{ .Values.rabbitMQ.port }},
             "secure": false
           }
         ],
-        "user": {{ .Values.rabbitMQ.user }},
-        "password": {{ .Values.rabbitMQ.password }},
+        "user": "{{ .Values.rabbitMQ.user }}",
+        "password": "{{ .Values.rabbitMQ.password }}",
         "vhost": "/",
         "redialPeriod": 5
-      {{ if .appname }}
+      "{{ if .appname }}"
       },
       "merlin": {
         "reservedCPU": 0,
         "heartbeatPeriod": 5,
         "programs": {
           "{{ .appname }}": {
-            "component": {{ .appname }}
-            "path": {{ .path }},
-            "queue": {{ .queue}},
+            "component": "{{ .appname }}",
+            "path": "{{ .path }}",
+            "queue": "{{ .queue}}",
             "CPU": 0,
             "RAM": 0
           }
         }
-      {{ end }}
+      "{{ end }}"
       }
     }
 {{- end }}

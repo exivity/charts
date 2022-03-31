@@ -34,4 +34,4 @@ spec:
         - name: log
           mountPath: /exivity/home/log
       imagePullSecrets:
-      - name: {{ .Values.imagePullSecret }}
+      - name: ghcr

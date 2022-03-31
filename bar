@@ -1,0 +1,48 @@
+{
+    "chronos": {
+        "heartbeatPeriod": 5,
+        "TTL": 60
+    },
+    "db": {
+        "driver": "postgres",
+        "parameters": {
+            "host": db,
+            "port": 5432,
+            "dbname": exivity,
+            "user": postgres,
+            "password": Password12!,
+            "connect_timeout": 10,
+            "sslmode": "disable"
+        }
+    },
+    "griffon": {
+        "heartbeatPeriod": 5,
+        "TTL": 10
+    },
+    "mq": {
+        "servers": [
+            {
+                "host": rabbit,
+                "port": 5672,
+                "secure": false
+            }
+        ],
+        "user": guest,
+        "password": guest,
+        "vhost": "/",
+        "redialPeriod": 5
+    },
+    "merlin": {
+        "reservedCPU": 0,
+        "heartbeatPeriod": 5,
+        "programs": {
+            "use": {
+                "component": use,
+                "path": /bin/use,
+                "queue": EXTRACT,
+                "CPU": 0,
+                "RAM": 0
+            }
+        }
+    }
+}

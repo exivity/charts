@@ -50,6 +50,6 @@ spec:
                   name: exivity-secrets
                   key: app_key
       imagePullSecrets:
-        - name: {{ .Values.imagePullSecret }}
+      - name: ghcr
 ---
 {{- include "exivity.config" (dict "Values" .Values "appname" "transcript" "path" "bin/transcript" "queue" "TRANSFORM") }}
