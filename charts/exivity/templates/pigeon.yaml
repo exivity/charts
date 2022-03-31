@@ -23,16 +23,16 @@ spec:
           claimName: exivity-log
       - name: config
         configMap:
-          name: app-config-default
+          name: app-config-pigeon
       containers:
       - name: pigeon
-        image: exivity/pigeon:{{ .Values.version.pigeon }}
+        image: {{ .Values.images.pigeon }}
         imagePullPolicy: Always
         volumeMounts:
         - name: log
           mountPath: /exivity/home/log
         - name: config
-          mountPath: /exivity/home/system/temp
+          mountPath: /exivity/home/system
         env:
         - name: EXIVITY_APP_KEY
           valueFrom:
@@ -48,4 +48,70 @@ spec:
         - name: QUEUE_DRIVER
           value: redis
       imagePullSecrets:
-      - name: {{ .Values.imagePullSecret }}
+      - name: ghcr
+---
+# pigeon listens to multiple MQ topics, so it gets it's own config definition for now
+# TODO: get some PHP guru to fix it so we don't need merlin here.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config-pigeon
+data:
+  config.json: |-
+    {
+      "db": {
+        "driver": "postgres",
+        "parameters": {
+          "host": "{{ .Values.database.host }}",
+          "port": {{ .Values.database.port }},
+          "dbname": "{{ .Values.database.dbname }}",
+          "user": "{{ .Values.database.username }}",
+          "password": "{{ .Values.database.password }}",
+          "connect_timeout": 10,
+          "sslmode": "disable"
+        }
+      },
+      "merlin": {
+        "reservedCPU": 1,
+        "heartbeatPeriod": 5,
+        "programs": {
+          "pigeon": {
+            "path": "server/php/php",
+            "queue": "PIGEON",
+            "CPU": 0,
+            "RAM": 0
+          },
+          "workflow_ended": {
+            "component": "pigeon",
+            "path": "/usr/bin/php",
+            "queue": "WORKFLOW_EVENT",
+            "topic": "evt.workflow_status.griffon.#",
+            "params": "common/pigeon/pigeon.phar event:post workflow_ended `${payload}`",
+            "CPU": 0.25,
+            "RAM": 250
+          },
+          "report_published": {
+            "component": "pigeon",
+            "path": "/usr/bin/php",
+            "queue": "REPORT_PUBLISHED",
+            "topic": "evt.report_published.proximity.#",
+            "params": "common/pigeon/pigeon.phar event:post report_published `${payload}`",
+            "CPU": 0.25,
+            "RAM": 250
+          }
+        }
+      },
+      "mq": {
+        "servers": [
+          {
+            "host": "{{ .Values.rabbitMQ.host }}",
+            "port": {{ .Values.rabbitMQ.port }},
+            "secure": false
+          }
+        ],
+        "user": "{{ .Values.rabbitMQ.user }}",
+        "password": "{{ .Values.rabbitMQ.password }}",
+        "vhost": "/",
+        "redialPeriod": 5
+      }
+    }

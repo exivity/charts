@@ -48,7 +48,7 @@ data:
         "password": "{{ .Values.rabbitMQ.password }}",
         "vhost": "/",
         "redialPeriod": 5
-      "{{ if .appname }}"
+      {{ if .appname }}
       },
       "merlin": {
         "reservedCPU": 0,
@@ -62,7 +62,7 @@ data:
             "RAM": 0
           }
         }
-      "{{ end }}"
+      {{ end }}
       }
     }
 {{- end }}
