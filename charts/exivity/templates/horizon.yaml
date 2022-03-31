@@ -26,7 +26,7 @@ spec:
           claimName: exivity-log
       containers:
       - name: horizon
-        image: exivity/horizon:{{ .Values.version.horizon }}
+        image: {{ .Values.images.horizon }}
         imagePullPolicy: Always
         volumeMounts:
         - name: config

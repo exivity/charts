@@ -54,7 +54,7 @@ data:
         "reservedCPU": 0,
         "heartbeatPeriod": 5,
         "programs": {
-          "program": {
+          "{{ .appname }}": {
             "component": {{ .appname }}
             "path": {{ .path }},
             "queue": {{ .queue}},

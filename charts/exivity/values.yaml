@@ -32,15 +32,16 @@ version:
   chronos: latest
   db: latest
   dummydata: docker
-  edify: k8s
   glass: latest
   griffon: latest
-  horizon: exvt-4756-docker
   pigeon: exvt-4756-docker
   proximity: exvt-4756-docker
-  transcript: exvt-4756-docker
-  trantor: latest
-  use: exvt-4756-docker
+
+images:
+  edify: ghcr.io/exivity/edify:develop
+  horizon: ghcr.io/exivity/horizon:k8s
+  transcript: ghcr.io/exivity/transcript:k8s
+  use: ghcr.io/exivity/use:k8s
 
 redis:
   replica:

@@ -29,11 +29,11 @@ spec:
           claimName: exivity-log
       containers:
       - name: use
-        image: exivity/use:{{ .Values.version.use }}
+        image: {{ .Values.images.use }}
         imagePullPolicy: Always
         volumeMounts:
         - name: config
-          mountPath: /exivity/home/system/temp
+          mountPath: /exivity/home/system
         - name: extracted
           mountPath: /exivity/home/system/extracted
         - name: log

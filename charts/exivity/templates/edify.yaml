@@ -32,7 +32,7 @@ spec:
           claimName: exivity-report
       containers:
       - name: edify
-        image: ghcr.io/exivity/edify:{{ .Values.version.edify }}
+        image: {{ .Values.images.edify }}
         imagePullPolicy: Always
         volumeMounts:
         - name: config
