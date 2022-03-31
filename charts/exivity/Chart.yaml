@@ -1,6 +1,6 @@
 apiVersion: v2
 name: exivity
-version: '0.1.8'
+version: '0.1.9'
 description: The chart to deploy Exivity to a kubernetes cluster
 dependencies:
 - name: redis

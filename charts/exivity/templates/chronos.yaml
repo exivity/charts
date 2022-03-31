@@ -26,7 +26,7 @@ spec:
           claimName: exivity-log
       containers:
       - name: chronos
-        image: exivity/chronos:{{ .Values.version.chronos }}
+        image: {{ .Values.iamges.chronos }}
         imagePullPolicy: Always
         volumeMounts:
         - name: config
@@ -34,5 +34,4 @@ spec:
         - name: log
           mountPath: /exivity/home/log
       imagePullSecrets:
-      - name:
-          {{ .Values.imagePullSecret }}
+      - name: ghcr
