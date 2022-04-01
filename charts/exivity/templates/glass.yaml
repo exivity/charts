@@ -19,12 +19,12 @@ spec:
     spec:
       containers:
       - name: glass
-        image: {{ .Values.images.glass }}
+        image: exivity/glass:{{ .Values.version.glass }}
         imagePullPolicy: Always
         ports:
         - containerPort: 443
       imagePullSecrets:
-      - name: ghcr
+      - name: {{ .Values.imagePullSecret }}
 ---
 apiVersion: v1
 kind: Service

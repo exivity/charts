@@ -37,7 +37,7 @@ version:
 images:
   chronos: ghcr.io/exivity/chronos:k8s
   edify: ghcr.io/exivity/edify:k8s
-  glass: ghcr.io/exivity/edify:k8s
+  glass: ghcr.io/exivity/glass:k8s
   horizon: ghcr.io/exivity/horizon:k8s
   pigeon: ghcr.io/exivity/pigeon:k8s
   transcript: ghcr.io/exivity/transcript:k8s
