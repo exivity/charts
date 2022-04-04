@@ -30,6 +30,9 @@ spec:
       - name: log
         persistentVolumeClaim:
           claimName: exivity-log
+      - name: merlin
+        persistentVolumeClaim:
+          claimName: exivity-merlin
       containers:
       - name: use
         image: {{ .Values.images.use }}
@@ -41,6 +44,8 @@ spec:
           mountPath: /exivity/home/system/config
         - name: extracted
           mountPath: /exivity/home/system/extracted
+        - name: merlin
+          mountPath: /exivity/home/log/merlin
         - name: log
           mountPath: /exivity/home/log/use
         env:

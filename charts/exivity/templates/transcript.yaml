@@ -18,42 +18,47 @@ spec:
         component: transcript
     spec:
       volumes:
-        - name: config
-          persistentVolumeClaim:
-            claimName: exivity-config
-        - name: config-file
-          configMap:
-            name: app-config-transcript
-        - name: extracted
-          persistentVolumeClaim:
-            claimName: exivity-extracted
-        - name: log
-          persistentVolumeClaim:
-            claimName: exivity-log
-        - name: report
-          persistentVolumeClaim:
-            claimName: exivity-report
+      - name: config
+        persistentVolumeClaim:
+          claimName: exivity-config
+      - name: config-file
+        configMap:
+          name: app-config-transcript
+      - name: extracted
+        persistentVolumeClaim:
+          claimName: exivity-extracted
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-log
+      - name: merlin
+        persistentVolumeClaim:
+          claimName: exivity-merlin
+      - name: report
+        persistentVolumeClaim:
+          claimName: exivity-report
       containers:
-        - name: transcript
-          image: {{ .Values.images.transcript }}
-          imagePullPolicy: Always
-          volumeMounts:
-            - name: config
-              mountPath: /exivity/home/system/config
-            - name: config-file
-              mountPath: /exivity/home/system
-            - name: extracted
-              mountPath: /exivity/home/system/extracted
-            - name: log
-              mountPath: /exivity/home/log/transcript
-            - name: report
-              mountPath: /exivity/home/system/report
-          env:
-            - name: EXIVITY_APP_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: exivity-secrets
-                  key: app_key
+      - name: transcript
+        image: {{ .Values.images.transcript }}
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: config-file
+          mountPath: /exivity/home/system
+        - name: extracted
+          mountPath: /exivity/home/system/extracted
+        - name: log
+          mountPath: /exivity/home/log/transcript
+        - name: merlin
+          mountPath: /exivity/home/log/merlin
+        - name: report
+          mountPath: /exivity/home/system/report
+        env:
+        - name: EXIVITY_APP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: app_key
       imagePullSecrets:
       - name: ghcr
 ---

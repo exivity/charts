@@ -194,3 +194,21 @@ spec:
   resources:
     requests:
       storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-merlin
+  labels:
+    app: exivity
+spec:
+  accessModes:
+    {{if .Values.multiNode}}
+    - ReadWriteMany
+    {{else}}
+    - ReadWriteOnce
+    {{end}}
+  resources:
+    requests:
+      storage: 1Gi
+---

@@ -18,6 +18,9 @@ spec:
         component: edify
     spec:
       volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: exivity-config
       - name: config-file
         configMap:
           name: app-config-edify
@@ -27,6 +30,9 @@ spec:
       - name: log
         persistentVolumeClaim:
           claimName: exivity-log
+      - name: merlin
+        persistentVolumeClaim:
+          claimName: exivity-merlin
       - name: report
         persistentVolumeClaim:
           claimName: exivity-report
@@ -43,6 +49,8 @@ spec:
           mountPath: /exivity/home/system/extracted
         - name: log
           mountPath: /exivity/home/log/edify
+        - name: merlin
+          mountPath: /exivity/home/log/merlin
         - name: report
           mountPath: /exivity/home/system/report
       imagePullSecrets:
