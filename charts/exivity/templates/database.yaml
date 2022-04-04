@@ -63,3 +63,4 @@ spec:
             {{end}}
       imagePullSecrets:
         - name: {{ .Values.imagePullSecret }}
+{{end}}
