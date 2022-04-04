@@ -18,7 +18,7 @@ spec:
         component: edify
     spec:
       volumes:
-      - name: config
+      - name: config-file
         configMap:
           name: app-config-edify
       - name: extracted
@@ -36,11 +36,13 @@ spec:
         imagePullPolicy: Always
         volumeMounts:
         - name: config
-          mountPath: /exivity/home/system/temp
+          mountPath: /exivity/home/system/config
+        - name: config-file
+          mountPath: /exivity/home/system
         - name: extracted
           mountPath: /exivity/home/system/extracted
         - name: log
-          mountPath: /exivity/home/log
+          mountPath: /exivity/home/log/edify
         - name: report
           mountPath: /exivity/home/system/report
       imagePullSecrets:

@@ -19,6 +19,9 @@ spec:
     spec:
       volumes:
       - name: config
+        persistentVolumeClaim:
+          claimName: exivity-config
+      - name: config-file
         configMap:
           name: app-config-use
       - name: extracted
@@ -32,12 +35,14 @@ spec:
         image: {{ .Values.images.use }}
         imagePullPolicy: Always
         volumeMounts:
-        - name: config
+        - name: config-file
           mountPath: /exivity/home/system
+        - name: config
+          mountPath: /exivity/home/system/config
         - name: extracted
           mountPath: /exivity/home/system/extracted
         - name: log
-          mountPath: /exivity/home/log
+          mountPath: /exivity/home/log/use
         env:
         - name: EXIVITY_APP_KEY
           valueFrom:

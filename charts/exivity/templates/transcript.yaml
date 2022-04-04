@@ -18,31 +18,36 @@ spec:
         component: transcript
     spec:
       volumes:
-        - name: log
-          persistentVolumeClaim:
-            claimName: exivity-log
         - name: config
+          persistentVolumeClaim:
+            claimName: exivity-config
+        - name: config-file
           configMap:
             name: app-config-transcript
-        - name: report
-          persistentVolumeClaim:
-            claimName: exivity-report
         - name: extracted
           persistentVolumeClaim:
             claimName: exivity-extracted
+        - name: log
+          persistentVolumeClaim:
+            claimName: exivity-log
+        - name: report
+          persistentVolumeClaim:
+            claimName: exivity-report
       containers:
         - name: transcript
           image: {{ .Values.images.transcript }}
           imagePullPolicy: Always
           volumeMounts:
-            - name: log
-              mountPath: /exivity/home/log
             - name: config
+              mountPath: /exivity/home/system/config
+            - name: config-file
               mountPath: /exivity/home/system
-            - name: report
-              mountPath: /exivity/home/system/report
             - name: extracted
               mountPath: /exivity/home/system/extracted
+            - name: log
+              mountPath: /exivity/home/log/transcript
+            - name: report
+              mountPath: /exivity/home/system/report
           env:
             - name: EXIVITY_APP_KEY
               valueFrom:
@@ -52,4 +57,4 @@ spec:
       imagePullSecrets:
       - name: ghcr
 ---
-{{- include "exivity.config" (dict "Values" .Values "appname" "transcript" "path" "bin/transcript" "queue" "TRANSFORM") }}
+{{- include "exivity.config" (dict "Values" .Values "appname" "transcript" "path" "/bin/transcript" "queue" "TRANSFORM") }}

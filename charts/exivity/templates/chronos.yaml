@@ -10,7 +10,7 @@ spec:
     matchLabels:
       app: exivity
       component: chronos
-  replicas: 1
+  replicas: 0
   template:
     metadata:
       labels:
