@@ -29,7 +29,7 @@ spec:
           claimName: exivity-log
       containers:
       - name: griffon
-        image: exivity/griffon:{{ .Values.version.griffon }}
+        image: {{ .Values.images.griffon }}
         imagePullPolicy: Always
         volumeMounts:
         volumeMounts:
