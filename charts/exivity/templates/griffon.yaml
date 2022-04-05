@@ -19,6 +19,9 @@ spec:
     spec:
       volumes:
       - name: config
+        persistentVolumeClaim:
+          claimName: exivity-config
+      - name: config-file
         configMap:
           name: app-config-default
       - name: log
@@ -29,9 +32,12 @@ spec:
         image: exivity/griffon:{{ .Values.version.griffon }}
         imagePullPolicy: Always
         volumeMounts:
+        volumeMounts:
         - name: config
-          mountPath: /exivity/home/system/temp
+          mountPath: /exivity/home/system/config
+        - name: config-file
+          mountPath: /exivity/home/system
         - name: log
-          mountPath: /exivity/home/log
+          mountPath: /exivity/home/log/griffon
       imagePullSecrets:
-      - name: {{ .Values.imagePullSecret }}
+      - name: ghcr
