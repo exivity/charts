@@ -10,7 +10,7 @@ spec:
     matchLabels:
       app: exivity
       component: chronos
-  replicas: 0
+  replicas: 1
   template:
     metadata:
       labels:
@@ -19,6 +19,9 @@ spec:
     spec:
       volumes:
       - name: config
+        persistentVolumeClaim:
+          claimName: exivity-config
+      - name: config-file
         configMap:
           name: app-config-default
       - name: log
@@ -30,8 +33,10 @@ spec:
         imagePullPolicy: Always
         volumeMounts:
         - name: config
+          mountPath: /exivity/home/system/config
+        - name: config-file
           mountPath: /exivity/home/system
         - name: log
-          mountPath: /exivity/home/log
+          mountPath: /exivity/home/log/chronos
       imagePullSecrets:
       - name: ghcr
