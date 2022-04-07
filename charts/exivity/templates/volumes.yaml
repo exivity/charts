@@ -6,7 +6,7 @@ metadata:
     app: exivity
 spec:
   accessModes:
-  {{- if .Values.devmode }}
+  {{- if .Values.singleNode }}
   - ReadWriteOnce
   {{- else }}
   - ReadWriteMany
@@ -23,7 +23,7 @@ metadata:
     app: exivity
 spec:
   accessModes:
-  {{- if .Values.devmode }}
+  {{- if .Values.singleNode }}
   - ReadWriteOnce
   {{- else }}
   - ReadWriteMany
@@ -40,7 +40,7 @@ metadata:
     app: exivity
 spec:
   accessModes:
-  {{- if .Values.devmode }}
+  {{- if .Values.singleNode }}
   - ReadWriteOnce
   {{- else }}
   - ReadWriteMany

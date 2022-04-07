@@ -20,7 +20,7 @@ spec:
       volumes:
       - name: config
         configMap:
-          name: exivity-horizon-config
+          name: app-config-horizon
       - name: log
         persistentVolumeClaim:
           claimName: exivity-horizon-log

@@ -1,4 +1,4 @@
-{{if not .Values.database.useExternalDatabase}}
+{{ if not .Values.database.useExternalDatabase }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -51,21 +51,21 @@ spec:
           mountPath: /var/lib/postgresql/data
         env:
         - name: POSTGRES_DB
-          value: {{.Values.database.dbname}}
+          value: {{ .Values.database.dbname }}
         - name: POSTGRES_PASSWORD
-          value: {{.Values.database.password}}
+          value: {{ .Values.database.password }}
         - name: EXIVITY_CONFIG_mq__user
-          value: {{.Values.rabbitMQ.user}}
+          value: {{ .Values.rabbitMQ.user }}
         - name: EXIVITY_CONFIG_mq__password
-          value: {{.Values.rabbitMQ.password}}
+          value: {{ .Values.rabbitMQ.password }}
         - name: EXIVITY_CONFIG_mq__vhost
-          value: {{.Values.rabbitMQ.vhost}}
-        {{ range $index, $server := .Values.rabbitMQ.servers}}
-        - name: EXIVITY_CONFIG_mq__servers__{{$index}}__host
-          value: {{$server.host}}
-        - name: EXIVITY_CONFIG_mq__servers__{{$index}}__port
-          value: "{{$server.port}}"
-        {{end}}
+          value: {{ .Values.rabbitMQ.vhost }}
+        {{ range $index, $server := .Values.rabbitMQ.servers }}
+        - name: EXIVITY_CONFIG_mq__servers__{{ $index }}__host
+          value: {{ $server.host }}
+        - name: EXIVITY_CONFIG_mq__servers__{{ $index }}__port
+          value: "{{ $server.port }}"
+        {{ end }}
       imagePullSecrets:
       - name: {{ .Values.imagePullSecret }}
 ---
@@ -82,4 +82,32 @@ spec:
   resources:
     requests:
       storage: 100Mi
-{{end}}
+{{ end }}
+---
+{{ if .Values.database.initialise }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: database-init
+  labels:
+    app: exivity
+    component: database
+spec:
+  ttlSecondsAfterFinished: 0
+  template:
+    spec:
+      containers:
+      - name: database-init
+        image: exivity/db:{{ .Values.version.db }}
+        imagePullPolicy: Always
+        env:
+        - name: PGUSER
+          value: {{ .Values.database.username }}
+        - name: PGPASSWORD
+          value: {{ .Values.database.password }}
+      restartPolicy: Never
+      imagePullSecrets:
+      - name: {{ .Values.imagePullSecret }}
+  backoffLimit: 4
+  completions: 1
+{{ end }}

@@ -6,7 +6,7 @@ JWTSecret: t5w0Zw7Kluz9CuwovP6muKeFqK+8XhFz
 imagePullSecret: regcred
 namespace: exivity
 host: localhost
-devmode: true
+singleNode: true
 deployment-name: exivity
 
 # Database config
@@ -17,8 +17,7 @@ database:
   host: db # only change when you have set useExternalDatabase to true
   port: 5432 # only change when you have set useExternalDatabase to true
   useExternalDatabase: false
-  recreateDatabase: true
-  createFakeData: true
+  initialise: true
 
 # RabbitMQ config
 rabbitMQ:
@@ -30,6 +29,7 @@ rabbitMQ:
   useExternalServers: false
 
 version:
+  db: latest
   proximity: exvt-4756-docker
 
 images:
