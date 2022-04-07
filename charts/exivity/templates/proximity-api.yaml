@@ -23,7 +23,7 @@ spec:
           claimName: exivity-proximity-api-log
       - name: config
         persistentVolumeClaim:
-          claimName: exivity-proximity-api-config
+          claimName: exivity-etl-config
       - name: config-file
         configMap:
           name: app-config-default
@@ -122,20 +122,6 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 80
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: exivity-proximity-api-config
-  labels:
-    app: exivity
-    component: proximity-api
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 100Mi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

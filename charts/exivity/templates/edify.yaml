@@ -20,7 +20,7 @@ spec:
       volumes:
       - name: config
         persistentVolumeClaim:
-          claimName: exivity-edify-config
+          claimName: exivity-etl-config
       - name: config-file
         configMap:
           name: app-config-edify
@@ -59,20 +59,6 @@ spec:
 ---
 # add templated configmap providing the service with the required config.json
 {{- include "exivity.config" (dict "Values" .Values "appname" "edify" "path" "/bin/edify" "queue" "REPORT") }}
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: exivity-edify-config
-  labels:
-    app: exivity
-    component: edify
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 100Mi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
