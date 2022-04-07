@@ -32,10 +32,6 @@ spec:
         app: exivity
         component: database
     spec:
-      resources:
-        requests:
-          cpu: "25m"
-          memory: "50Mi"
       volumes:
         - name: database
           persistentVolumeClaim:
@@ -44,6 +40,10 @@ spec:
         - name: exivity-database
           image: exivity/postgresql-database:latest
           imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: "25m"
+              memory: "50Mi"
           ports:
             - containerPort: 5432
           volumeMounts:

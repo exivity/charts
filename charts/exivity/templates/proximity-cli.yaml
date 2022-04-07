@@ -17,10 +17,6 @@ spec:
         app: exivity
         component: proximity-cli
     spec:
-      resources:
-        requests:
-          cpu: "25m"
-          memory: "50Mi"
       volumes:
       - name: log
         persistentVolumeClaim:
@@ -44,6 +40,10 @@ spec:
       - name: proximity-cli
         image: exivity/proximity-cli:{{ .Values.version.proximity }}
         imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
         volumeMounts:
         - name: config
           mountPath: /exivity/home/system/config
@@ -104,4 +104,4 @@ spec:
           value: "{{$server.port}}"
         {{end}}
       imagePullSecrets:
-        - name: {{ .Values.imagePullSecret }}
+      - name: {{ .Values.imagePullSecret }}

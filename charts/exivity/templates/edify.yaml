@@ -17,10 +17,6 @@ spec:
         app: exivity
         component: edify
     spec:
-      resources:
-        requests:
-          cpu: "25m"
-          memory: "50Mi"
       volumes:
       - name: config
         persistentVolumeClaim:
@@ -41,6 +37,10 @@ spec:
       - name: edify
         image: {{ .Values.images.edify }}
         imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
         volumeMounts:
         - name: config
           mountPath: /exivity/home/system/config

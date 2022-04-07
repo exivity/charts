@@ -17,10 +17,6 @@ spec:
         app: exivity
         component: horizon
     spec:
-      resources:
-        requests:
-          cpu: "25m"
-          memory: "50Mi"
       volumes:
       - name: config
         configMap:
@@ -32,6 +28,10 @@ spec:
       - name: horizon
         image: {{ .Values.images.horizon }}
         imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
         volumeMounts:
         - name: config
           mountPath: /exivity/home/system/temp

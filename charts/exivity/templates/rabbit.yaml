@@ -9,7 +9,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 5672
+  - port: 5672
   clusterIP: None
   selector:
     app: exivity
@@ -32,20 +32,20 @@ spec:
         app: exivity
         component: rabbit
     spec:
-      resources:
-        requests:
-          cpu: "25m"
-          memory: "50Mi"
       containers:
-        - name: exivity-rabbit
-          image: rabbitmq:latest
-          ports:
-            - containerPort: 5672
-          env:
-            - name: RABBITMQ_DEFAULT_USER
-              value: {{ .Values.rabbitMQ.user }}
-            - name: RABBITMQ_DEFAULT_PASS
-              value: {{ .Values.rabbitMQ.password }}
-            - name: RABBITMQ_DEFAULT_VHOST
-              value: {{ .Values.rabbitMQ.vhost }}
+      - name: exivity-rabbit
+        image: rabbitmq:latest
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        ports:
+        - containerPort: 5672
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: {{ .Values.rabbitMQ.user }}
+        - name: RABBITMQ_DEFAULT_PASS
+          value: {{ .Values.rabbitMQ.password }}
+        - name: RABBITMQ_DEFAULT_VHOST
+          value: {{ .Values.rabbitMQ.vhost }}
 {{end}}

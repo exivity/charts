@@ -17,10 +17,6 @@ spec:
         app: exivity
         component: pigeon
     spec:
-      resources:
-        requests:
-          cpu: "25m"
-          memory: "50Mi"
       volumes:
       - name: log
         persistentVolumeClaim:
@@ -32,6 +28,10 @@ spec:
       - name: pigeon
         image: {{ .Values.images.pigeon }}
         imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
         volumeMounts:
         - name: log
           mountPath: /exivity/home/log

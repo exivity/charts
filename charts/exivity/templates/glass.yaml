@@ -17,14 +17,14 @@ spec:
         app: exivity
         component: glass
     spec:
-      resources:
-        requests:
-          cpu: "25m"
-          memory: "50Mi"
       containers:
       - name: glass
         image: {{ .Values.images.glass }}
         imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
         ports:
         - containerPort: 443
       imagePullSecrets:
