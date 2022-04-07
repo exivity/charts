@@ -6,7 +6,11 @@ metadata:
     app: exivity
 spec:
   accessModes:
-    - {{ "ReadWriteOnce" if .Values.devmode | default("ReadWriteMany") }}
+  {{- if .Values.devmode }}
+  - ReadWriteOnce
+  {{- else }}
+  - ReadWriteMany
+  {{- end }}
   resources:
     requests:
       storage: 1Gi
@@ -19,7 +23,11 @@ metadata:
     app: exivity
 spec:
   accessModes:
-    - {{ "ReadWriteOnce" if .Values.devmode | default("ReadWriteMany") }}
+  {{- if .Values.devmode }}
+  - ReadWriteOnce
+  {{- else }}
+  - ReadWriteMany
+  {{- end }}
   resources:
     requests:
       storage: 1Gi
@@ -32,7 +40,11 @@ metadata:
     app: exivity
 spec:
   accessModes:
-    - {{ "ReadWriteOnce" if .Values.devmode | default("ReadWriteMany") }}
+  {{- if .Values.devmode }}
+  - ReadWriteOnce
+  {{- else }}
+  - ReadWriteMany
+  {{- end }}
   resources:
     requests:
       storage: 1Gi
