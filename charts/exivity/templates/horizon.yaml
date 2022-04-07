@@ -23,7 +23,7 @@ spec:
           name: app-config-default
       - name: log
         persistentVolumeClaim:
-          claimName: exivity-log
+          claimName: exivity-horizon-log
       containers:
       - name: horizon
         image: {{ .Values.images.horizon }}
@@ -34,8 +34,22 @@ spec:
             memory: "50Mi"
         volumeMounts:
         - name: config
-          mountPath: /exivity/home/system/temp
+          mountPath: /exivity/home/system
         - name: log
           mountPath: /exivity/home/log
       imagePullSecrets:
       - name: ghcr
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-horizon-log
+  labels:
+    app: exivity
+    component: horizon
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi

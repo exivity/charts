@@ -9,7 +9,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 5432
+  - port: 5432
   clusterIP: None
   selector:
     app: exivity
@@ -33,39 +33,53 @@ spec:
         component: database
     spec:
       volumes:
-        - name: database
-          persistentVolumeClaim:
-            claimName: exivity-database
+      - name: database
+        persistentVolumeClaim:
+          claimName: exivity-database
       containers:
-        - name: exivity-database
-          image: exivity/postgresql-database:latest
-          imagePullPolicy: Always
-          resources:
-            requests:
-              cpu: "25m"
-              memory: "50Mi"
-          ports:
-            - containerPort: 5432
-          volumeMounts:
-            - name: database
-              mountPath: /var/lib/postgresql/data
-          env:
-            - name: POSTGRES_DB
-              value: {{.Values.database.dbname}}
-            - name: POSTGRES_PASSWORD
-              value: {{.Values.database.password}}
-            - name: EXIVITY_CONFIG_mq__user
-              value: {{.Values.rabbitMQ.user}}
-            - name: EXIVITY_CONFIG_mq__password
-              value: {{.Values.rabbitMQ.password}}
-            - name: EXIVITY_CONFIG_mq__vhost
-              value: {{.Values.rabbitMQ.vhost}}
-            {{ range $index, $server := .Values.rabbitMQ.servers}}
-            - name: EXIVITY_CONFIG_mq__servers__{{$index}}__host
-              value: {{$server.host}}
-            - name: EXIVITY_CONFIG_mq__servers__{{$index}}__port
-              value: "{{$server.port}}"
-            {{end}}
+      - name: exivity-database
+        image: exivity/postgresql-database:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: database
+          mountPath: /var/lib/postgresql/data
+        env:
+        - name: POSTGRES_DB
+          value: {{.Values.database.dbname}}
+        - name: POSTGRES_PASSWORD
+          value: {{.Values.database.password}}
+        - name: EXIVITY_CONFIG_mq__user
+          value: {{.Values.rabbitMQ.user}}
+        - name: EXIVITY_CONFIG_mq__password
+          value: {{.Values.rabbitMQ.password}}
+        - name: EXIVITY_CONFIG_mq__vhost
+          value: {{.Values.rabbitMQ.vhost}}
+        {{ range $index, $server := .Values.rabbitMQ.servers}}
+        - name: EXIVITY_CONFIG_mq__servers__{{$index}}__host
+          value: {{$server.host}}
+        - name: EXIVITY_CONFIG_mq__servers__{{$index}}__port
+          value: "{{$server.port}}"
+        {{end}}
       imagePullSecrets:
-        - name: {{ .Values.imagePullSecret }}
+      - name: {{ .Values.imagePullSecret }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-database
+  labels:
+    app: exivity
+    component: database
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
 {{end}}

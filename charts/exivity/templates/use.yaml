@@ -30,9 +30,6 @@ spec:
       - name: log
         persistentVolumeClaim:
           claimName: exivity-use-log
-      - name: merlin
-        persistentVolumeClaim:
-          claimName: exivity-merlin
       containers:
       - name: use
         image: {{ .Values.images.use }}

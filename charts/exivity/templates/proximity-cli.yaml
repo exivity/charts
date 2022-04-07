@@ -20,10 +20,10 @@ spec:
       volumes:
       - name: log
         persistentVolumeClaim:
-          claimName: exivity-log
+          claimName: exivity-proximity-cli-log
       - name: config
         persistentVolumeClaim:
-          claimName: exivity-config
+          claimName: exivity-proximity-cli-config
       - name: config-file
         configMap:
           name: app-config-default
@@ -105,3 +105,31 @@ spec:
         {{end}}
       imagePullSecrets:
       - name: {{ .Values.imagePullSecret }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-proximity-cli-config
+  labels:
+    app: exivity
+    component: proximity-cli
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-proximity-cli-log
+  labels:
+    app: exivity
+    component: proximity-cli
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
