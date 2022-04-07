@@ -40,6 +40,10 @@ spec:
       imagePullSecrets:
       - name: ghcr
 ---
+# add templated configmap providing the service with the required config.json
+{{- include "exivity.config" (dict "Values" .Values "appname" "horizon" "path" "/bin/horizon" "queue" "BUDGET") }}
+---
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
