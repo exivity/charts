@@ -18,12 +18,12 @@ spec:
         component: pigeon
     spec:
       volumes:
-      - name: log
-        persistentVolumeClaim:
-          claimName: exivity-pigeon-log
       - name: config
         configMap:
           name: app-config-pigeon
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-pigeon-log
       containers:
       - name: pigeon
         image: {{ .Values.images.pigeon }}
@@ -33,10 +33,10 @@ spec:
             cpu: "25m"
             memory: "50Mi"
         volumeMounts:
-        - name: log
-          mountPath: /exivity/home/log
         - name: config
           mountPath: /exivity/home/system
+        - name: log
+          mountPath: /exivity/home/log/merlin
         env:
         - name: EXIVITY_APP_KEY
           valueFrom:
