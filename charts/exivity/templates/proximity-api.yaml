@@ -17,6 +17,10 @@ spec:
         app: exivity
         component: proximity-api
     spec:
+      resources:
+        requests:
+          cpu: "25m"
+          memory: "50Mi"
       volumes:
         - name: log
           persistentVolumeClaim:

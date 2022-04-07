@@ -17,16 +17,20 @@ spec:
         app: exivity
         component: griffon
     spec:
+      resources:
+        requests:
+          cpu: "25m"
+          memory: "50Mi"
       volumes:
       - name: config
         persistentVolumeClaim:
-          claimName: exivity-config
+          claimName: exivity-griffon-config
       - name: config-file
         configMap:
           name: app-config-default
       - name: log
         persistentVolumeClaim:
-          claimName: exivity-log
+          claimName: exivity-griffon-log
       containers:
       - name: griffon
         image: {{ .Values.images.griffon }}
@@ -41,3 +45,31 @@ spec:
           mountPath: /exivity/home/log/griffon
       imagePullSecrets:
       - name: ghcr
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-griffon-config
+  labels:
+    app: exivity
+    component: griffon
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-griffon-log
+  labels:
+    app: exivity
+    component: griffon
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

@@ -17,6 +17,10 @@ spec:
         app: exivity
         component: glass
     spec:
+      resources:
+        requests:
+          cpu: "25m"
+          memory: "50Mi"
       containers:
       - name: glass
         image: {{ .Values.images.glass }}
@@ -32,6 +36,7 @@ metadata:
   name: glass
   labels:
     app: exivity
+    component: glass
 spec:
   selector:
     app: exivity

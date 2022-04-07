@@ -5,6 +5,7 @@ metadata:
   name: db
   labels:
     app: exivity
+    component: database
 spec:
   type: ClusterIP
   ports:
@@ -31,6 +32,10 @@ spec:
         app: exivity
         component: database
     spec:
+      resources:
+        requests:
+          cpu: "25m"
+          memory: "50Mi"
       volumes:
         - name: database
           persistentVolumeClaim:

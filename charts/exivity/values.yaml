@@ -6,7 +6,8 @@ JWTSecret: t5w0Zw7Kluz9CuwovP6muKeFqK+8XhFz
 imagePullSecret: regcred
 namespace: exivity
 host: localhost
-development: true
+devmode: true
+deployment-name: exivity
 
 # Database config
 database:
@@ -29,8 +30,6 @@ rabbitMQ:
   useExternalServers: false
 
 version:
-  db: latest
-  dummydata: docker
   proximity: exvt-4756-docker
 
 images:

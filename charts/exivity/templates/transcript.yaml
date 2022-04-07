@@ -17,10 +17,14 @@ spec:
         app: exivity
         component: transcript
     spec:
+      resources:
+        requests:
+          cpu: "25m"
+          memory: "50Mi"
       volumes:
       - name: config
         persistentVolumeClaim:
-          claimName: exivity-config
+          claimName: exivity-transcript-config
       - name: config-file
         configMap:
           name: app-config-transcript
@@ -29,10 +33,7 @@ spec:
           claimName: exivity-extracted
       - name: log
         persistentVolumeClaim:
-          claimName: exivity-log
-      - name: merlin
-        persistentVolumeClaim:
-          claimName: exivity-merlin
+          claimName: exivity-transcript-log
       - name: report
         persistentVolumeClaim:
           claimName: exivity-report
@@ -49,7 +50,7 @@ spec:
           mountPath: /exivity/home/system/extracted
         - name: log
           mountPath: /exivity/home/log/transcript
-        - name: merlin
+        - name: log
           mountPath: /exivity/home/log/merlin
         - name: report
           mountPath: /exivity/home/system/report
@@ -62,4 +63,33 @@ spec:
       imagePullSecrets:
       - name: ghcr
 ---
+# add templated configmap providing the service with the required config.json
 {{- include "exivity.config" (dict "Values" .Values "appname" "transcript" "path" "/bin/transcript" "queue" "TRANSFORM") }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-transcript-config
+  labels:
+    app: exivity
+    component: transcript
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-transcript-log
+  labels:
+    app: exivity
+    component: transcript
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi

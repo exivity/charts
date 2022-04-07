@@ -17,6 +17,10 @@ spec:
         app: exivity
         component: pigeon
     spec:
+      resources:
+        requests:
+          cpu: "25m"
+          memory: "50Mi"
       volumes:
       - name: log
         persistentVolumeClaim:
@@ -50,7 +54,7 @@ spec:
       imagePullSecrets:
       - name: ghcr
 ---
-# pigeon listens to multiple MQ topics, so it gets it's own config definition for now
+# pigeon listens to multiple MQ topics, so it gets its own config definition for now
 # TODO: get some PHP guru to fix it so we don't need merlin here.
 apiVersion: v1
 kind: ConfigMap
