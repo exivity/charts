@@ -100,7 +100,7 @@ spec:
           value: {{ .Values.database.password }}
       restartPolicy: Never
       imagePullSecrets:
-      - name: {{ .Values.imagePullSecret }}
+      - name: ghcr
   backoffLimit: 4
   completions: 1
 {{ end }}
