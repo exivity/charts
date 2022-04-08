@@ -56,9 +56,11 @@ spec:
           mountPath: /exivity/home/system
         env:
         - name: POSTGRES_DB
-          value: {{.Values.database.dbname}}
+          value: {{ .Values.database.dbname }}
+        - name: POSTGRES_USER
+          value: {{ .Values.database.username }}
         - name: POSTGRES_PASSWORD
-          value: {{.Values.database.password}}
+          value: {{ .Values.database.password }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
