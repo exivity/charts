@@ -11,11 +11,8 @@ deployment-name: exivity
 
 # Database config
 database:
-  username: postgres
   password: Password12!
   dbname: exivity
-  host: db # only change when you have set useExternalDatabase to true
-  port: 5432 # only change when you have set useExternalDatabase to true
   useExternalDatabase: false
   initialise: true
 
