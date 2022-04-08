@@ -29,11 +29,11 @@ rabbitMQ:
   useExternalServers: false
 
 version:
-  db: latest
   proximity: exvt-4756-docker
 
 images:
   chronos: ghcr.io/exivity/chronos:k8s
+  db-init: ghcr.io/exivity/db:k8s
   edify: ghcr.io/exivity/edify:k8s
   glass: ghcr.io/exivity/glass:k8s
   griffon: ghcr.io/exivity/griffon:k8s
@@ -45,3 +45,4 @@ images:
 redis:
   replica:
     replicaCount: 1
+  fullnameOverride: exivity

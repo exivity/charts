@@ -91,7 +91,7 @@ spec:
     spec:
       containers:
       - name: database-init
-        image: exivity/db:{{ .Values.version.db }}
+        image: {{ .Values.images.db-init }}
         imagePullPolicy: Always
         env:
         - name: PGUSER
