@@ -86,12 +86,12 @@ metadata:
     app: exivity
     component: database
 spec:
-  ttlSecondsAfterFinished: 0
+  ttlSecondsAfterFinished: 300
   template:
     spec:
       containers:
       - name: database-init
-        image: exivity/db:{{ .Values.version.db }}
+        image: {{ .Values.images.db_init }}
         imagePullPolicy: Always
         env:
         - name: PGUSER
@@ -100,7 +100,7 @@ spec:
           value: {{ .Values.database.password }}
       restartPolicy: Never
       imagePullSecrets:
-      - name: {{ .Values.imagePullSecret }}
+      - name: ghcr
   backoffLimit: 4
   completions: 1
 {{ end }}
