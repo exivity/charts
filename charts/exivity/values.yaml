@@ -17,7 +17,7 @@ database:
   host: db # only change when you have set useExternalDatabase to true
   port: 5432 # only change when you have set useExternalDatabase to true
   useExternalDatabase: false
-  recreateDatabase: true
+  initialise: true
 
 # RabbitMQ config
 rabbitMQ:
