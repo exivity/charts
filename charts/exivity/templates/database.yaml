@@ -36,9 +36,12 @@ spec:
       - name: database
         persistentVolumeClaim:
           claimName: exivity-database
+      - name: config-file
+        configMap:
+          name: app-config-default
       containers:
       - name: exivity-database
-        image: exivity/postgresql-database:latest
+        image: postgres:12.10
         imagePullPolicy: Always
         resources:
           requests:
@@ -49,25 +52,8 @@ spec:
         volumeMounts:
         - name: database
           mountPath: /var/lib/postgresql/data
-        env:
-        - name: POSTGRES_DB
-          value: {{ .Values.database.dbname }}
-        - name: POSTGRES_PASSWORD
-          value: {{ .Values.database.password }}
-        - name: EXIVITY_CONFIG_mq__user
-          value: {{ .Values.rabbitMQ.user }}
-        - name: EXIVITY_CONFIG_mq__password
-          value: {{ .Values.rabbitMQ.password }}
-        - name: EXIVITY_CONFIG_mq__vhost
-          value: {{ .Values.rabbitMQ.vhost }}
-        {{ range $index, $server := .Values.rabbitMQ.servers }}
-        - name: EXIVITY_CONFIG_mq__servers__{{ $index }}__host
-          value: {{ $server.host }}
-        - name: EXIVITY_CONFIG_mq__servers__{{ $index }}__port
-          value: "{{ $server.port }}"
-        {{ end }}
-      imagePullSecrets:
-      - name: {{ .Values.imagePullSecret }}
+        - name: config-file
+          mountPath: /exivity/home/system
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
