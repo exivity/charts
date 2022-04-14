@@ -12,8 +12,8 @@ spec:
   - port: 5672
   clusterIP: None
   selector:
-    app: exivity
-    component: rabbit
+    exivity.k8s/component: rabbitMQ
+    {{- include "exivity.default_labels" . | indent 4 }}
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -32,8 +32,8 @@ spec:
   template:
     metadata:
       labels:
-        app: exivity
-        component: rabbit
+        exivity.k8s/component: rabbitMQ
+        {{- include "exivity.default_labels" . | indent 8 }}
     spec:
       containers:
       - name: exivity-rabbit

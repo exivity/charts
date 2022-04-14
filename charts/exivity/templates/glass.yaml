@@ -39,8 +39,8 @@ metadata:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   selector:
-    app: exivity
-    component: glass
+    exivity.k8s/component: glass
+    {{- include "exivity.default_labels" . | indent 4 }}
   ports:
   - protocol: TCP
     port: 80

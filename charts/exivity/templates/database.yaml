@@ -12,8 +12,8 @@ spec:
   - port: 5432
   clusterIP: None
   selector:
-    app: exivity
-    component: database
+    exivity.k8s/component: database
+    {{- include "exivity.default_labels" . | indent 4 }}
 ---
 apiVersion: apps/v1
 kind: StatefulSet

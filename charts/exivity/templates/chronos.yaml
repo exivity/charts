@@ -24,7 +24,7 @@ spec:
       - name: config-file
         configMap:
           name: app-config-default
-      - name: logexiv
+      - name: log
         persistentVolumeClaim:
           claimName: exivity-chronos-log
       containers:
