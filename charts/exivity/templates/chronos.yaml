@@ -3,19 +3,19 @@ kind: Deployment
 metadata:
   name: chronos
   labels:
-    app: exivity
-    component: chronos
+    exivity.k8s/component: chronos
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   selector:
     matchLabels:
-      app: exivity
-      component: chronos
+      exivity.k8s/component: chronos
+      {{- include "exivity.default_labels" . | indent 6 }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: exivity
-        component: chronos
+        exivity.k8s/component: chronos
+        {{- include "exivity.default_labels" . | indent 8 }}
     spec:
       volumes:
       - name: config
@@ -24,7 +24,7 @@ spec:
       - name: config-file
         configMap:
           name: app-config-default
-      - name: log
+      - name: logexiv
         persistentVolumeClaim:
           claimName: exivity-chronos-log
       containers:
@@ -50,8 +50,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: exivity-chronos-config
   labels:
-    app: exivity
-    component: chronos
+    exivity.k8s/component: chronos
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
   - ReadWriteOnce
@@ -64,8 +64,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: exivity-chronos-log
   labels:
-    app: exivity
-    component: chronos
+    exivity.k8s/component: chronos
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
   - ReadWriteOnce

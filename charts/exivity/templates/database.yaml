@@ -4,8 +4,8 @@ kind: Service
 metadata:
   name: db
   labels:
-    app: exivity
-    component: database
+    exivity.k8s/component: database
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   type: ClusterIP
   ports:
@@ -22,15 +22,15 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: exivity
-      component: database
+      exivity.k8s/component: database
+      {{- include "exivity.default_labels" . | indent 6 }}
   serviceName: db
   replicas: 1
   template:
     metadata:
       labels:
-        app: exivity
-        component: database
+        exivity.k8s/component: database
+        {{- include "exivity.default_labels" . | indent 8 }}
     spec:
       volumes:
       - name: database
@@ -67,8 +67,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: exivity-database
   labels:
-    app: exivity
-    component: database
+    exivity.k8s/component: database
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
   - ReadWriteOnce
@@ -83,8 +83,8 @@ kind: Job
 metadata:
   name: database-init
   labels:
-    app: exivity
-    component: database
+    exivity.k8s/component: database
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   ttlSecondsAfterFinished: 300
   template:

@@ -4,8 +4,8 @@ kind: Service
 metadata:
   name: rabbit
   labels:
-    app: exivity
-    component: rabbit
+    exivity.k8s/component: rabbitMQ
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   type: ClusterIP
   ports:
@@ -19,11 +19,14 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: exivity-rabbit
+  labels:
+    exivity.k8s/component: rabbitMQ
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   selector:
     matchLabels:
-      app: exivity
-      component: rabbit
+      exivity.k8s/component: rabbitMQ
+      {{- include "exivity.default_labels" . | indent 6 }}
   serviceName: rabbit
   replicas: 1
   template:

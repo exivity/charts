@@ -3,19 +3,19 @@ kind: Deployment
 metadata:
   name: proximity-cli
   labels:
-    app: exivity
-    component: proximity-cli
+    exivity.k8s/component: proximity-cli
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   selector:
     matchLabels:
-      app: exivity
-      component: proximity-cli
+      exivity.k8s/component: proximity-cli
+      {{- include "exivity.default_labels" . | indent 6 }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: exivity
-        component: proximity-cli
+        exivity.k8s/component: proximity-cli
+        {{- include "exivity.default_labels" . | indent 8 }}
     spec:
       volumes:
       - name: log
@@ -86,8 +86,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: exivity-proximity-cli-log
   labels:
-    app: exivity
-    component: proximity-cli
+    exivity.k8s/component: proximity-cli
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
   - ReadWriteOnce

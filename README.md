@@ -4,8 +4,7 @@
 
 Currently the images for the application are hosted in private registries, so an
 imagePullSecret has to be added to the namespace for any private registry
-currently in use. In this case [dockerhub](https://hub.docker.com/) and
-[ghcr](https://ghcr.io).
+currently in use. In this case [ghcr](https://ghcr.io).
 
 [Creating an imagePullSecret](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
 

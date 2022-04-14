@@ -3,19 +3,19 @@ kind: Deployment
 metadata:
   name: glass
   labels:
-    app: exivity
-    component: glass
+    exivity.k8s/component: glass
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   selector:
     matchLabels:
-      app: exivity
-      component: glass
+      exivity.k8s/component: glass
+      {{- include "exivity.default_labels" . | indent 6 }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: exivity
-        component: glass
+        exivity.k8s/component: glass
+        {{- include "exivity.default_labels" . | indent 8 }}
     spec:
       containers:
       - name: glass
@@ -35,8 +35,8 @@ kind: Service
 metadata:
   name: glass
   labels:
-    app: exivity
-    component: glass
+    exivity.k8s/component: glass
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   selector:
     app: exivity

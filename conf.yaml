@@ -1,0 +1,2852 @@
+NAME: exivity
+LAST DEPLOYED: Thu Apr 14 12:07:23 2022
+NAMESPACE: exivity
+STATUS: pending-install
+REVISION: 1
+TEST SUITE: None
+USER-SUPPLIED VALUES:
+JWTSecret: t5w0Zw7Kluz9CuwovP6muKeFqK+
+appKey: mo4ninlUeFFF1athvhqXz3Q9DovT3Dia
+license: 2JDuoQydtWcnLgZAOYtzstILiYHIuWG3ikm3fBvtpNAberAFyGDkZDfyMRA2N1Ua+eIAe+NlKNjTy281lsCxK+96PL8XZLM26xXfHNCQbqFddSDpXzFR69GathbzQcwgHAWHjd53e51tNfUyLkEj63tCcyvgsDZChQiYg/AOOgfO8f7RkleIKJzy/Gx97yOS17e934Md5VM8LNIiac36xZNqTWzmK0wJ4GScG8TohewpusFqd0b6P+tFdIggowHgDaQD2JzOEaVnObbdJOjyW0BxDSW5sOngLQM0wppYIaBqa+IzO7aCeGu3WSQEKOqQGZ3Rc4g17zvbZ4O9Avi8jpIa0Lw9EeUaEorDvUHgIOSaJOmFT0mMaGUnjSi+8n7d3h18/0mG8WQrsRZGwnoyFaB85mArSnZCbZ4uq+jVA6RAgRYUcUPQhebMIgrrMLZKvwLyeuDnNCX8Xm5F8pQeLHo5uWpwG2nvWclW/4uLEIC4txzhMIGfSV1ty0YAqgPa8+iko7bz35g4jwmNyvon2VYbtrd9QtQY1rWgzOwAoFwOMgnZHp025pPz6ShPNal/bZ4Ayhwv2V8w8WOH89EsglPhttjS/oBm+c4ysKC/NEFiDj0C+e/5u0NcKx43hYprAvoEBsimQBP6pWoX+IbGqRYlMRf2XD93lQeuECYDhAw=
+singleNode: true
+
+COMPUTED VALUES:
+JWTSecret: t5w0Zw7Kluz9CuwovP6muKeFqK+
+appKey: mo4ninlUeFFF1athvhqXz3Q9DovT3Dia
+database:
+  dbname: exivity
+  host: db
+  initialise: true
+  password: Password12!
+  port: 5432
+  useExternalDatabase: false
+  username: postgres
+deployment-name: exivity
+host: localhost
+imagePullSecret: regcred
+images:
+  chronos: ghcr.io/exivity/chronos:k8s
+  db_init: ghcr.io/exivity/db:k8s
+  edify: ghcr.io/exivity/edify:k8s
+  glass: ghcr.io/exivity/glass:k8s
+  griffon: ghcr.io/exivity/griffon:k8s
+  horizon: ghcr.io/exivity/horizon:k8s
+  pigeon: ghcr.io/exivity/pigeon:k8s
+  proximity_api: ghcr.io/exivity/proximity-api:k8s
+  proximity_cli: ghcr.io/exivity/proximity-cli:k8s
+  transcript: ghcr.io/exivity/transcript:k8s
+  use: ghcr.io/exivity/use:k8s
+license: 2JDuoQydtWcnLgZAOYtzstILiYHIuWG3ikm3fBvtpNAberAFyGDkZDfyMRA2N1Ua+eIAe+NlKNjTy281lsCxK+96PL8XZLM26xXfHNCQbqFddSDpXzFR69GathbzQcwgHAWHjd53e51tNfUyLkEj63tCcyvgsDZChQiYg/AOOgfO8f7RkleIKJzy/Gx97yOS17e934Md5VM8LNIiac36xZNqTWzmK0wJ4GScG8TohewpusFqd0b6P+tFdIggowHgDaQD2JzOEaVnObbdJOjyW0BxDSW5sOngLQM0wppYIaBqa+IzO7aCeGu3WSQEKOqQGZ3Rc4g17zvbZ4O9Avi8jpIa0Lw9EeUaEorDvUHgIOSaJOmFT0mMaGUnjSi+8n7d3h18/0mG8WQrsRZGwnoyFaB85mArSnZCbZ4uq+jVA6RAgRYUcUPQhebMIgrrMLZKvwLyeuDnNCX8Xm5F8pQeLHo5uWpwG2nvWclW/4uLEIC4txzhMIGfSV1ty0YAqgPa8+iko7bz35g4jwmNyvon2VYbtrd9QtQY1rWgzOwAoFwOMgnZHp025pPz6ShPNal/bZ4Ayhwv2V8w8WOH89EsglPhttjS/oBm+c4ysKC/NEFiDj0C+e/5u0NcKx43hYprAvoEBsimQBP6pWoX+IbGqRYlMRf2XD93lQeuECYDhAw=
+namespace: exivity
+rabbitMQ:
+  host: rabbit
+  password: guest
+  port: 5672
+  useExternalServers: false
+  user: guest
+  vhost: /
+redis:
+  architecture: replication
+  auth:
+    enabled: true
+    existingSecret: ""
+    existingSecretPasswordKey: ""
+    password: ""
+    sentinel: true
+    usePasswordFiles: false
+  clusterDomain: cluster.local
+  common:
+    exampleValue: common-chart
+    global:
+      imagePullSecrets: []
+      imageRegistry: ""
+      redis:
+        password: ""
+      storageClass: ""
+  commonAnnotations: {}
+  commonConfiguration: |-
+    # Enable AOF https://redis.io/topics/persistence#append-only-file
+    appendonly yes
+    # Disable RDB persistence, AOF persistence already enabled.
+    save ""
+  commonLabels: {}
+  diagnosticMode:
+    args:
+    - infinity
+    command:
+    - sleep
+    enabled: false
+  existingConfigmap: ""
+  extraDeploy: []
+  fullnameOverride: exivity
+  global:
+    imagePullSecrets: []
+    imageRegistry: ""
+    redis:
+      password: ""
+    storageClass: ""
+  image:
+    debug: false
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+    registry: docker.io
+    repository: bitnami/redis
+    tag: 6.2.6-debian-10-r158
+  kubeVersion: ""
+  master:
+    affinity: {}
+    args: []
+    command: []
+    configuration: ""
+    containerPorts:
+      redis: 6379
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 1001
+    customLivenessProbe: {}
+    customReadinessProbe: {}
+    customStartupProbe: {}
+    disableCommands:
+    - FLUSHDB
+    - FLUSHALL
+    extraEnvVars: []
+    extraEnvVarsCM: ""
+    extraEnvVarsSecret: ""
+    extraFlags: []
+    extraVolumeMounts: []
+    extraVolumes: []
+    hostAliases: []
+    initContainers: []
+    kind: StatefulSet
+    lifecycleHooks: {}
+    livenessProbe:
+      enabled: true
+      failureThreshold: 5
+      initialDelaySeconds: 20
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 5
+    nodeAffinityPreset:
+      key: ""
+      type: ""
+      values: []
+    nodeSelector: {}
+    persistence:
+      accessModes:
+      - ReadWriteOnce
+      annotations: {}
+      dataSource: {}
+      enabled: true
+      existingClaim: ""
+      medium: ""
+      path: /data
+      selector: {}
+      size: 8Gi
+      sizeLimit: ""
+      storageClass: ""
+      subPath: ""
+    podAffinityPreset: ""
+    podAnnotations: {}
+    podAntiAffinityPreset: soft
+    podLabels: {}
+    podSecurityContext:
+      enabled: true
+      fsGroup: 1001
+    preExecCmds: []
+    priorityClassName: ""
+    readinessProbe:
+      enabled: true
+      failureThreshold: 5
+      initialDelaySeconds: 20
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 1
+    resources:
+      limits: {}
+      requests: {}
+    schedulerName: ""
+    service:
+      annotations: {}
+      clusterIP: ""
+      externalTrafficPolicy: Cluster
+      extraPorts: []
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      nodePorts:
+        redis: ""
+      ports:
+        redis: 6379
+      type: ClusterIP
+    shareProcessNamespace: false
+    sidecars: []
+    startupProbe:
+      enabled: false
+      failureThreshold: 5
+      initialDelaySeconds: 20
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 5
+    terminationGracePeriodSeconds: 30
+    tolerations: []
+    topologySpreadConstraints: []
+    updateStrategy:
+      rollingUpdate: {}
+      type: RollingUpdate
+  metrics:
+    command: []
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 1001
+    enabled: false
+    extraArgs: {}
+    extraEnvVars: []
+    extraVolumeMounts: []
+    extraVolumes: []
+    image:
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+      registry: docker.io
+      repository: bitnami/redis-exporter
+      tag: 1.36.0-debian-10-r5
+    podAnnotations:
+      prometheus.io/port: "9121"
+      prometheus.io/scrape: "true"
+    podLabels: {}
+    prometheusRule:
+      additionalLabels: {}
+      enabled: false
+      namespace: ""
+      rules: []
+    redisTargetHost: localhost
+    resources:
+      limits: {}
+      requests: {}
+    service:
+      annotations: {}
+      externalTrafficPolicy: Cluster
+      extraPorts: []
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      port: 9121
+      type: ClusterIP
+    serviceMonitor:
+      additionalLabels: {}
+      enabled: false
+      honorLabels: false
+      interval: 30s
+      metricRelabelings: []
+      namespace: ""
+      relabellings: []
+      scrapeTimeout: ""
+  nameOverride: ""
+  networkPolicy:
+    allowExternal: true
+    enabled: false
+    extraEgress: []
+    extraIngress: []
+    ingressNSMatchLabels: {}
+    ingressNSPodMatchLabels: {}
+  pdb:
+    create: false
+    maxUnavailable: ""
+    minAvailable: 1
+  podSecurityPolicy:
+    create: false
+    enabled: false
+  rbac:
+    create: false
+    rules: []
+  replica:
+    affinity: {}
+    args: []
+    autoscaling:
+      enabled: false
+      maxReplicas: 11
+      minReplicas: 1
+      targetCPU: ""
+      targetMemory: ""
+    command: []
+    configuration: ""
+    containerPorts:
+      redis: 6379
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 1001
+    customLivenessProbe: {}
+    customReadinessProbe: {}
+    customStartupProbe: {}
+    disableCommands:
+    - FLUSHDB
+    - FLUSHALL
+    externalMaster:
+      enabled: false
+      host: ""
+      port: 6379
+    extraEnvVars: []
+    extraEnvVarsCM: ""
+    extraEnvVarsSecret: ""
+    extraFlags: []
+    extraVolumeMounts: []
+    extraVolumes: []
+    hostAliases: []
+    initContainers: []
+    lifecycleHooks: {}
+    livenessProbe:
+      enabled: true
+      failureThreshold: 5
+      initialDelaySeconds: 20
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 5
+    nodeAffinityPreset:
+      key: ""
+      type: ""
+      values: []
+    nodeSelector: {}
+    persistence:
+      accessModes:
+      - ReadWriteOnce
+      annotations: {}
+      dataSource: {}
+      enabled: true
+      medium: ""
+      path: /data
+      selector: {}
+      size: 8Gi
+      storageClass: ""
+      subPath: ""
+    podAffinityPreset: ""
+    podAnnotations: {}
+    podAntiAffinityPreset: soft
+    podLabels: {}
+    podManagementPolicy: ""
+    podSecurityContext:
+      enabled: true
+      fsGroup: 1001
+    preExecCmds: []
+    priorityClassName: ""
+    readinessProbe:
+      enabled: true
+      failureThreshold: 5
+      initialDelaySeconds: 20
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 1
+    replicaCount: 1
+    resources:
+      limits: {}
+      requests: {}
+    schedulerName: ""
+    service:
+      annotations: {}
+      clusterIP: ""
+      externalTrafficPolicy: Cluster
+      extraPorts: []
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      nodePorts:
+        redis: ""
+      ports:
+        redis: 6379
+      type: ClusterIP
+    shareProcessNamespace: false
+    sidecars: []
+    startupProbe:
+      enabled: true
+      failureThreshold: 22
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 5
+    terminationGracePeriodSeconds: 30
+    tolerations: []
+    topologySpreadConstraints: []
+    updateStrategy:
+      rollingUpdate: {}
+      type: RollingUpdate
+  sentinel:
+    args: []
+    automateClusterRecovery: false
+    command: []
+    configuration: ""
+    containerPorts:
+      sentinel: 26379
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 1001
+    customLivenessProbe: {}
+    customReadinessProbe: {}
+    customStartupProbe: {}
+    downAfterMilliseconds: 60000
+    enabled: false
+    externalMaster:
+      enabled: false
+      host: ""
+      port: 6379
+    extraEnvVars: []
+    extraEnvVarsCM: ""
+    extraEnvVarsSecret: ""
+    extraVolumeMounts: []
+    extraVolumes: []
+    failoverTimeout: 18000
+    getMasterTimeout: 220
+    image:
+      debug: false
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+      registry: docker.io
+      repository: bitnami/redis-sentinel
+      tag: 6.2.6-debian-10-r156
+    lifecycleHooks: {}
+    livenessProbe:
+      enabled: true
+      failureThreshold: 5
+      initialDelaySeconds: 20
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 5
+    masterSet: mymaster
+    parallelSyncs: 1
+    persistence:
+      accessModes:
+      - ReadWriteOnce
+      annotations: {}
+      dataSource: {}
+      enabled: false
+      selector: {}
+      size: 100Mi
+      storageClass: ""
+    preExecCmds: []
+    quorum: 2
+    readinessProbe:
+      enabled: true
+      failureThreshold: 5
+      initialDelaySeconds: 20
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 1
+    resources:
+      limits: {}
+      requests: {}
+    service:
+      annotations: {}
+      clusterIP: ""
+      externalTrafficPolicy: Cluster
+      extraPorts: []
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      nodePorts:
+        redis: ""
+        sentinel: ""
+      ports:
+        redis: 6379
+        sentinel: 26379
+      type: ClusterIP
+    startupProbe:
+      enabled: true
+      failureThreshold: 22
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 5
+    terminationGracePeriodSeconds: 30
+  serviceAccount:
+    annotations: {}
+    automountServiceAccountToken: true
+    create: true
+    name: ""
+  sysctl:
+    command: []
+    enabled: false
+    image:
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+      registry: docker.io
+      repository: bitnami/bitnami-shell
+      tag: 10-debian-10-r367
+    mountHostSys: false
+    resources:
+      limits: {}
+      requests: {}
+  tls:
+    authClients: true
+    autoGenerated: false
+    certCAFilename: ""
+    certFilename: ""
+    certKeyFilename: ""
+    certificatesSecret: ""
+    dhParamsFilename: ""
+    enabled: false
+    existingSecret: ""
+  useExternalDNS:
+    additionalAnnotations: {}
+    annotationKey: external-dns.alpha.kubernetes.io/
+    enabled: false
+    suffix: ""
+  volumePermissions:
+    containerSecurityContext:
+      runAsUser: 0
+    enabled: false
+    image:
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+      registry: docker.io
+      repository: bitnami/bitnami-shell
+      tag: 10-debian-10-r367
+    resources:
+      limits: {}
+      requests: {}
+singleNode: true
+
+HOOKS:
+MANIFEST:
+---
+# Source: exivity/charts/redis/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+automountServiceAccountToken: true
+metadata:
+  name: exivity
+  namespace: "exivity"
+  labels:
+    app.kubernetes.io/name: redis
+    helm.sh/chart: redis-16.6.0
+    app.kubernetes.io/instance: exivity
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: exivity/charts/redis/templates/secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: exivity
+  namespace: "exivity"
+  labels:
+    app.kubernetes.io/name: redis
+    helm.sh/chart: redis-16.6.0
+    app.kubernetes.io/instance: exivity
+    app.kubernetes.io/managed-by: Helm
+type: Opaque
+data:
+  redis-password: "ZFpicDZCM3N6eQ=="
+---
+# Source: exivity/templates/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: exivity-secrets
+  labels:    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+stringData:
+  app_key: mo4ninlUeFFF1athvhqXz3Q9DovT3Dia
+  license_key: 2JDuoQydtWcnLgZAOYtzstILiYHIuWG3ikm3fBvtpNAberAFyGDkZDfyMRA2N1Ua+eIAe+NlKNjTy281lsCxK+96PL8XZLM26xXfHNCQbqFddSDpXzFR69GathbzQcwgHAWHjd53e51tNfUyLkEj63tCcyvgsDZChQiYg/AOOgfO8f7RkleIKJzy/Gx97yOS17e934Md5VM8LNIiac36xZNqTWzmK0wJ4GScG8TohewpusFqd0b6P+tFdIggowHgDaQD2JzOEaVnObbdJOjyW0BxDSW5sOngLQM0wppYIaBqa+IzO7aCeGu3WSQEKOqQGZ3Rc4g17zvbZ4O9Avi8jpIa0Lw9EeUaEorDvUHgIOSaJOmFT0mMaGUnjSi+8n7d3h18/0mG8WQrsRZGwnoyFaB85mArSnZCbZ4uq+jVA6RAgRYUcUPQhebMIgrrMLZKvwLyeuDnNCX8Xm5F8pQeLHo5uWpwG2nvWclW/4uLEIC4txzhMIGfSV1ty0YAqgPa8+iko7bz35g4jwmNyvon2VYbtrd9QtQY1rWgzOwAoFwOMgnZHp025pPz6ShPNal/bZ4Ayhwv2V8w8WOH89EsglPhttjS/oBm+c4ysKC/NEFiDj0C+e/5u0NcKx43hYprAvoEBsimQBP6pWoX+IbGqRYlMRf2XD93lQeuECYDhAw=
+  jwt_secret: t5w0Zw7Kluz9CuwovP6muKeFqK+
+---
+# Source: exivity/templates/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: exivity-tls
+  labels:    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+data:
+  
+  
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURPRENDQWlDZ0F3SUJBZ0lSQUxIWi8yWmZBNExrNlhHT09IaFZCZFV3RFFZSktvWklodmNOQVFFTEJRQXcKRlRFVE1CRUdBMVVFQXhNS1pYaHBkbWwwZVMxallUQWVGdzB5TWpBME1UUXhNREEzTWpSYUZ3MHlNekEwTVRReApNREEzTWpSYU1CWXhGREFTQmdOVkJBTVRDMlY0YVhacGRIa3RaM1ZwTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGCkFBT0NBUThBTUlJQkNnS0NBUUVBdmRCR1FxTUF6dWpzSXdwL1hOZlh3a0tYMys3Mmx6Mm42M2YvZlQ4TzE1dGYKZnczTUU2YUdoTU93Z05lWmp6QWk3ckNZUnhXUHc1eGNYbUUyY1hDa2xOSUhsdG5DenVEOUdiNTR6bGkycTZzWQpHeE1tNHVaNGxyQUd3WFcwcDJnZGNVNDZMdEY0djl3elJGSU4zaWdPTm0rY3pRMHRuOVo2bHpWYmgrYnVsTW5BCmxpUDk5a3FPS3pEd0NPblZpWjhNMFVHaVhZTEdBSUI1STl0dWRvbVcvalYrKzAyb0FORzVXRnExbStQWlk3SVUKWVRCQ2Q0RUl2Smp3Rk5jZ2t6NFpaeHFKd2pudkxjT2hSVytqekhRaCtZOUNrNndLR0Y3RXppck5LSkI1RzIvMApLOXlMamdlM3VqbmlNNURBOUkrbjZheE96bDhLUFk3eTVMa2lTVi81RndJREFRQUJvNEdCTUg4d0RnWURWUjBQCkFRSC9CQVFEQWdXZ01CMEdBMVVkSlFRV01CUUdDQ3NHQVFVRkJ3TUJCZ2dyQmdFRkJRY0RBakFNQmdOVkhSTUIKQWY4RUFqQUFNQjhHQTFVZEl3UVlNQmFBRk5ueStOUkU2eFNNUnA5SmFMRHlOQkQrRDMrcE1COEdBMVVkRVFRWQpNQmFDQ1d4dlkyRnNhRzl6ZElJSmJHOWpZV3hvYjNOME1BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRQ3cvMER3CnUyS2ZSblVnZG44enErb04zM3QrbXFGM0VrY2htSU01WEorQkdBUEpDTlZ3dCt0WFU2MGlxbkVvTGFlRStSV0oKU2s3dU9HMXB2TXZoUzdQMXVMS1dOQlhYT2c3aURmdFRUS3EvbXc5N01qNUJSOFVUd2xqUW4zeUJDbjljOUx3SApYMFlZUHMrczlLTmp2ZVBZRW4yenkzVlhOK0kwNVhCY1cveVEyd3VJKzVMa0JIZFZJQ1dCRFlxYWt1aVZ0QUdYCnpXZTRrNHp1VjBXRkRMcEdlalpzcUQ1aE5UZDVsMHkrbUh0bHoraDkxanRYN3kxMGRneHo0NEVqUkpnMHEwR1kKUUtHSDNyc3hBc01CY3BONzR6SEp6T2pCb2hENVAwWmVtRmgrcCs4Qm8wVUNxbCtsbE9iRko5TFpVY2pWVFdBaQpzRVZLcHVGNzBsaGlONERrCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+  tls.key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcEFJQkFBS0NBUUVBdmRCR1FxTUF6dWpzSXdwL1hOZlh3a0tYMys3Mmx6Mm42M2YvZlQ4TzE1dGZmdzNNCkU2YUdoTU93Z05lWmp6QWk3ckNZUnhXUHc1eGNYbUUyY1hDa2xOSUhsdG5DenVEOUdiNTR6bGkycTZzWUd4TW0KNHVaNGxyQUd3WFcwcDJnZGNVNDZMdEY0djl3elJGSU4zaWdPTm0rY3pRMHRuOVo2bHpWYmgrYnVsTW5BbGlQOQo5a3FPS3pEd0NPblZpWjhNMFVHaVhZTEdBSUI1STl0dWRvbVcvalYrKzAyb0FORzVXRnExbStQWlk3SVVZVEJDCmQ0RUl2Smp3Rk5jZ2t6NFpaeHFKd2pudkxjT2hSVytqekhRaCtZOUNrNndLR0Y3RXppck5LSkI1RzIvMEs5eUwKamdlM3VqbmlNNURBOUkrbjZheE96bDhLUFk3eTVMa2lTVi81RndJREFRQUJBb0lCQUQ4TlVtbU1VQlpyVlJXRwp4U3dJSHduT3FUaWYzcFg2eXk3eTI1RzFRcTdvVTk2V3JMWFNXVmo4MEVMY1c0d3ZCMHVXcWQ3akVMQi8za2NUCnI4d2JDUERPbStyR1Iyb0ZYczRRY1h6S0IxUWJMNVMrMWVvRmVRVkZUOWt2eW1UWnR2NE9hRkZwRDkxYnZrUHgKcGQyb0hLQ0VqdWVtZXdOZmNiV002ZXpKRDNPb3htU2pUTEJlS1JwQURicDdDRmIxUGYwL1I0SnR1aExDdTFuWgprZHl4S2tDNW4wQjNrTkVIaVVzWmxRYkl6TkVHM2JJa2NObysxYUg2V1AwbjlOMEpoSkNVMVh5REJzRlRrL0lPCm9KaVpjKzc0MmRBUVpVdXR2N3BDZDZCMmRoRzZxenI3Rm81MGR2MXRQN0xJeThzckFLS3F4bDFBQTNVRHpHejgKc3BBVlFnRUNnWUVBNjQ1TlJ2cC9mSTh6bnBTU1d3VnV2M2k0Y2crdTVHR09oNmkrbWtPSUVSVy9sUFRoQUphTgpQMEtZcXVOUlRqMmtZVzJVdWx3R1B2bUQzR1J2NFpaWGZIaWVuRWFPQjl0UEFKKzBuSmllaHlTdlRYZGtJbENRCnh6T21qdE0wSVF1M3YvdG0xRHhsMFBCZWR0RW9sYzZJYzJib2RQZjFMWGVEL1pmRVZNazF1SmNDZ1lFQXprbWwKdThNQ1pBbUdqS3NEZGVJZ2ZJcTdzcC9BZndCcmxJZE8xVFVjVExaTUFSaUdMaGxpQXpEalhjTElFNXNKN1hRNgpxNXpEM0tOUEZmL3VubkF2UGo2WWRIYk1EK2s2dTdpNkZHZlBWN1JXNGI1d2IzdGhZNEowYXJPOVppV1ZTbjB5CmdWOWcrU0pnMmMzSmUxTHFjYlhJcVAwMis3eEtsU1cyeWhyVFU0RUNnWUFLVzgybUsybmp6bUJVdnUvWXROcHoKN1JrZld2VXo4ZDVVdE9UODM2OWlJUFMxMWpiMjBhZ1FlaHRBbUpLQXdGRTBQNTlrdXB0RHRiRkl4ZG50cjdEVgpObkN6S3A4Z1ZWS2FFbXZjM3hGSm5DRmhaTGl3a1o1c1JDYzA3TERFSzBHL1hZemVGSEhkeUZRL0lWK0podldWCkxaZFhYWGdZc2NMS0toeG1KaHNJclFLQmdRREtRV3M5clBXckg2dk1QK0FrdEpFbGl1QjlRaVI2WU84WnNaQ1oKZW5sRXZYZkhtMFB6N3U4cU1jUzdLVDhCK2dEQjBETzJEdjM2VmlRMGJicUhuWGEwa0tycGhaQ09DUjZNNzVHQwpjRVhhdC9aM1gwRGVEUnB2ZG5pdUpZeU5ta3ZGdlBySDNidzJpSDV0RGxkOWtzNUtydkVPdnpZcG0zT0V5SFZ2CnN0MkFBUUtCZ1FDUktIQUlmTW5xa2xhWVozanlqN0lrSkgwVnlrNVk2NXp2eXZYczR5S2ZTclM5aGYxeFJNMi8KUjgyNkVqbGhScTc0YmF6YXE2L2tYM2lkUkE5UVNGNkFFbmUyNGVrWGJpQ2Z3Z2hacEl3L05mNzJUSUIvV2NoNApaK3U5UnZZd2lEM2tDaTJRT3dOWWFnOVJqM2tUNjlmYk5EQnMxb2RhOFk5N1VVbmRUYXM1aWc9PQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
+type: kubernetes.io/tls
+---
+# Source: exivity/charts/redis/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: exivity-configuration
+  namespace: "exivity"
+  labels:
+    app.kubernetes.io/name: redis
+    helm.sh/chart: redis-16.6.0
+    app.kubernetes.io/instance: exivity
+    app.kubernetes.io/managed-by: Helm
+data:
+  redis.conf: |-
+    # User-supplied common configuration:
+    # Enable AOF https://redis.io/topics/persistence#append-only-file
+    appendonly yes
+    # Disable RDB persistence, AOF persistence already enabled.
+    save ""
+    # End of common configuration
+  master.conf: |-
+    dir /data
+    # User-supplied master configuration:
+    rename-command FLUSHDB ""
+    rename-command FLUSHALL ""
+    # End of master configuration
+  replica.conf: |-
+    dir /data
+    slave-read-only yes
+    # User-supplied replica configuration:
+    rename-command FLUSHDB ""
+    rename-command FLUSHALL ""
+    # End of replica configuration
+---
+# Source: exivity/charts/redis/templates/health-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: exivity-health
+  namespace: "exivity"
+  labels:
+    app.kubernetes.io/name: redis
+    helm.sh/chart: redis-16.6.0
+    app.kubernetes.io/instance: exivity
+    app.kubernetes.io/managed-by: Helm
+data:
+  ping_readiness_local.sh: |-
+    #!/bin/bash
+
+    [[ -f $REDIS_PASSWORD_FILE ]] && export REDIS_PASSWORD="$(< "${REDIS_PASSWORD_FILE}")"
+    [[ -n "$REDIS_PASSWORD" ]] && export REDISCLI_AUTH="$REDIS_PASSWORD"
+    response=$(
+      timeout -s 3 $1 \
+      redis-cli \
+        -h localhost \
+        -p $REDIS_PORT \
+        ping
+    )
+    if [ "$?" -eq "124" ]; then
+      echo "Timed out"
+      exit 1
+    fi
+    if [ "$response" != "PONG" ]; then
+      echo "$response"
+      exit 1
+    fi
+  ping_liveness_local.sh: |-
+    #!/bin/bash
+
+    [[ -f $REDIS_PASSWORD_FILE ]] && export REDIS_PASSWORD="$(< "${REDIS_PASSWORD_FILE}")"
+    [[ -n "$REDIS_PASSWORD" ]] && export REDISCLI_AUTH="$REDIS_PASSWORD"
+    response=$(
+      timeout -s 3 $1 \
+      redis-cli \
+        -h localhost \
+        -p $REDIS_PORT \
+        ping
+    )
+    if [ "$?" -eq "124" ]; then
+      echo "Timed out"
+      exit 1
+    fi
+    responseFirstWord=$(echo $response | head -n1 | awk '{print $1;}')
+    if [ "$response" != "PONG" ] && [ "$responseFirstWord" != "LOADING" ] && [ "$responseFirstWord" != "MASTERDOWN" ]; then
+      echo "$response"
+      exit 1
+    fi
+  ping_readiness_master.sh: |-
+    #!/bin/bash
+
+    [[ -f $REDIS_MASTER_PASSWORD_FILE ]] && export REDIS_MASTER_PASSWORD="$(< "${REDIS_MASTER_PASSWORD_FILE}")"
+    [[ -n "$REDIS_MASTER_PASSWORD" ]] && export REDISCLI_AUTH="$REDIS_MASTER_PASSWORD"
+    response=$(
+      timeout -s 3 $1 \
+      redis-cli \
+        -h $REDIS_MASTER_HOST \
+        -p $REDIS_MASTER_PORT_NUMBER \
+        ping
+    )
+    if [ "$?" -eq "124" ]; then
+      echo "Timed out"
+      exit 1
+    fi
+    if [ "$response" != "PONG" ]; then
+      echo "$response"
+      exit 1
+    fi
+  ping_liveness_master.sh: |-
+    #!/bin/bash
+
+    [[ -f $REDIS_MASTER_PASSWORD_FILE ]] && export REDIS_MASTER_PASSWORD="$(< "${REDIS_MASTER_PASSWORD_FILE}")"
+    [[ -n "$REDIS_MASTER_PASSWORD" ]] && export REDISCLI_AUTH="$REDIS_MASTER_PASSWORD"
+    response=$(
+      timeout -s 3 $1 \
+      redis-cli \
+        -h $REDIS_MASTER_HOST \
+        -p $REDIS_MASTER_PORT_NUMBER \
+        ping
+    )
+    if [ "$?" -eq "124" ]; then
+      echo "Timed out"
+      exit 1
+    fi
+    responseFirstWord=$(echo $response | head -n1 | awk '{print $1;}')
+    if [ "$response" != "PONG" ] && [ "$responseFirstWord" != "LOADING" ]; then
+      echo "$response"
+      exit 1
+    fi
+  ping_readiness_local_and_master.sh: |-
+    script_dir="$(dirname "$0")"
+    exit_status=0
+    "$script_dir/ping_readiness_local.sh" $1 || exit_status=$?
+    "$script_dir/ping_readiness_master.sh" $1 || exit_status=$?
+    exit $exit_status
+  ping_liveness_local_and_master.sh: |-
+    script_dir="$(dirname "$0")"
+    exit_status=0
+    "$script_dir/ping_liveness_local.sh" $1 || exit_status=$?
+    "$script_dir/ping_liveness_master.sh" $1 || exit_status=$?
+    exit $exit_status
+---
+# Source: exivity/charts/redis/templates/scripts-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: exivity-scripts
+  namespace: "exivity"
+  labels:
+    app.kubernetes.io/name: redis
+    helm.sh/chart: redis-16.6.0
+    app.kubernetes.io/instance: exivity
+    app.kubernetes.io/managed-by: Helm
+data:
+  start-master.sh: |
+    #!/bin/bash
+
+    [[ -f $REDIS_PASSWORD_FILE ]] && export REDIS_PASSWORD="$(< "${REDIS_PASSWORD_FILE}")"
+    if [[ ! -f /opt/bitnami/redis/etc/master.conf ]];then
+        cp /opt/bitnami/redis/mounted-etc/master.conf /opt/bitnami/redis/etc/master.conf
+    fi
+    if [[ ! -f /opt/bitnami/redis/etc/redis.conf ]];then
+        cp /opt/bitnami/redis/mounted-etc/redis.conf /opt/bitnami/redis/etc/redis.conf
+    fi
+    ARGS=("--port" "${REDIS_PORT}")
+    ARGS+=("--requirepass" "${REDIS_PASSWORD}")
+    ARGS+=("--masterauth" "${REDIS_PASSWORD}")
+    ARGS+=("--include" "/opt/bitnami/redis/etc/redis.conf")
+    ARGS+=("--include" "/opt/bitnami/redis/etc/master.conf")
+    exec redis-server "${ARGS[@]}"
+  start-replica.sh: |
+    #!/bin/bash
+
+    get_port() {
+        hostname="$1"
+        type="$2"
+
+        port_var=$(echo "${hostname^^}_SERVICE_PORT_$type" | sed "s/-/_/g")
+        port=${!port_var}
+
+        if [ -z "$port" ]; then
+            case $type in
+                "SENTINEL")
+                    echo 26379
+                    ;;
+                "REDIS")
+                    echo 6379
+                    ;;
+            esac
+        else
+            echo $port
+        fi
+    }
+
+    get_full_hostname() {
+        hostname="$1"
+        echo "${hostname}.${HEADLESS_SERVICE}"
+    }
+
+    REDISPORT=$(get_port "$HOSTNAME" "REDIS")
+
+    [[ -f $REDIS_PASSWORD_FILE ]] && export REDIS_PASSWORD="$(< "${REDIS_PASSWORD_FILE}")"
+    [[ -f $REDIS_MASTER_PASSWORD_FILE ]] && export REDIS_MASTER_PASSWORD="$(< "${REDIS_MASTER_PASSWORD_FILE}")"
+    if [[ ! -f /opt/bitnami/redis/etc/replica.conf ]];then
+        cp /opt/bitnami/redis/mounted-etc/replica.conf /opt/bitnami/redis/etc/replica.conf
+    fi
+    if [[ ! -f /opt/bitnami/redis/etc/redis.conf ]];then
+        cp /opt/bitnami/redis/mounted-etc/redis.conf /opt/bitnami/redis/etc/redis.conf
+    fi
+
+    echo "" >> /opt/bitnami/redis/etc/replica.conf
+    echo "replica-announce-port $REDISPORT" >> /opt/bitnami/redis/etc/replica.conf
+    echo "replica-announce-ip $(get_full_hostname "$HOSTNAME")" >> /opt/bitnami/redis/etc/replica.conf
+    ARGS=("--port" "${REDIS_PORT}")
+    ARGS+=("--slaveof" "${REDIS_MASTER_HOST}" "${REDIS_MASTER_PORT_NUMBER}")
+    ARGS+=("--requirepass" "${REDIS_PASSWORD}")
+    ARGS+=("--masterauth" "${REDIS_MASTER_PASSWORD}")
+    ARGS+=("--include" "/opt/bitnami/redis/etc/redis.conf")
+    ARGS+=("--include" "/opt/bitnami/redis/etc/replica.conf")
+    exec redis-server "${ARGS[@]}"
+---
+# Source: exivity/templates/edify.yaml
+# add templated configmap providing the service with the required config.json
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config-edify
+data:
+  config.json: |-
+    {
+      "chronos": {
+        "heartbeatPeriod": 5,
+        "TTL": 60
+      },
+      "db": {
+        "driver": "postgres",
+        "parameters": {
+          "host": "db",
+          "port": 5432,
+          "dbname": "exivity",
+          "user": "postgres",
+          "password": "Password12!",
+          "connect_timeout": 10,
+          "sslmode": "disable"
+        }
+      },
+      "griffon": {
+        "heartbeatPeriod": 5,
+        "TTL": 10
+      },
+      "mq": {
+        "servers": [
+          {
+            "host": "rabbit",
+            "port": 5672,
+            "secure": false
+          }
+        ],
+        "user": "guest",
+        "password": "guest",
+        "vhost": "/",
+        "redialPeriod": 5
+      
+      },
+      "merlin": {
+        "reservedCPU": 0,
+        "heartbeatPeriod": 5,
+        "programs": {
+          "edify": {
+            "component": "edify",
+            "path": "/bin/edify",
+            "queue": "REPORT",
+            "CPU": 0,
+            "RAM": 0
+          }
+        }
+      
+      }
+    }
+---
+# Source: exivity/templates/horizon.yaml
+# add templated configmap providing the service with the required config.json
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config-horizon
+data:
+  config.json: |-
+    {
+      "chronos": {
+        "heartbeatPeriod": 5,
+        "TTL": 60
+      },
+      "db": {
+        "driver": "postgres",
+        "parameters": {
+          "host": "db",
+          "port": 5432,
+          "dbname": "exivity",
+          "user": "postgres",
+          "password": "Password12!",
+          "connect_timeout": 10,
+          "sslmode": "disable"
+        }
+      },
+      "griffon": {
+        "heartbeatPeriod": 5,
+        "TTL": 10
+      },
+      "mq": {
+        "servers": [
+          {
+            "host": "rabbit",
+            "port": 5672,
+            "secure": false
+          }
+        ],
+        "user": "guest",
+        "password": "guest",
+        "vhost": "/",
+        "redialPeriod": 5
+      
+      },
+      "merlin": {
+        "reservedCPU": 0,
+        "heartbeatPeriod": 5,
+        "programs": {
+          "horizon": {
+            "component": "horizon",
+            "path": "/bin/horizon",
+            "queue": "BUDGET",
+            "CPU": 0,
+            "RAM": 0
+          }
+        }
+      
+      }
+    }
+---
+# Source: exivity/templates/pigeon.yaml
+# pigeon listens to multiple MQ topics, so it gets its own config definition for now
+# TODO: get some PHP guru to fix it so we don't need merlin here.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config-pigeon
+  labels:
+    exivity.k8s/component: pigeon    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+data:
+  config.json: |-
+    {
+      "db": {
+        "driver": "postgres",
+        "parameters": {
+          "host": "db",
+          "port": 5432,
+          "dbname": "exivity",
+          "user": "postgres",
+          "password": "Password12!",
+          "connect_timeout": 10,
+          "sslmode": "disable"
+        }
+      },
+      "merlin": {
+        "reservedCPU": 1,
+        "heartbeatPeriod": 5,
+        "programs": {
+          "pigeon": {
+            "path": "server/php/php",
+            "queue": "PIGEON",
+            "CPU": 0,
+            "RAM": 0
+          },
+          "workflow_ended": {
+            "component": "pigeon",
+            "path": "/usr/bin/php",
+            "queue": "WORKFLOW_EVENT",
+            "topic": "evt.workflow_status.griffon.#",
+            "params": "common/pigeon/pigeon.phar event:post workflow_ended `${payload}`",
+            "CPU": 0.25,
+            "RAM": 250
+          },
+          "report_published": {
+            "component": "pigeon",
+            "path": "/usr/bin/php",
+            "queue": "REPORT_PUBLISHED",
+            "topic": "evt.report_published.proximity.#",
+            "params": "common/pigeon/pigeon.phar event:post report_published `${payload}`",
+            "CPU": 0.25,
+            "RAM": 250
+          }
+        }
+      },
+      "mq": {
+        "servers": [
+          {
+            "host": "rabbit",
+            "port": 5672,
+            "secure": false
+          }
+        ],
+        "user": "guest",
+        "password": "guest",
+        "vhost": "/",
+        "redialPeriod": 5
+      }
+    }
+---
+# Source: exivity/templates/proximity-api.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: exivity-license-pub
+  labels:
+    exivity.k8s/component: proximity-api    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+data:
+  license.pub: |-
+    -----BEGIN PUBLIC KEY-----
+    MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA7PQTdfCtqv7Ls+TZEItu
+    Si0suYMlW4Elt9RVYCC5E6iXLYuKZsT9LZruUaClff7qF6RHC7mfL/LsuZ6fXnjc
+    p+v4l/CTKtkhWQ749ZFOld4Z03oOPlbeeP+mMmHUSNp45ocMqIKg2JLQFAar/FC3
+    uR8nE87ZUACwoWNC4r5XEXZBmgRSp95czn47o2De0uIVuLrEI0sj2g6Tq8kukjue
+    p6vdF8EtnIVNAaqBf5xptwo5CxpYSp0djhT/bU4+A+xJbmwNHVPMMDwaG0yu/hAo
+    DvxLO8wiyNAMUtkl30kgkSOBBBBarURMU5KMD0ifPn+y5M9beqyAnNTD/YRmElJC
+    X/z+/btt8Hb5QaMBQ5ht7GVNHYmbEx+dewA8vL3wX7k5terEimGR/oLjQcXRIpFY
+    9+aEBzes9V5ullabbDVSitlzdewlP48MxkSe40wTnSpyIkt88wTmVeaCyhmGtf31
+    Hsc7hv8osgvCx4nAtEUNIOQeZRW2fz9mlUBwQzmkmFPmBueAx4ON/wctnBU/3s7O
+    NAwOxsx7he46BCNDk/ZKZz4fAsGOqSteUluKPYrSPOJBKuu5y486+iQthm04p/Bw
+    2g1z1jmVroQ2It26qK8XpbFyuV8gc+b3cc/HT8MCLGVCwjl/chmkz2doWPJPLaOh
+    BIy2eaNHtH2KDZCXVhQTB8MCAwEAAQ==
+    -----END PUBLIC KEY-----
+---
+# Source: exivity/templates/proximity-api.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: exivity-license-key
+  labels:
+    exivity.k8s/component: proximity-api    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+data:
+  license.key: 2JDuoQydtWcnLgZAOYtzstILiYHIuWG3ikm3fBvtpNAberAFyGDkZDfyMRA2N1Ua+eIAe+NlKNjTy281lsCxK+96PL8XZLM26xXfHNCQbqFddSDpXzFR69GathbzQcwgHAWHjd53e51tNfUyLkEj63tCcyvgsDZChQiYg/AOOgfO8f7RkleIKJzy/Gx97yOS17e934Md5VM8LNIiac36xZNqTWzmK0wJ4GScG8TohewpusFqd0b6P+tFdIggowHgDaQD2JzOEaVnObbdJOjyW0BxDSW5sOngLQM0wppYIaBqa+IzO7aCeGu3WSQEKOqQGZ3Rc4g17zvbZ4O9Avi8jpIa0Lw9EeUaEorDvUHgIOSaJOmFT0mMaGUnjSi+8n7d3h18/0mG8WQrsRZGwnoyFaB85mArSnZCbZ4uq+jVA6RAgRYUcUPQhebMIgrrMLZKvwLyeuDnNCX8Xm5F8pQeLHo5uWpwG2nvWclW/4uLEIC4txzhMIGfSV1ty0YAqgPa8+iko7bz35g4jwmNyvon2VYbtrd9QtQY1rWgzOwAoFwOMgnZHp025pPz6ShPNal/bZ4Ayhwv2V8w8WOH89EsglPhttjS/oBm+c4ysKC/NEFiDj0C+e/5u0NcKx43hYprAvoEBsimQBP6pWoX+IbGqRYlMRf2XD93lQeuECYDhAw=
+---
+# Source: exivity/templates/proximity-cli.yaml
+# add templated configmap providing the service with the required config.json
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config-proximity-cli
+data:
+  config.json: |-
+    {
+      "chronos": {
+        "heartbeatPeriod": 5,
+        "TTL": 60
+      },
+      "db": {
+        "driver": "postgres",
+        "parameters": {
+          "host": "db",
+          "port": 5432,
+          "dbname": "exivity",
+          "user": "postgres",
+          "password": "Password12!",
+          "connect_timeout": 10,
+          "sslmode": "disable"
+        }
+      },
+      "griffon": {
+        "heartbeatPeriod": 5,
+        "TTL": 10
+      },
+      "mq": {
+        "servers": [
+          {
+            "host": "rabbit",
+            "port": 5672,
+            "secure": false
+          }
+        ],
+        "user": "guest",
+        "password": "guest",
+        "vhost": "/",
+        "redialPeriod": 5
+      
+      },
+      "merlin": {
+        "reservedCPU": 0,
+        "heartbeatPeriod": 5,
+        "programs": {
+          "proximity-cli": {
+            "component": "proximity-cli",
+            "path": "/usr/bin/php",
+            "queue": "PROXIMITY",
+            "CPU": 0,
+            "RAM": 0
+          }
+        }
+      
+      }
+    }
+---
+# Source: exivity/templates/shared-config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config-default
+data:
+  config.json: |-
+    {
+      "chronos": {
+        "heartbeatPeriod": 5,
+        "TTL": 60
+      },
+      "db": {
+        "driver": "postgres",
+        "parameters": {
+          "host": "db",
+          "port": 5432,
+          "dbname": "exivity",
+          "user": "postgres",
+          "password": "Password12!",
+          "connect_timeout": 10,
+          "sslmode": "disable"
+        }
+      },
+      "griffon": {
+        "heartbeatPeriod": 5,
+        "TTL": 10
+      },
+      "mq": {
+        "servers": [
+          {
+            "host": "rabbit",
+            "port": 5672,
+            "secure": false
+          }
+        ],
+        "user": "guest",
+        "password": "guest",
+        "vhost": "/",
+        "redialPeriod": 5
+      
+      }
+    }
+---
+# Source: exivity/templates/transcript.yaml
+# add templated configmap providing the service with the required config.json
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config-transcript
+data:
+  config.json: |-
+    {
+      "chronos": {
+        "heartbeatPeriod": 5,
+        "TTL": 60
+      },
+      "db": {
+        "driver": "postgres",
+        "parameters": {
+          "host": "db",
+          "port": 5432,
+          "dbname": "exivity",
+          "user": "postgres",
+          "password": "Password12!",
+          "connect_timeout": 10,
+          "sslmode": "disable"
+        }
+      },
+      "griffon": {
+        "heartbeatPeriod": 5,
+        "TTL": 10
+      },
+      "mq": {
+        "servers": [
+          {
+            "host": "rabbit",
+            "port": 5672,
+            "secure": false
+          }
+        ],
+        "user": "guest",
+        "password": "guest",
+        "vhost": "/",
+        "redialPeriod": 5
+      
+      },
+      "merlin": {
+        "reservedCPU": 0,
+        "heartbeatPeriod": 5,
+        "programs": {
+          "transcript": {
+            "component": "transcript",
+            "path": "/bin/transcript",
+            "queue": "TRANSFORM",
+            "CPU": 0,
+            "RAM": 0
+          }
+        }
+      
+      }
+    }
+---
+# Source: exivity/templates/use.yaml
+# add templated configmap providing the service with the required config.json
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config-use
+data:
+  config.json: |-
+    {
+      "chronos": {
+        "heartbeatPeriod": 5,
+        "TTL": 60
+      },
+      "db": {
+        "driver": "postgres",
+        "parameters": {
+          "host": "db",
+          "port": 5432,
+          "dbname": "exivity",
+          "user": "postgres",
+          "password": "Password12!",
+          "connect_timeout": 10,
+          "sslmode": "disable"
+        }
+      },
+      "griffon": {
+        "heartbeatPeriod": 5,
+        "TTL": 10
+      },
+      "mq": {
+        "servers": [
+          {
+            "host": "rabbit",
+            "port": 5672,
+            "secure": false
+          }
+        ],
+        "user": "guest",
+        "password": "guest",
+        "vhost": "/",
+        "redialPeriod": 5
+      
+      },
+      "merlin": {
+        "reservedCPU": 0,
+        "heartbeatPeriod": 5,
+        "programs": {
+          "use": {
+            "component": "use",
+            "path": "/bin/use",
+            "queue": "EXTRACT",
+            "CPU": 0,
+            "RAM": 0
+          }
+        }
+      
+      }
+    }
+---
+# Source: exivity/templates/chronos.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-chronos-config
+  labels:
+    exivity.k8s/component: chronos    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+# Source: exivity/templates/chronos.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-chronos-log
+  labels:
+    exivity.k8s/component: chronos    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+# Source: exivity/templates/database.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-database
+  labels:
+    exivity.k8s/component: database    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+# Source: exivity/templates/edify.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-edify-log
+  labels:
+    exivity.k8s/component: edify    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+# Source: exivity/templates/griffon.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-griffon-config
+  labels:
+    exivity.k8s/component: griffon    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+# Source: exivity/templates/griffon.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-griffon-log
+  labels:
+    exivity.k8s/component: griffon    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+# Source: exivity/templates/horizon.yaml
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-horizon-log
+  labels:
+    exivity.k8s/component: horizon    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+# Source: exivity/templates/pigeon.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-pigeon-log
+  labels:
+    exivity.k8s/component: pigeon    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+# Source: exivity/templates/proximity-api.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-proximity-api-log
+  labels:
+    exivity.k8s/component: proximity-api    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+# Source: exivity/templates/proximity-cli.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-proximity-cli-log
+  labels:
+    exivity.k8s/component: proximity-cli    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+# Source: exivity/templates/transcript.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-transcript-log
+  labels:
+    exivity.k8s/component: transcript    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+# Source: exivity/templates/use.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-use-log
+  labels:
+    exivity.k8s/component: use    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+# Source: exivity/templates/volumes.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-lookup
+  labels:    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+# Source: exivity/templates/volumes.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-extracted
+  labels:    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+# Source: exivity/templates/volumes.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-report
+  labels:    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+# Source: exivity/templates/volumes.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-etl-config
+  labels:    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+# Source: exivity/charts/redis/templates/headless-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: exivity-headless
+  namespace: "exivity"
+  labels:
+    app.kubernetes.io/name: redis
+    helm.sh/chart: redis-16.6.0
+    app.kubernetes.io/instance: exivity
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: tcp-redis
+      port: 6379
+      targetPort: redis
+  selector:
+    app.kubernetes.io/name: redis
+    app.kubernetes.io/instance: exivity
+---
+# Source: exivity/charts/redis/templates/master/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: exivity-master
+  namespace: "exivity"
+  labels:
+    app.kubernetes.io/name: redis
+    helm.sh/chart: redis-16.6.0
+    app.kubernetes.io/instance: exivity
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: master
+spec:
+  type: ClusterIP
+  
+  ports:
+    - name: tcp-redis
+      port: 6379
+      targetPort: redis
+      nodePort: null
+  selector:
+    app.kubernetes.io/name: redis
+    app.kubernetes.io/instance: exivity
+    app.kubernetes.io/component: master
+---
+# Source: exivity/charts/redis/templates/replicas/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: exivity-replicas
+  namespace: "exivity"
+  labels:
+    app.kubernetes.io/name: redis
+    helm.sh/chart: redis-16.6.0
+    app.kubernetes.io/instance: exivity
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: replica
+spec:
+  type: ClusterIP
+  ports:
+    - name: tcp-redis
+      port: 6379
+      targetPort: redis
+      nodePort: null
+  selector:
+    app.kubernetes.io/name: redis
+    app.kubernetes.io/instance: exivity
+    app.kubernetes.io/component: replica
+---
+# Source: exivity/templates/database.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  labels:
+    exivity.k8s/component: database    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5432
+  clusterIP: None
+  selector:
+    app: exivity
+    component: database
+---
+# Source: exivity/templates/glass.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: glass
+  labels:
+    exivity.k8s/component: glass    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  selector:
+    app: exivity
+    component: glass
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+---
+# Source: exivity/templates/proximity-api.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: proximity-api
+  labels:
+    exivity.k8s/component: proximity-api    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  selector:
+    exivity.k8s/component: proximity-api    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+---
+# Source: exivity/templates/rabbit.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbit
+  labels:
+    exivity.k8s/component: rabbitMQ    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5672
+  clusterIP: None
+  selector:
+    app: exivity
+    component: rabbit
+---
+# Source: exivity/templates/chronos.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chronos
+  labels:
+    exivity.k8s/component: chronos    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  selector:
+    matchLabels:
+      exivity.k8s/component: chronos      
+      exivity.k8s/app: exivity
+      exivity.k8s/name: exivity
+      exivity.k8s/version: 0.2.0
+      exivity.k8s/namespace: exivity
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        exivity.k8s/component: chronos        
+        exivity.k8s/app: exivity
+        exivity.k8s/name: exivity
+        exivity.k8s/version: 0.2.0
+        exivity.k8s/namespace: exivity
+    spec:
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: exivity-chronos-config
+      - name: config-file
+        configMap:
+          name: app-config-default
+      - name: logexiv
+        persistentVolumeClaim:
+          claimName: exivity-chronos-log
+      containers:
+      - name: chronos
+        image: ghcr.io/exivity/chronos:k8s
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: config-file
+          mountPath: /exivity/home/system
+        - name: log
+          mountPath: /exivity/home/log/chronos
+      imagePullSecrets:
+      - name: ghcr
+---
+# Source: exivity/templates/edify.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edify
+  labels:
+    exivity.k8s/component: edify    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  selector:
+    matchLabels:
+      exivity.k8s/component: edify      
+      exivity.k8s/app: exivity
+      exivity.k8s/name: exivity
+      exivity.k8s/version: 0.2.0
+      exivity.k8s/namespace: exivity
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        exivity.k8s/component: edify        
+        exivity.k8s/app: exivity
+        exivity.k8s/name: exivity
+        exivity.k8s/version: 0.2.0
+        exivity.k8s/namespace: exivity
+    spec:
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: exivity-etl-config
+      - name: config-file
+        configMap:
+          name: app-config-edify
+      - name: extracted
+        persistentVolumeClaim:
+          claimName: exivity-extracted
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-edify-log
+      - name: report
+        persistentVolumeClaim:
+          claimName: exivity-report
+      containers:
+      - name: edify
+        image: ghcr.io/exivity/edify:k8s
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: config-file
+          mountPath: /exivity/home/system
+        - name: extracted
+          mountPath: /exivity/home/system/extracted
+        - name: log
+          mountPath: /exivity/home/log/edify
+        - name: log
+          mountPath: /exivity/home/log/merlin
+        - name: report
+          mountPath: /exivity/home/system/report
+      imagePullSecrets:
+      - name: ghcr
+---
+# Source: exivity/templates/glass.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: glass
+  labels:
+    exivity.k8s/component: glass    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  selector:
+    matchLabels:
+      exivity.k8s/component: glass      
+      exivity.k8s/app: exivity
+      exivity.k8s/name: exivity
+      exivity.k8s/version: 0.2.0
+      exivity.k8s/namespace: exivity
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        exivity.k8s/component: glass        
+        exivity.k8s/app: exivity
+        exivity.k8s/name: exivity
+        exivity.k8s/version: 0.2.0
+        exivity.k8s/namespace: exivity
+    spec:
+      containers:
+      - name: glass
+        image: ghcr.io/exivity/glass:k8s
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        ports:
+        - containerPort: 443
+      imagePullSecrets:
+      - name: ghcr
+---
+# Source: exivity/templates/griffon.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: griffon
+  labels:
+    exivity.k8s/component: griffon    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  selector:
+    matchLabels:
+      exivity.k8s/component: griffon      
+      exivity.k8s/app: exivity
+      exivity.k8s/name: exivity
+      exivity.k8s/version: 0.2.0
+      exivity.k8s/namespace: exivity
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        exivity.k8s/component: griffon        
+        exivity.k8s/app: exivity
+        exivity.k8s/name: exivity
+        exivity.k8s/version: 0.2.0
+        exivity.k8s/namespace: exivity
+    spec:
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: exivity-griffon-config
+      - name: config-file
+        configMap:
+          name: app-config-default
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-griffon-log
+      containers:
+      - name: griffon
+        image: ghcr.io/exivity/griffon:k8s
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        volumeMounts:
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: config-file
+          mountPath: /exivity/home/system
+        - name: log
+          mountPath: /exivity/home/log/griffon
+      imagePullSecrets:
+      - name: ghcr
+---
+# Source: exivity/templates/horizon.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: horizon
+  labels:
+    exivity.k8s/component: horizon    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  selector:
+    matchLabels:
+      exivity.k8s/component: horizon      
+      exivity.k8s/app: exivity
+      exivity.k8s/name: exivity
+      exivity.k8s/version: 0.2.0
+      exivity.k8s/namespace: exivity
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        exivity.k8s/component: horizon        
+        exivity.k8s/app: exivity
+        exivity.k8s/name: exivity
+        exivity.k8s/version: 0.2.0
+        exivity.k8s/namespace: exivity
+    spec:
+      volumes:
+      - name: config
+        configMap:
+          name: app-config-horizon
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-horizon-log
+      containers:
+      - name: horizon
+        image: ghcr.io/exivity/horizon:k8s
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system
+        - name: log
+          mountPath: /exivity/home/log/merlin
+      imagePullSecrets:
+      - name: ghcr
+---
+# Source: exivity/templates/pigeon.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pigeon
+  labels:
+    exivity.k8s/component: pigeon
+spec:
+  selector:
+    matchLabels:
+      exivity.k8s/component: pigeon      
+      exivity.k8s/app: exivity
+      exivity.k8s/name: exivity
+      exivity.k8s/version: 0.2.0
+      exivity.k8s/namespace: exivity
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        exivity.k8s/component: pigeon        
+        exivity.k8s/app: exivity
+        exivity.k8s/name: exivity
+        exivity.k8s/version: 0.2.0
+        exivity.k8s/namespace: exivity
+    spec:
+      volumes:
+      - name: config
+        configMap:
+          name: app-config-pigeon
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-pigeon-log
+      containers:
+      - name: pigeon
+        image: ghcr.io/exivity/pigeon:k8s
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system
+        - name: log
+          mountPath: /exivity/home/log/merlin
+        env:
+        - name: EXIVITY_APP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: app_key
+        - name: REDIS_HOST
+          value: exivity-redis-master
+        - name: REDIS_PORT
+          value: '6379'
+        - name: CACHE_DRIVER
+          value: redis
+        - name: QUEUE_DRIVER
+          value: redis
+      imagePullSecrets:
+      - name: ghcr
+---
+# Source: exivity/templates/proximity-api.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proximity-api
+  labels:
+    exivity.k8s/component: proximity-api    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  selector:
+    matchLabels:
+      exivity.k8s/component: proximity-api      
+      exivity.k8s/app: exivity
+      exivity.k8s/name: exivity
+      exivity.k8s/version: 0.2.0
+      exivity.k8s/namespace: exivity
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        exivity.k8s/component: proximity-api        
+        exivity.k8s/app: exivity
+        exivity.k8s/name: exivity
+        exivity.k8s/version: 0.2.0
+        exivity.k8s/namespace: exivity
+    spec:
+      volumes:
+      - name: projected
+        projected:
+          sources:
+          - configMap:
+              name: app-config-default
+          - configMap:
+              name: exivity-license-pub
+          - configMap:
+              name: exivity-license-key
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-proximity-api-log
+      - name: config
+        persistentVolumeClaim:
+          claimName: exivity-etl-config
+      - name: lookup
+        persistentVolumeClaim:
+          claimName: exivity-lookup
+      - name: report
+        persistentVolumeClaim:
+          claimName: exivity-report
+      - name: extracted
+        persistentVolumeClaim:
+          claimName: exivity-extracted
+      containers:
+      - name: proximity-api
+        image: ghcr.io/exivity/proximity-api:k8s
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        ports:
+        - containerPort: 8002
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: projected
+          mountPath: /exivity/home/system
+        - name: extracted
+          mountPath: /exivity/home/system/extracted
+        - name: log
+          mountPath: /exivity/home/log/proximity
+        - name: lookup
+          mountPath: /exivity/home/import/lookup
+        - name: report
+          mountPath: /exivity/home/system/report
+        env:
+        - name: EXIVITY_APP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: app_key
+        - name: EXIVITY_LICENSE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: license_key
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: jwt_secret
+        - name: REDIS_HOST
+          value: exivity-redis-master
+        - name: CACHE_DRIVER
+          value: redis
+        - name: QUEUE_DRIVER
+          value: redis
+      imagePullSecrets:
+      - name: ghcr
+---
+# Source: exivity/templates/proximity-cli.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proximity-cli
+  labels:
+    exivity.k8s/component: proximity-cli    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  selector:
+    matchLabels:
+      exivity.k8s/component: proximity-cli      
+      exivity.k8s/app: exivity
+      exivity.k8s/name: exivity
+      exivity.k8s/version: 0.2.0
+      exivity.k8s/namespace: exivity
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        exivity.k8s/component: proximity-cli        
+        exivity.k8s/app: exivity
+        exivity.k8s/name: exivity
+        exivity.k8s/version: 0.2.0
+        exivity.k8s/namespace: exivity
+    spec:
+      volumes:
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-proximity-cli-log
+      - name: config
+        persistentVolumeClaim:
+          claimName: exivity-etl-config
+      - name: config-file
+        configMap:
+          name: app-config-proximity-cli
+      - name: lookup
+        persistentVolumeClaim:
+          claimName: exivity-lookup
+      - name: report
+        persistentVolumeClaim:
+          claimName: exivity-report
+      - name: extracted
+        persistentVolumeClaim:
+          claimName: exivity-extracted
+      containers:
+      - name: proximity-cli
+        image: ghcr.io/exivity/proximity-cli:k8s
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: config-file
+          mountPath: /exivity/home/system
+        - name: extracted
+          mountPath: /exivity/home/system/extracted
+        - name: log
+          mountPath: /exivity/home/log/merlin
+        - name: log
+          mountPath: /exivity/home/log/proximity
+        - name: lookup
+          mountPath: /exivity/home/import/lookup
+        - name: report
+          mountPath: /exivity/home/system/report
+        env:
+        - name: EXIVITY_APP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: app_key
+        - name: EXIVITY_LICENSE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: license_key
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: jwt_secret
+      imagePullSecrets:
+      - name: ghcr
+---
+# Source: exivity/templates/transcript.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transcript
+  labels:
+    exivity.k8s/component: transcript    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  selector:
+    matchLabels:
+      exivity.k8s/component: transcript      
+      exivity.k8s/app: exivity
+      exivity.k8s/name: exivity
+      exivity.k8s/version: 0.2.0
+      exivity.k8s/namespace: exivity
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        exivity.k8s/component: transcript        
+        exivity.k8s/app: exivity
+        exivity.k8s/name: exivity
+        exivity.k8s/version: 0.2.0
+        exivity.k8s/namespace: exivity
+    spec:
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: exivity-etl-config
+      - name: config-file
+        configMap:
+          name: app-config-transcript
+      - name: extracted
+        persistentVolumeClaim:
+          claimName: exivity-extracted
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-transcript-log
+      - name: report
+        persistentVolumeClaim:
+          claimName: exivity-report
+      containers:
+      - name: transcript
+        image: ghcr.io/exivity/transcript:k8s
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: config-file
+          mountPath: /exivity/home/system
+        - name: extracted
+          mountPath: /exivity/home/system/extracted
+        - name: log
+          mountPath: /exivity/home/log/transcript
+        - name: log
+          mountPath: /exivity/home/log/merlin
+        - name: report
+          mountPath: /exivity/home/system/report
+        env:
+        - name: EXIVITY_APP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: app_key
+      imagePullSecrets:
+      - name: ghcr
+---
+# Source: exivity/templates/use.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: use
+  labels:
+    exivity.k8s/component: use    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  selector:
+    matchLabels:
+      exivity.k8s/component: use      
+      exivity.k8s/app: exivity
+      exivity.k8s/name: exivity
+      exivity.k8s/version: 0.2.0
+      exivity.k8s/namespace: exivity
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        exivity.k8s/component: use        
+        exivity.k8s/app: exivity
+        exivity.k8s/name: exivity
+        exivity.k8s/version: 0.2.0
+        exivity.k8s/namespace: exivity
+    spec:
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: exivity-etl-config
+      - name: config-file
+        configMap:
+          name: app-config-use
+      - name: extracted
+        persistentVolumeClaim:
+          claimName: exivity-extracted
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-use-log
+      containers:
+      - name: use
+        image: ghcr.io/exivity/use:k8s
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: config-file
+          mountPath: /exivity/home/system
+        - name: extracted
+          mountPath: /exivity/home/system/extracted
+        - name: log
+          mountPath: /exivity/home/log/merlin
+        - name: log
+          mountPath: /exivity/home/log/use
+        env:
+        - name: EXIVITY_APP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: exivity-secrets
+              key: app_key
+        - name: RUN_DELAY
+          value: "10"
+      imagePullSecrets:
+      - name: ghcr
+---
+# Source: exivity/charts/redis/templates/master/application.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: exivity-master
+  namespace: "exivity"
+  labels:
+    app.kubernetes.io/name: redis
+    helm.sh/chart: redis-16.6.0
+    app.kubernetes.io/instance: exivity
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: redis
+      app.kubernetes.io/instance: exivity
+      app.kubernetes.io/component: master
+  serviceName: exivity-headless
+  updateStrategy:
+    rollingUpdate: {}
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: redis
+        helm.sh/chart: redis-16.6.0
+        app.kubernetes.io/instance: exivity
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: master
+      annotations:
+        checksum/configmap: 36d3897050c9bf64b8a7d739e744500688fa2973f76b3f7f74b87a38195dd439
+        checksum/health: 70fb6612891956db4dd77bb75b0ad2c4fb11b4b70be72f2f82ff77688e6c8445
+        checksum/scripts: 0fb38762688b8420c0a1bdf650ed47d2f6d47fe3ef75609eaa4268a75f6eff26
+        checksum/secret: e3a459c4d32ea79754ac677289ca000578a7367b49a79cb0c0902962adfbcc75
+    spec:
+      
+      securityContext:
+        fsGroup: 1001
+      serviceAccountName: exivity
+      affinity:
+        podAffinity:
+          
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: redis
+                    app.kubernetes.io/instance: exivity
+                    app.kubernetes.io/component: master
+                namespaces:
+                  - "exivity"
+                topologyKey: kubernetes.io/hostname
+              weight: 1
+        nodeAffinity:
+          
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: redis
+          image: docker.io/bitnami/redis:6.2.6-debian-10-r158
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            runAsUser: 1001
+          command:
+            - /bin/bash
+          args:
+            - -c
+            - /opt/bitnami/scripts/start-scripts/start-master.sh
+          env:
+            - name: BITNAMI_DEBUG
+              value: "false"
+            - name: REDIS_REPLICATION_MODE
+              value: master
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "no"
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: exivity
+                  key: redis-password
+            - name: REDIS_TLS_ENABLED
+              value: "no"
+            - name: REDIS_PORT
+              value: "6379"
+          ports:
+            - name: redis
+              containerPort: 6379
+          livenessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            # One second longer than command timeout should prevent generation of zombie processes.
+            timeoutSeconds: 6
+            successThreshold: 1
+            failureThreshold: 5
+            exec:
+              command:
+                - sh
+                - -c
+                - /health/ping_liveness_local.sh 5
+          readinessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 5
+            exec:
+              command:
+                - sh
+                - -c
+                - /health/ping_readiness_local.sh 1
+          resources:
+            limits: {}
+            requests: {}
+          volumeMounts:
+            - name: start-scripts
+              mountPath: /opt/bitnami/scripts/start-scripts
+            - name: health
+              mountPath: /health
+            - name: redis-data
+              mountPath: /data
+              subPath: 
+            - name: config
+              mountPath: /opt/bitnami/redis/mounted-etc
+            - name: redis-tmp-conf
+              mountPath: /opt/bitnami/redis/etc/
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: start-scripts
+          configMap:
+            name: exivity-scripts
+            defaultMode: 0755
+        - name: health
+          configMap:
+            name: exivity-health
+            defaultMode: 0755
+        - name: config
+          configMap:
+            name: exivity-configuration
+        - name: redis-tmp-conf
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-data
+        labels:
+          app.kubernetes.io/name: redis
+          app.kubernetes.io/instance: exivity
+          app.kubernetes.io/component: master
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: "8Gi"
+---
+# Source: exivity/charts/redis/templates/replicas/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: exivity-replicas
+  namespace: "exivity"
+  labels:
+    app.kubernetes.io/name: redis
+    helm.sh/chart: redis-16.6.0
+    app.kubernetes.io/instance: exivity
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: replica
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: redis
+      app.kubernetes.io/instance: exivity
+      app.kubernetes.io/component: replica
+  serviceName: exivity-headless
+  updateStrategy:
+    rollingUpdate: {}
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: redis
+        helm.sh/chart: redis-16.6.0
+        app.kubernetes.io/instance: exivity
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: replica
+      annotations:
+        checksum/configmap: 36d3897050c9bf64b8a7d739e744500688fa2973f76b3f7f74b87a38195dd439
+        checksum/health: 70fb6612891956db4dd77bb75b0ad2c4fb11b4b70be72f2f82ff77688e6c8445
+        checksum/scripts: 0fb38762688b8420c0a1bdf650ed47d2f6d47fe3ef75609eaa4268a75f6eff26
+        checksum/secret: 2e711e228263258a4fc58ff0636b13655ca8c4b41f72d42460b759838c5433cd
+    spec:
+      
+      securityContext:
+        fsGroup: 1001
+      serviceAccountName: exivity
+      affinity:
+        podAffinity:
+          
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: redis
+                    app.kubernetes.io/instance: exivity
+                    app.kubernetes.io/component: replica
+                namespaces:
+                  - "exivity"
+                topologyKey: kubernetes.io/hostname
+              weight: 1
+        nodeAffinity:
+          
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: redis
+          image: docker.io/bitnami/redis:6.2.6-debian-10-r158
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            runAsUser: 1001
+          command:
+            - /bin/bash
+          args:
+            - -c
+            - /opt/bitnami/scripts/start-scripts/start-replica.sh
+          env:
+            - name: BITNAMI_DEBUG
+              value: "false"
+            - name: REDIS_REPLICATION_MODE
+              value: slave
+            - name: REDIS_MASTER_HOST
+              value: exivity-master-0.exivity-headless.exivity.svc.cluster.local
+            - name: REDIS_MASTER_PORT_NUMBER
+              value: "6379"
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "no"
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: exivity
+                  key: redis-password
+            - name: REDIS_MASTER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: exivity
+                  key: redis-password
+            - name: REDIS_TLS_ENABLED
+              value: "no"
+            - name: REDIS_PORT
+              value: "6379"
+          ports:
+            - name: redis
+              containerPort: 6379
+          startupProbe:
+            failureThreshold: 22
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+            tcpSocket:
+              port: redis
+          livenessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            timeoutSeconds: 6
+            successThreshold: 1
+            failureThreshold: 5
+            exec:
+              command:
+                - sh
+                - -c
+                - /health/ping_liveness_local_and_master.sh 5
+          readinessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 5
+            exec:
+              command:
+                - sh
+                - -c
+                - /health/ping_readiness_local_and_master.sh 1
+          resources:
+            limits: {}
+            requests: {}
+          volumeMounts:
+            - name: start-scripts
+              mountPath: /opt/bitnami/scripts/start-scripts
+            - name: health
+              mountPath: /health
+            - name: redis-data
+              mountPath: /data
+              subPath: 
+            - name: config
+              mountPath: /opt/bitnami/redis/mounted-etc
+            - name: redis-tmp-conf
+              mountPath: /opt/bitnami/redis/etc
+      volumes:
+        - name: start-scripts
+          configMap:
+            name: exivity-scripts
+            defaultMode: 0755
+        - name: health
+          configMap:
+            name: exivity-health
+            defaultMode: 0755
+        - name: config
+          configMap:
+            name: exivity-configuration
+        - name: redis-tmp-conf
+          emptyDir: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-data
+        labels:
+          app.kubernetes.io/name: redis
+          app.kubernetes.io/instance: exivity
+          app.kubernetes.io/component: replica
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: "8Gi"
+---
+# Source: exivity/templates/database.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: exivity-database
+spec:
+  selector:
+    matchLabels:
+      exivity.k8s/component: database      
+      exivity.k8s/app: exivity
+      exivity.k8s/name: exivity
+      exivity.k8s/version: 0.2.0
+      exivity.k8s/namespace: exivity
+  serviceName: db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        exivity.k8s/component: database        
+        exivity.k8s/app: exivity
+        exivity.k8s/name: exivity
+        exivity.k8s/version: 0.2.0
+        exivity.k8s/namespace: exivity
+    spec:
+      volumes:
+      - name: database
+        persistentVolumeClaim:
+          claimName: exivity-database
+      - name: config-file
+        configMap:
+          name: app-config-default
+      containers:
+      - name: exivity-database
+        image: postgres:12.10
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: database
+          mountPath: /var/lib/postgresql/data
+        - name: config-file
+          mountPath: /exivity/home/system
+        env:
+        - name: POSTGRES_DB
+          value: exivity
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: Password12!
+---
+# Source: exivity/templates/rabbit.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: exivity-rabbit
+  labels:
+    exivity.k8s/component: rabbitMQ    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  selector:
+    matchLabels:
+      exivity.k8s/component: rabbitMQ      
+      exivity.k8s/app: exivity
+      exivity.k8s/name: exivity
+      exivity.k8s/version: 0.2.0
+      exivity.k8s/namespace: exivity
+  serviceName: rabbit
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exivity
+        component: rabbit
+    spec:
+      containers:
+      - name: exivity-rabbit
+        image: rabbitmq:latest
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        ports:
+        - containerPort: 5672
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: guest
+        - name: RABBITMQ_DEFAULT_PASS
+          value: guest
+        - name: RABBITMQ_DEFAULT_VHOST
+          value: /
+---
+# Source: exivity/templates/database.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: database-init
+  labels:
+    exivity.k8s/component: database    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      containers:
+      - name: database-init
+        image: ghcr.io/exivity/db:k8s
+        imagePullPolicy: Always
+        env:
+        - name: PGUSER
+          value: postgres
+        - name: PGPASSWORD
+          value: Password12!
+      restartPolicy: Never
+      imagePullSecrets:
+      - name: ghcr
+  backoffLimit: 4
+  completions: 1
+---
+# Source: exivity/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: exivity-ingress
+  annotations:
+    kubernetes.io/ingress.allow-http: 'false'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+  labels:    
+    exivity.k8s/app: exivity
+    exivity.k8s/name: exivity
+    exivity.k8s/version: 0.2.0
+    exivity.k8s/namespace: exivity
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - localhost
+    secretName: exivity-tls
+  rules:
+  - host: localhost
+    http:
+      paths:
+        - path: '/v1'
+          pathType: Prefix
+          backend:
+            service:
+              name: proximity-api
+              port:
+                number: 80
+        - path: '/'
+          pathType: Prefix
+          backend:
+            service:
+              name: glass
+              port:
+                number: 80
+

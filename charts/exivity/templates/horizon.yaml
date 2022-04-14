@@ -3,19 +3,19 @@ kind: Deployment
 metadata:
   name: horizon
   labels:
-    app: exivity
-    component: horizon
+    exivity.k8s/component: horizon
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   selector:
     matchLabels:
-      app: exivity
-      component: horizon
+      exivity.k8s/component: horizon
+      {{- include "exivity.default_labels" . | indent 6 }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: exivity
-        component: horizon
+        exivity.k8s/component: horizon
+        {{- include "exivity.default_labels" . | indent 8 }}
     spec:
       volumes:
       - name: config
@@ -49,8 +49,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: exivity-horizon-log
   labels:
-    app: exivity
-    component: horizon
+    exivity.k8s/component: horizon
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
   - ReadWriteOnce

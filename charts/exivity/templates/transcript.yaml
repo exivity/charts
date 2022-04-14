@@ -3,19 +3,19 @@ kind: Deployment
 metadata:
   name: transcript
   labels:
-    app: exivity
-    component: transcript
+    exivity.k8s/component: transcript
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   selector:
     matchLabels:
-      app: exivity
-      component: transcript
+      exivity.k8s/component: transcript
+      {{- include "exivity.default_labels" . | indent 6 }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: exivity
-        component: transcript
+        exivity.k8s/component: transcript
+        {{- include "exivity.default_labels" . | indent 8 }}
     spec:
       volumes:
       - name: config
@@ -71,8 +71,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: exivity-transcript-log
   labels:
-    app: exivity
-    component: transcript
+    exivity.k8s/component: transcript
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
   - ReadWriteOnce

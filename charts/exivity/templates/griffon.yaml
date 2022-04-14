@@ -3,19 +3,19 @@ kind: Deployment
 metadata:
   name: griffon
   labels:
-    app: exivity
-    component: griffon
+    exivity.k8s/component: griffon
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   selector:
     matchLabels:
-      app: exivity
-      component: griffon
+      exivity.k8s/component: griffon
+      {{- include "exivity.default_labels" . | indent 6 }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: exivity
-        component: griffon
+        exivity.k8s/component: griffon
+        {{- include "exivity.default_labels" . | indent 8 }}
     spec:
       volumes:
       - name: config
@@ -51,8 +51,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: exivity-griffon-config
   labels:
-    app: exivity
-    component: griffon
+    exivity.k8s/component: griffon
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
   - ReadWriteOnce
@@ -65,8 +65,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: exivity-griffon-log
   labels:
-    app: exivity
-    component: griffon
+    exivity.k8s/component: griffon
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
   - ReadWriteOnce

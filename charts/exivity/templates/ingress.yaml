@@ -5,6 +5,8 @@ metadata:
   annotations:
     kubernetes.io/ingress.allow-http: 'false'
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+  labels:
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   ingressClassName: nginx
   tls:

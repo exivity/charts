@@ -3,19 +3,19 @@ kind: Deployment
 metadata:
   name: proximity-api
   labels:
-    app: exivity
-    component: proximity-api
+    exivity.k8s/component: proximity-api
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   selector:
     matchLabels:
-      app: exivity
-      component: proximity-api
+      exivity.k8s/component: proximity-api
+      {{- include "exivity.default_labels" . | indent 6 }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: exivity
-        component: proximity-api
+        exivity.k8s/component: proximity-api
+        {{- include "exivity.default_labels" . | indent 8 }}
     spec:
       volumes:
       - name: projected
@@ -97,11 +97,12 @@ kind: Service
 metadata:
   name: proximity-api
   labels:
-    app: exivity
+    exivity.k8s/component: proximity-api
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   selector:
-    app: exivity
-    component: proximity-api
+    exivity.k8s/component: proximity-api
+    {{- include "exivity.default_labels" . | indent 4 }}
   ports:
   - protocol: TCP
     port: 80
@@ -112,8 +113,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: exivity-proximity-api-log
   labels:
-    app: exivity
-    component: proximity-api
+    exivity.k8s/component: proximity-api
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
   - ReadWriteOnce
@@ -125,6 +126,9 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: exivity-license-pub
+  labels:
+    exivity.k8s/component: proximity-api
+    {{- include "exivity.default_labels" . | indent 4 }}
 data:
   license.pub: |-
     -----BEGIN PUBLIC KEY-----
@@ -146,5 +150,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: exivity-license-key
+  labels:
+    exivity.k8s/component: proximity-api
+    {{- include "exivity.default_labels" . | indent 4 }}
 data:
   license.key: {{ .Values.license }}

@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: exivity-lookup
   labels:
-    app: exivity
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
   {{- if .Values.singleNode }}
@@ -20,7 +20,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: exivity-extracted
   labels:
-    app: exivity
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
   {{- if .Values.singleNode }}
@@ -37,7 +37,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: exivity-report
   labels:
-    app: exivity
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
   {{- if .Values.singleNode }}
@@ -54,7 +54,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: exivity-etl-config
   labels:
-    app: exivity
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
   {{- if .Values.singleNode }}

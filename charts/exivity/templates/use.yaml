@@ -3,19 +3,19 @@ kind: Deployment
 metadata:
   name: use
   labels:
-    app: exivity
-    component: use
+    exivity.k8s/component: use
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   selector:
     matchLabels:
-      app: exivity
-      component: use
+      exivity.k8s/component: use
+      {{- include "exivity.default_labels" . | indent 6 }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: exivity
-        component: use
+        exivity.k8s/component: use
+        {{- include "exivity.default_labels" . | indent 8 }}
     spec:
       volumes:
       - name: config
@@ -68,8 +68,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: exivity-use-log
   labels:
-    app: exivity
-    component: use
+    exivity.k8s/component: use
+    {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
   - ReadWriteOnce
