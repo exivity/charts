@@ -32,6 +32,27 @@ spec:
       - name: log
         persistentVolumeClaim:
           claimName: exivity-proximity-api-log
+      - name: log-chronos
+        persistentVolumeClaim:
+          claimName: exivity-chronos-log
+      - name: log-edify
+        persistentVolumeClaim:
+          claimName: exivity-edify-log
+      - name: log-griffon
+        persistentVolumeClaim:
+          claimName: exivity-griffon-log
+      - name: log-horizon
+        persistentVolumeClaim:
+          claimName: exivity-horizon-log
+      - name: log-pigeon
+        persistentVolumeClaim:
+          claimName: exivity-pigeon-log
+      - name: log-transcript
+        persistentVolumeClaim:
+          claimName: exivity-transcript-log
+      - name: log-use
+        persistentVolumeClaim:
+          claimName: exivity-use-log
       - name: config
         persistentVolumeClaim:
           claimName: exivity-etl-config
@@ -63,6 +84,20 @@ spec:
           mountPath: /exivity/home/system/extracted
         - name: log
           mountPath: /exivity/home/log/proximity
+        - name: log-chronos
+          mountPath: /exivity/home/log/chronos
+        - name: log-edify
+          mountPath: /exivity/home/log/edify
+        - name: log-griffon
+          mountPath: /exivity/home/log/griffon
+        - name: log-horizon
+          mountPath: /exivity/home/log/horizon
+        - name: log-pigeon
+          mountPath: /exivity/home/log/pigeon
+        - name: log-transcript
+          mountPath: /exivity/home/log/transcript
+        - name: log-use
+          mountPath: /exivity/home/log/use
         - name: lookup
           mountPath: /exivity/home/import/lookup
         - name: report

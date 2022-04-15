@@ -36,6 +36,8 @@ spec:
           mountPath: /exivity/home/system
         - name: log
           mountPath: /exivity/home/log/merlin
+        - name: log
+          mountPath: /exivity/home/log/pigeon
         env:
         - name: EXIVITY_APP_KEY
           valueFrom:
