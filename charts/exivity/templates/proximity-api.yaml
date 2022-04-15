@@ -56,12 +56,15 @@ spec:
       - name: config
         persistentVolumeClaim:
           claimName: exivity-etl-config
-      - name: lookup
+      - name: import
         persistentVolumeClaim:
-          claimName: exivity-lookup
+          claimName: exivity-import
       - name: report
         persistentVolumeClaim:
           claimName: exivity-report
+      - name: exported
+        persistentVolumeClaim:
+          claimName: exivity-exported
       - name: extracted
         persistentVolumeClaim:
           claimName: exivity-extracted
@@ -80,6 +83,8 @@ spec:
           mountPath: /exivity/home/system/config
         - name: projected
           mountPath: /exivity/home/system
+        - name: exported
+          mountPath: /exivity/home/exported
         - name: extracted
           mountPath: /exivity/home/system/extracted
         - name: log
@@ -98,8 +103,8 @@ spec:
           mountPath: /exivity/home/log/transcript
         - name: log-use
           mountPath: /exivity/home/log/use
-        - name: lookup
-          mountPath: /exivity/home/import/lookup
+        - name: import
+          mountPath: /exivity/home/import
         - name: report
           mountPath: /exivity/home/system/report
         env:

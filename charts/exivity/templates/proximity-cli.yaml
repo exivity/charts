@@ -27,15 +27,18 @@ spec:
       - name: config-file
         configMap:
           name: app-config-proximity-cli
-      - name: lookup
+      - name: import
         persistentVolumeClaim:
-          claimName: exivity-lookup
+          claimName: exivity-import
       - name: report
         persistentVolumeClaim:
           claimName: exivity-report
       - name: extracted
         persistentVolumeClaim:
           claimName: exivity-extracted
+      - name: exported
+        persistentVolumeClaim:
+          claimName: exivity-exported
       containers:
       - name: proximity-cli
         image: {{ .Values.images.proximity_cli }}
@@ -49,14 +52,16 @@ spec:
           mountPath: /exivity/home/system/config
         - name: config-file
           mountPath: /exivity/home/system
+        - name: exported
+          mountPath: /exivity/home/system/exported
         - name: extracted
           mountPath: /exivity/home/system/extracted
         - name: log
           mountPath: /exivity/home/log/merlin
         - name: log
           mountPath: /exivity/home/log/proximity
-        - name: lookup
-          mountPath: /exivity/home/import/lookup
+        - name: import
+          mountPath: /exivity/home/import
         - name: report
           mountPath: /exivity/home/system/report
         env:

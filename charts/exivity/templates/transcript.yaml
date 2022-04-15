@@ -24,9 +24,15 @@ spec:
       - name: config-file
         configMap:
           name: app-config-transcript
+      - name: exported
+        persistentVolumeClaim:
+          claimName: exivity-exported
       - name: extracted
         persistentVolumeClaim:
           claimName: exivity-extracted
+      - name: import
+        persistentVolumeClaim:
+          claimName: exivity-import
       - name: log
         persistentVolumeClaim:
           claimName: exivity-transcript-log
@@ -46,8 +52,12 @@ spec:
           mountPath: /exivity/home/system/config
         - name: config-file
           mountPath: /exivity/home/system
+        - name: exported
+          mountPath: /exivity/home/exported
         - name: extracted
           mountPath: /exivity/home/system/extracted
+        - name: import
+          mountPath: /exivity/home/import
         - name: log
           mountPath: /exivity/home/log/transcript
         - name: log
