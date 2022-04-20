@@ -21,9 +21,13 @@ If you had already added this repo earlier, run `helm repo update` to retrieve
 the latest versions of the packages. You can then run `helm search repo exivity`
 to see the charts.
 
+Create a local values file and fill in the respective values:
+
+    echo -e "JWTSecret: xxx\nappKey: xxx\nlicense: xxx" > exivity-values.yaml
+
 To install the exivity chart:
 
-    helm install <chart-name> <repo-name>/exivity
+    helm install <chart-name> <repo-name>/exivity --values exivity-values.yaml
 
 To uninstall the chart:
 
