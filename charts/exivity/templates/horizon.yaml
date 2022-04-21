@@ -34,7 +34,7 @@ spec:
             memory: "50Mi"
         securityContext:
           runAsUser: 1000
-          runAsGroup: {{ .Values.securityContext.runAsGroup }}
+          runAsGroup: 1000
         volumeMounts:
         - name: config
           mountPath: /exivity/home/system
