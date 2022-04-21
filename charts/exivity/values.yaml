@@ -40,8 +40,3 @@ images:
   proximity_cli: ghcr.io/exivity/proximity-cli:k8s
   transcript: ghcr.io/exivity/transcript:k8s
   use: ghcr.io/exivity/use:k8s
-
-redis:
-  replica:
-    replicaCount: 1
-  fullnameOverride: exivity

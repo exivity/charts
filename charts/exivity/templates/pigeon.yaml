@@ -31,6 +31,9 @@ spec:
           requests:
             cpu: "25m"
             memory: "50Mi"
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
         volumeMounts:
         - name: config
           mountPath: /exivity/home/system
