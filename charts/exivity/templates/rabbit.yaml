@@ -1,18 +1,18 @@
-{{if not .Values.rabbitMQ.useExternalServers}}
+{{if not .Values.rabbitmq.useExternalServers}}
 apiVersion: v1
 kind: Service
 metadata:
   name: rabbit
   labels:
-    exivity.k8s/component: rabbitMQ
+    exivity.k8s/component: rabbitmq
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   type: ClusterIP
   ports:
-  - port: 5672
+  - port: {{ .Values.rabbitmq.port }}
   clusterIP: None
   selector:
-    exivity.k8s/component: rabbitMQ
+    exivity.k8s/component: rabbitmq
     {{- include "exivity.default_labels" . | indent 4 }}
 ---
 apiVersion: apps/v1
@@ -20,24 +20,24 @@ kind: StatefulSet
 metadata:
   name: exivity-rabbit
   labels:
-    exivity.k8s/component: rabbitMQ
+    exivity.k8s/component: rabbitmq
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   selector:
     matchLabels:
-      exivity.k8s/component: rabbitMQ
+      exivity.k8s/component: rabbitmq
       {{- include "exivity.default_labels" . | indent 6 }}
   serviceName: rabbit
   replicas: 1
   template:
     metadata:
       labels:
-        exivity.k8s/component: rabbitMQ
+        exivity.k8s/component: rabbitmq
         {{- include "exivity.default_labels" . | indent 8 }}
     spec:
       containers:
       - name: exivity-rabbit
-        image: rabbitmq:latest
+        image: {{ .Values.images.rabbitmq }}
         resources:
           requests:
             cpu: "25m"
@@ -49,9 +49,9 @@ spec:
         - containerPort: 5672
         env:
         - name: RABBITMQ_DEFAULT_USER
-          value: {{ .Values.rabbitMQ.user }}
+          value: {{ .Values.rabbitmq.user }}
         - name: RABBITMQ_DEFAULT_PASS
-          value: {{ .Values.rabbitMQ.password }}
+          value: {{ .Values.rabbitmq.password }}
         - name: RABBITMQ_DEFAULT_VHOST
-          value: {{ .Values.rabbitMQ.vhost }}
+          value: {{ .Values.rabbitmq.vhost }}
 {{end}}

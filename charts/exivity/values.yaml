@@ -3,24 +3,26 @@
 # appKey:
 # JWTSecret:
 
-imagePullSecret: regcred
-namespace: exivity
 host: localhost
 singleNode: true
-deployment-name: exivity
 
-# Database config
+# bitnami/postgresql chart config
+postgresql:
+  image:
+    tag: 12.10.0
+    pullPolicy: Always
+  auth:
+    database: exivity
+    username: exivity
+    password: Password12!
+    postgresPassword: Password13!
+  fullnameOverride: exivity-postgres
+
 database:
-  username: postgres
-  password: Password12!
-  dbname: exivity
-  host: db # only change when you have set useExternalDatabase to true
-  port: 5432 # only change when you have set useExternalDatabase to true
-  useExternalDatabase: false
   initialise: true
 
-# RabbitMQ config
-rabbitMQ:
+# Rabbitmq config
+rabbitmq:
   user: guest
   password: guest
   vhost: /
@@ -30,13 +32,14 @@ rabbitMQ:
 
 images:
   chronos: ghcr.io/exivity/chronos:k8s
-  db_init: ghcr.io/exivity/db:k8s
+  db_init: ghcr.io/exivity/db:feat-unpriv
   edify: ghcr.io/exivity/edify:k8s
-  glass: ghcr.io/exivity/glass:develop
+  glass: ghcr.io/exivity/glass:feat-unpriv
   griffon: ghcr.io/exivity/griffon:k8s
   horizon: ghcr.io/exivity/horizon:k8s
   pigeon: ghcr.io/exivity/pigeon:k8s
   proximity_api: ghcr.io/exivity/proximity-api:k8s
   proximity_cli: ghcr.io/exivity/proximity-cli:k8s
+  rabbitmq: rabbitmq:3.9
   transcript: ghcr.io/exivity/transcript:k8s
   use: ghcr.io/exivity/use:k8s

@@ -39,7 +39,6 @@ spec:
           runAsUser: 1000
           runAsGroup: 1000
         volumeMounts:
-        volumeMounts:
         - name: config
           mountPath: /exivity/home/system/config
         - name: config-file

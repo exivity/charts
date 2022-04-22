@@ -114,17 +114,17 @@ spec:
         - name: EXIVITY_APP_KEY
           valueFrom:
             secretKeyRef:
-              name: exivity-secrets
+              name: exivity-app-key
               key: app_key
         - name: EXIVITY_LICENSE_KEY
           valueFrom:
             secretKeyRef:
-              name: exivity-secrets
+              name: exivity-license
               key: license_key
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:
-              name: exivity-secrets
+              name: exivity-jwt-secret
               key: jwt_secret
         - name: REDIS_HOST
           value: exivity-redis-master

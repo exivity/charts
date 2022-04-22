@@ -1,0 +1,29 @@
+{{ if .Values.database.initialise }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: database-init
+  labels:
+    exivity.k8s/component: database
+    {{- include "exivity.default_labels" . | indent 4 }}
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      containers:
+      - name: database-init
+        image: {{ .Values.images.db_init }}
+        imagePullPolicy: Always
+        env:
+        - name: PGUSER
+          value: {{ .Values.postgresql.auth.username }}
+        - name: PGPASSWORD
+          value: {{ .Values.postgresql.auth.password }}
+        - name: PGHOST
+          value: {{ .Values.postgresql.fullnameOverride }}
+      restartPolicy: Never
+      imagePullSecrets:
+      - name: ghcr
+  backoffLimit: 4
+  completions: 1
+{{ end }}

@@ -25,6 +25,12 @@ To install the exivity chart:
 
     helm install <chart-name> <repo-name>/exivity
 
+## Removing Installation
+
 To uninstall the chart:
 
     helm delete <chart-name>
+
+To delete the PVCs associated with the release:
+
+    kubectl delete pvc -l app.kubernetes.io/instance=exivity

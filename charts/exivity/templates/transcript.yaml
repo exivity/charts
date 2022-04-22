@@ -71,7 +71,7 @@ spec:
         - name: EXIVITY_APP_KEY
           valueFrom:
             secretKeyRef:
-              name: exivity-secrets
+              name: exivity-app-key
               key: app_key
       imagePullSecrets:
       - name: ghcr

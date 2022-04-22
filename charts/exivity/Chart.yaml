@@ -1,8 +1,8 @@
 apiVersion: v2
 name: exivity
-version: '0.2.6'
+version: '0.2.7'
 description: The chart to deploy Exivity to a kubernetes cluster
 dependencies:
-- name: redis
+- name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: '16.6.0'
+  version: '11.1.22'

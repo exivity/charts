@@ -23,11 +23,11 @@ data:
       "db": {
         "driver": "postgres",
         "parameters": {
-          "host": "{{ .Values.database.host }}",
-          "port": {{ .Values.database.port }},
-          "dbname": "{{ .Values.database.dbname }}",
-          "user": "{{ .Values.database.username }}",
-          "password": "{{ .Values.database.password }}",
+          "host": "{{ .Values.postgresql.fullnameOverride }}",
+          "port": 5432,
+          "dbname": "{{ .Values.postgresql.auth.database }}",
+          "user": "{{ .Values.postgresql.auth.username }}",
+          "password": "{{ .Values.postgresql.auth.password }}",
           "connect_timeout": 10,
           "sslmode": "disable"
         }
@@ -39,13 +39,13 @@ data:
       "mq": {
         "servers": [
           {
-            "host": "{{ .Values.rabbitMQ.host }}",
-            "port": {{ .Values.rabbitMQ.port }},
+            "host": "{{ .Values.rabbitmq.host }}",
+            "port": {{ .Values.rabbitmq.port }},
             "secure": false
           }
         ],
-        "user": "{{ .Values.rabbitMQ.user }}",
-        "password": "{{ .Values.rabbitMQ.password }}",
+        "user": "{{ .Values.rabbitmq.user }}",
+        "password": "{{ .Values.rabbitmq.password }}",
         "vhost": "/",
         "redialPeriod": 5
       {{ if .appname }}
