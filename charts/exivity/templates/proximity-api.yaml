@@ -9,7 +9,6 @@ spec:
   selector:
     matchLabels:
       exivity.k8s/component: proximity-api
-      {{- include "exivity.default_labels" . | indent 6 }}
   replicas: 1
   template:
     metadata:

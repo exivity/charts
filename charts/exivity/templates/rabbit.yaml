@@ -26,7 +26,6 @@ spec:
   selector:
     matchLabels:
       exivity.k8s/component: rabbitmq
-      {{- include "exivity.default_labels" . | indent 6 }}
   serviceName: rabbit
   replicas: 1
   template:
