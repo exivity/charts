@@ -2,6 +2,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: exivity-etl-config
+  annotations:
+    "helm.sh/resource-policy": keep
   labels:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
@@ -19,6 +21,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: exivity-exported
+  annotations:
+    "helm.sh/resource-policy": keep
   labels:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
@@ -36,6 +40,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: exivity-extracted
+  annotations:
+    "helm.sh/resource-policy": keep
   labels:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
@@ -53,6 +59,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: exivity-import
+  annotations:
+    "helm.sh/resource-policy": keep
   labels:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
@@ -70,6 +78,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: exivity-report
+  annotations:
+    "helm.sh/resource-policy": keep
   labels:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:

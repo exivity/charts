@@ -129,9 +129,9 @@ spec:
         - name: REDIS_HOST
           value: exivity-redis-master
         - name: CACHE_DRIVER
-          value: redis
+          value: file
         - name: QUEUE_DRIVER
-          value: redis
+          value: sync
       imagePullSecrets:
       - name: ghcr
 ---
