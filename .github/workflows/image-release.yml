@@ -1,9 +1,5 @@
 name: Release Images
 
-env:
-  DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
-  DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
-
 on:
   release:
     types: [published]
@@ -22,3 +18,6 @@ jobs:
       with:
         oldTag: develop
         newTag: $GITHUB_REF
+      env:
+        DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
+        DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
