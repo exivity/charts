@@ -3,7 +3,7 @@ name: Release Images
 on:
   push:
     tag:
-    - '*'
+    - '0.*'
   workflow_dispatch:
 
 jobs:
