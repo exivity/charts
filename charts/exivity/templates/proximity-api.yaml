@@ -69,7 +69,7 @@ spec:
           claimName: exivity-extracted
       containers:
       - name: proximity-api
-        image: {{ .Values.service.proximityApi.image }}:{{ .Values.service.proximityApi.tag | default(.Chart.Version) }}
+        image: {{ .Values.service.proximityApi.image }}:{{ .Values.service.proximityApi.tag | default("exivity-" .Chart.Version) }}
         imagePullPolicy: Always
         resources:
           requests:
