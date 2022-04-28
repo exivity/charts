@@ -22,7 +22,7 @@ spec:
           claimName: exivity-glass-log
       containers:
       - name: glass
-        image: {{ .Values.images.glass }}
+        image: {{ .Values.service.glass.image }}:{{ .Values.service.glass.tag }}
         imagePullPolicy: Always
         resources:
           requests:
@@ -68,3 +68,6 @@ spec:
   resources:
     requests:
       storage: 1Gi
+{{- if .Values.storage.storageClass }}
+  storageClassName: {{ .Values.storage.storageClass }}
+{{ end }}

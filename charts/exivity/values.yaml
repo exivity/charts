@@ -1,16 +1,10 @@
-# Private values that need to be configured
-# license:
-# appKey:
-# JWTSecret:
-
 ingress:
   enable: true
   host: localhost
 
 storage:
   singleNode: true
-  storageClass: default
-  resourcePolicy: keep
+  helmResourcePolicyKeep: false
 
 # bitnami/postgresql chart config
 postgresql:
@@ -27,7 +21,6 @@ postgresql:
 database:
   initialise: true
 
-# Rabbitmq config
 rabbitmq:
   user: guest
   password: guest
@@ -36,16 +29,39 @@ rabbitmq:
   port: 5672
   useExternalServers: false
 
-images:
-  chronos: ghcr.io/exivity/chronos:k8s
-  db_init: ghcr.io/exivity/db:feat-unpriv
-  edify: ghcr.io/exivity/edify:k8s
-  glass: ghcr.io/exivity/glass:feat-unpriv
-  griffon: ghcr.io/exivity/griffon:k8s
-  horizon: ghcr.io/exivity/horizon:k8s
-  pigeon: ghcr.io/exivity/pigeon:k8s
-  proximityApi: ghcr.io/exivity/proximity-api:k8s
-  proximityCli: ghcr.io/exivity/proximity-cli:k8s
-  rabbitmq: rabbitmq:3.9
-  transcript: ghcr.io/exivity/transcript:k8s
-  use: ghcr.io/exivity/use:k8s
+service:
+  chronos:
+    image: ghcr.io/exivity/chronos
+    tag: k8s
+  dbInit:
+    image: ghcr.io/exivity/db
+    tag: feat-unpriv
+  edify:
+    image: ghcr.io/exivity/edify
+    tag: k8s
+  glass:
+    image: ghcr.io/exivity/glass
+    tag: feat-unpriv
+  griffon:
+    image: ghcr.io/exivity/griffon
+    tag: k8s
+  horizon:
+    image: ghcr.io/exivity/horizon
+    tag: k8s
+  pigeon:
+    image: ghcr.io/exivity/pigeon
+    tag: k8s
+  proximityApi:
+    image: docker.io/exivity/proximity-api
+  proximityCli:
+    image: ghcr.io/exivity/proximity-cli
+    tag: k8s
+  rabbitmq:
+    image: rabbitmq
+    tag: 3.9
+  transcript:
+    image: ghcr.io/exivity/transcript
+    tag: k8s
+  use:
+    image: ghcr.io/exivity/use
+    tag: k8s

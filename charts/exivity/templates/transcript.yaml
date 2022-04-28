@@ -40,7 +40,7 @@ spec:
           claimName: exivity-report
       containers:
       - name: transcript
-        image: {{ .Values.images.transcript }}
+        image: {{ .Values.service.transcript.image }}:{{ .Values.service.transcript.tag }}
         imagePullPolicy: Always
         resources:
           requests:
@@ -91,3 +91,6 @@ spec:
   resources:
     requests:
       storage: 100Mi
+{{- if .Values.storage.storageClass }}
+  storageClassName: {{ .Values.storage.storageClass }}
+{{ end }}

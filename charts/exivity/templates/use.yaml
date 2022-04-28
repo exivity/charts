@@ -37,7 +37,7 @@ spec:
           claimName: exivity-use-log
       containers:
       - name: use
-        image: {{ .Values.images.use }}
+        image: {{ .Values.service.use.image }}:{{ .Values.service.use.tag }}
         imagePullPolicy: Always
         resources:
           requests:
@@ -88,3 +88,6 @@ spec:
   resources:
     requests:
       storage: 100Mi
+{{- if .Values.storage.storageClass }}
+  storageClassName: {{ .Values.storage.storageClass }}
+{{ end }}

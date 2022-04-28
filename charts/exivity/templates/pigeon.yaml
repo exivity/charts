@@ -24,7 +24,7 @@ spec:
           claimName: exivity-pigeon-log
       containers:
       - name: pigeon
-        image: {{ .Values.images.pigeon }}
+        image: {{ .Values.service.pigeon.image }}:{{ .Values.service.pigeon.tag }}
         imagePullPolicy: Always
         resources:
           requests:
@@ -139,3 +139,6 @@ spec:
   resources:
     requests:
       storage: 100Mi
+{{- if .Values.storage.storageClass }}
+  storageClassName: {{ .Values.storage.storageClass }}
+{{ end }}

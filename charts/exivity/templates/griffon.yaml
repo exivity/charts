@@ -28,7 +28,7 @@ spec:
           claimName: exivity-griffon-log
       containers:
       - name: griffon
-        image: {{ .Values.images.griffon }}
+        image: {{ .Values.service.griffon.image }}:{{ .Values.service.griffon.tag }}
         imagePullPolicy: Always
         resources:
           requests:
@@ -60,6 +60,9 @@ spec:
   resources:
     requests:
       storage: 1Gi
+{{- if .Values.storage.storageClass }}
+  storageClassName: {{ .Values.storage.storageClass }}
+{{ end }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -74,3 +77,6 @@ spec:
   resources:
     requests:
       storage: 1Gi
+{{- if .Values.storage.storageClass }}
+  storageClassName: {{ .Values.storage.storageClass }}
+{{ end }}
