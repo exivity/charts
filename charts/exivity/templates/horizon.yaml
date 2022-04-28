@@ -25,7 +25,7 @@ spec:
           claimName: exivity-horizon-log
       containers:
       - name: horizon
-        image: {{ .Values.images.horizon }}
+        image: {{ .Values.service.horizon.image }}:{{ .Values.service.horizon.tag }}
         imagePullPolicy: Always
         resources:
           requests:
@@ -61,3 +61,6 @@ spec:
   resources:
     requests:
       storage: 100Mi
+{{- if .Values.storage.storageClass }}
+  storageClassName: {{ .Values.storage.storageClass }}
+{{ end }}

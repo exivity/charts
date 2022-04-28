@@ -28,7 +28,7 @@ spec:
           claimName: exivity-chronos-log
       containers:
       - name: chronos
-        image: {{ .Values.images.chronos }}
+        image: {{ .Values.service.chronos.image }}:{{ .Values.service.chronos.tag }}
         imagePullPolicy: Always
         resources:
           requests:
@@ -60,6 +60,9 @@ spec:
   resources:
     requests:
       storage: 1Gi
+{{- if .Values.storage.storageClass }}
+  storageClassName: {{ .Values.storage.storageClass }}
+{{ end }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -74,3 +77,6 @@ spec:
   resources:
     requests:
       storage: 1Gi
+{{- if .Values.storage.storageClass }}
+  storageClassName: {{ .Values.storage.storageClass }}
+{{ end }}

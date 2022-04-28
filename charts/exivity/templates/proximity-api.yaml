@@ -69,7 +69,7 @@ spec:
           claimName: exivity-extracted
       containers:
       - name: proximity-api
-        image: {{ .Values.images.proximity_api }}
+        image: {{ .Values.service.proximityApi.image }}:{{ .Values.service.proximityApi.tag || .Chart.Version }}
         imagePullPolicy: Always
         resources:
           requests:
@@ -129,7 +129,7 @@ spec:
           value: exivity-redis-master
         - name: CACHE_DRIVER
           value: file
-        - name: QUEUE_DRIVER
+        - name: QUEUE_CONNECTION
           value: sync
       imagePullSecrets:
       - name: ghcr
@@ -163,6 +163,9 @@ spec:
   resources:
     requests:
       storage: 100Mi
+{{- if .Values.storage.storageClass }}
+  storageClassName: {{ .Values.storage.storageClass }}
+{{ end }}
 ---
 apiVersion: v1
 kind: ConfigMap

@@ -1,0 +1,23 @@
+name: Release Images
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  image-release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        name:
+        - proximity-api
+    steps:
+    - name: release images with tags
+      uses: exivity/actions/docker-retag-image@chore/build-script-retag-action
+      with:
+        oldTag: develop
+        newTag: $GITHUB_REF
+      env:
+        DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
+        DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}

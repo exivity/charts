@@ -1,3 +1,4 @@
+{{- if .Values.ingress.enable }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -11,7 +12,7 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - {{ .Values.host }}
+    - {{ .Values.ingress.host }}
     secretName: exivity-tls
   rules:
   - host: {{ .Values.host }}
@@ -31,8 +32,9 @@ spec:
               name: glass
               port:
                 number: 80
+{{ end }}
 ---
-{{- if eq .Values.host "localhost" }}
+{{- if eq .Values.ingress.host "localhost" }}
 apiVersion: v1
 kind: Secret
 metadata:
@@ -41,7 +43,7 @@ metadata:
     {{- include "exivity.default_labels" . | indent 4 }}
 data:
   {{ $ca := genCA "exivity-ca" 365 }}
-  {{ $cert := genSignedCert "exivity-gui" nil (list .Values.host "localhost") 365 $ca }}
+  {{ $cert := genSignedCert "exivity-gui" nil (list .Values.ingress.host "localhost") 365 $ca }}
   tls.crt: {{ $cert.Cert | b64enc }}
   tls.key: {{ $cert.Key | b64enc }}
 type: kubernetes.io/tls

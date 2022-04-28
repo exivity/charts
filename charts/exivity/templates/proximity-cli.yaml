@@ -40,7 +40,7 @@ spec:
           claimName: exivity-exported
       containers:
       - name: proximity-cli
-        image: {{ .Values.images.proximity_cli }}
+        image: {{ .Values.service.proximityCli.image }}:{{ .Values.service.proximityCli.tag }}
         imagePullPolicy: Always
         resources:
           requests:
@@ -101,3 +101,6 @@ spec:
   resources:
     requests:
       storage: 100Mi
+{{- if .Values.storage.storageClass }}
+  storageClassName: {{ .Values.storage.storageClass }}
+{{ end }}

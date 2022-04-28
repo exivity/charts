@@ -12,7 +12,8 @@ spec:
     spec:
       containers:
       - name: database-init
-        image: {{ .Values.images.db_init }}
+        image: {{ .Values.service.dbInit.image }}:{{ .Values.service.dbInit.tag }}
+
         imagePullPolicy: Always
         env:
         - name: PGUSER

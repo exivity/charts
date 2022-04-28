@@ -36,7 +36,7 @@ spec:
     spec:
       containers:
       - name: exivity-rabbit
-        image: {{ .Values.images.rabbitmq }}
+        image: {{ .Values.service.rabbitmq.image }}:{{ .Values.service.rabbitmq.tag }}
         resources:
           requests:
             cpu: "25m"

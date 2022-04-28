@@ -34,7 +34,7 @@ spec:
           claimName: exivity-report
       containers:
       - name: edify
-        image: {{ .Values.images.edify }}
+        image: {{ .Values.service.edify.image }}:{{ .Values.service.edify.tag }}
         imagePullPolicy: Always
         resources:
           requests:
@@ -75,3 +75,6 @@ spec:
   resources:
     requests:
       storage: 100Mi
+{{- if .Values.storage.storageClass }}
+  storageClassName: {{ .Values.storage.storageClass }}
+{{ end }}
