@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: release images with tags
-      uses: exivity/docker-retag-image@chore/build-script-retag-action
+      uses: exivity/actions/docker-retag-image@chore/build-script-retag-action
       with:
         name: proximity-api
         oldTag: develop
