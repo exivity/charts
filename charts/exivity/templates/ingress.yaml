@@ -1,3 +1,4 @@
+{{- if eq .Values.ingress.enable }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -31,8 +32,9 @@ spec:
               name: glass
               port:
                 number: 80
+{{ end }}
 ---
-{{- if eq .Values.host "localhost" }}
+{{- if eq .Values.ingress.host "localhost" }}
 apiVersion: v1
 kind: Secret
 metadata:

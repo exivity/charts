@@ -3,12 +3,12 @@ kind: PersistentVolumeClaim
 metadata:
   name: exivity-etl-config
   annotations:
-    "helm.sh/resource-policy": keep
+    "helm.sh/resource-policy": {{ .Values.storage.resourcePolicy}}
   labels:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
-  {{- if .Values.singleNode }}
+  {{- if .Values.storage.singleNode }}
   - ReadWriteOnce
   {{- else }}
   - ReadWriteMany
@@ -16,18 +16,19 @@ spec:
   resources:
     requests:
       storage: 1Gi
+  storageClassName: {{ .Values.storage.storageClass }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: exivity-exported
   annotations:
-    "helm.sh/resource-policy": keep
+    "helm.sh/resource-policy": {{ .Values.storage.resourcePolicy}}
   labels:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
-  {{- if .Values.singleNode }}
+  {{- if .Values.storage.singleNode }}
   - ReadWriteOnce
   {{- else }}
   - ReadWriteMany
@@ -35,18 +36,19 @@ spec:
   resources:
     requests:
       storage: 1Gi
+  storageClassName: {{ .Values.storage.storageClass }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: exivity-extracted
   annotations:
-    "helm.sh/resource-policy": keep
+    "helm.sh/resource-policy": {{ .Values.storage.resourcePolicy}}
   labels:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
-  {{- if .Values.singleNode }}
+  {{- if .Values.storage.singleNode }}
   - ReadWriteOnce
   {{- else }}
   - ReadWriteMany
@@ -60,12 +62,12 @@ kind: PersistentVolumeClaim
 metadata:
   name: exivity-import
   annotations:
-    "helm.sh/resource-policy": keep
+    "helm.sh/resource-policy": {{ .Values.storage.resourcePolicy}}
   labels:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
-  {{- if .Values.singleNode }}
+  {{- if .Values.storage.singleNode }}
   - ReadWriteOnce
   {{- else }}
   - ReadWriteMany
@@ -73,18 +75,19 @@ spec:
   resources:
     requests:
       storage: 1Gi
+  storageClassName: {{ .Values.storage.storageClass }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: exivity-report
   annotations:
-    "helm.sh/resource-policy": keep
+    "helm.sh/resource-policy": {{ .Values.storage.resourcePolicy}}
   labels:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
-  {{- if .Values.singleNode }}
+  {{- if .Values.storage.singleNode }}
   - ReadWriteOnce
   {{- else }}
   - ReadWriteMany
@@ -92,3 +95,4 @@ spec:
   resources:
     requests:
       storage: 1Gi
+  storageClassName: {{ .Values.storage.storageClass }}

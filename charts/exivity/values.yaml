@@ -3,8 +3,14 @@
 # appKey:
 # JWTSecret:
 
-host: localhost
-singleNode: true
+ingress:
+  enable: true
+  host: localhost
+
+storage:
+  singleNode: true
+  storageClass: default
+  resourcePolicy: keep
 
 # bitnami/postgresql chart config
 postgresql:
@@ -38,8 +44,8 @@ images:
   griffon: ghcr.io/exivity/griffon:k8s
   horizon: ghcr.io/exivity/horizon:k8s
   pigeon: ghcr.io/exivity/pigeon:k8s
-  proximity_api: ghcr.io/exivity/proximity-api:k8s
-  proximity_cli: ghcr.io/exivity/proximity-cli:k8s
+  proximityApi: ghcr.io/exivity/proximity-api:k8s
+  proximityCli: ghcr.io/exivity/proximity-cli:k8s
   rabbitmq: rabbitmq:3.9
   transcript: ghcr.io/exivity/transcript:k8s
   use: ghcr.io/exivity/use:k8s
