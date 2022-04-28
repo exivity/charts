@@ -1,5 +1,9 @@
 name: Release Images
+
 on:
+  push:
+    branches:
+    - retag-release
   workflow_dispatch:
 
 jobs:
