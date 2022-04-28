@@ -2,8 +2,8 @@ name: Release Images
 
 on:
   push:
-    tags:
-    - '*'
+    release:
+    - created
   workflow_dispatch:
 
 jobs:
