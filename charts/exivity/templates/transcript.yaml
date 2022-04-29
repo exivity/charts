@@ -40,7 +40,7 @@ spec:
           claimName: exivity-report
       containers:
       - name: transcript
-        image: {{ .Values.service.transcript.image }}:{{ .Values.service.transcript.tag }}
+        image: {{ .Values.service.transcript.tag | default (printf "exivity-%s" (.Chart.Version)) }}
         imagePullPolicy: Always
         resources:
           requests:

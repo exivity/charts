@@ -4,6 +4,7 @@ on:
   push:
     tags:
     - '*'
+  workflow_dispatch:
 
 jobs:
   image-release:
@@ -17,7 +18,10 @@ jobs:
         - edify
         - glass
         - griffon
+        - horizon
         - proximity-api
+        - proximity-cli
+        - transcript
         - use
     steps:
     - name: release images with tags

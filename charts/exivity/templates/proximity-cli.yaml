@@ -40,7 +40,7 @@ spec:
           claimName: exivity-exported
       containers:
       - name: proximity-cli
-        image: {{ .Values.service.proximityCli.image }}:{{ .Values.service.proximityCli.tag }}
+        image: {{ .Values.service.proximityCli.tag | default (printf "exivity-%s" (.Chart.Version)) }}
         imagePullPolicy: Always
         resources:
           requests:

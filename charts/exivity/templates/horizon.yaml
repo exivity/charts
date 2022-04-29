@@ -25,7 +25,7 @@ spec:
           claimName: exivity-horizon-log
       containers:
       - name: horizon
-        image: {{ .Values.service.horizon.image }}:{{ .Values.service.horizon.tag }}
+        image: {{ .Values.service.horizon.tag | default (printf "exivity-%s" (.Chart.Version)) }}
         imagePullPolicy: Always
         resources:
           requests:

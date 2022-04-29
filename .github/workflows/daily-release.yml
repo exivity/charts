@@ -16,7 +16,10 @@ jobs:
         - edify
         - glass
         - griffon
+        - horizon
         - proximity-api
+        - proximity-cli
+        - transcript
         - use
     steps:
     - name: release images with tags
