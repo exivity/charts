@@ -22,7 +22,7 @@ spec:
           claimName: exivity-glass-log
       containers:
       - name: glass
-        image: {{ .Values.service.glass.image }}:{{ .Values.service.glass.tag }}
+        image: {{ .Values.service.glass.image }}:{{ .Values.service.glass.tag | default (printf "exivity-%s" (.Chart.Version)) }}
         imagePullPolicy: Always
         resources:
           requests:

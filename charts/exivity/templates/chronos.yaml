@@ -28,7 +28,7 @@ spec:
           claimName: exivity-chronos-log
       containers:
       - name: chronos
-        image: {{ .Values.service.chronos.image }}:{{ .Values.service.chronos.tag }}
+        image: {{ .Values.service.chronos.tag | default (printf "exivity-%s" (.Chart.Version)) }}
         imagePullPolicy: Always
         resources:
           requests:

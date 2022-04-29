@@ -34,7 +34,7 @@ spec:
           claimName: exivity-report
       containers:
       - name: edify
-        image: {{ .Values.service.edify.image }}:{{ .Values.service.edify.tag }}
+        image: {{ .Values.service.edify.tag | default (printf "exivity-%s" (.Chart.Version)) }}
         imagePullPolicy: Always
         resources:
           requests:

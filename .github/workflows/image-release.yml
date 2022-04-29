@@ -3,7 +3,7 @@ name: Release Images
 on:
   push:
     tags:
-      - '*'
+    - '*'
 
 jobs:
   image-release:
@@ -12,7 +12,13 @@ jobs:
     strategy:
       matrix:
         name:
+        - chronos
+        - db
+        - edify
+        - glass
+        - griffon
         - proximity-api
+        - use
     steps:
     - name: release images with tags
       uses: exivity/actions/docker-retag-image@chore/build-script-retag-action

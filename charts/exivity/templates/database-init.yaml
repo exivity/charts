@@ -12,8 +12,7 @@ spec:
     spec:
       containers:
       - name: database-init
-        image: {{ .Values.service.dbInit.image }}:{{ .Values.service.dbInit.tag }}
-
+        image: {{ .Values.service.dbInit.tag | default (printf "exivity-%s" (.Chart.Version)) }}
         imagePullPolicy: Always
         env:
         - name: PGUSER

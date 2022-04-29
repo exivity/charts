@@ -37,7 +37,7 @@ spec:
           claimName: exivity-use-log
       containers:
       - name: use
-        image: {{ .Values.service.use.image }}:{{ .Values.service.use.tag }}
+        image: {{ .Values.service.use.tag | default (printf "exivity-%s" (.Chart.Version)) }}
         imagePullPolicy: Always
         resources:
           requests:
