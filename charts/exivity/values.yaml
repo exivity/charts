@@ -31,28 +31,29 @@ rabbitmq:
 
 service:
   chronos:
-    image: ghcr.io/exivity/chronos
+    image: docker.io/exivity/chronos
   dbInit:
-    image: ghcr.io/exivity/db
+    image: docker.io/exivity/db
   edify:
-    image: ghcr.io/exivity/edify
+    image: docker.io/exivity/edify
   glass:
     image: ghcr.io/exivity/glass
+    tag: feat-unpriv
   griffon:
-    image: ghcr.io/exivity/griffon
+    image: docker.io/exivity/griffon
   horizon:
-    image: ghcr.io/exivity/horizon
+    image: docker.io/exivity/horizon
   pigeon:
     image: ghcr.io/exivity/pigeon
     tag: k8s
   proximityApi:
     image: docker.io/exivity/proximity-api
   proximityCli:
-    image: ghcr.io/exivity/proximity-cli
+    image: docker.io/exivity/proximity-cli
   rabbitmq:
     image: rabbitmq
     tag: 3.9
   transcript:
-    image: ghcr.io/exivity/transcript
+    image: docker.io/exivity/transcript
   use:
-    image: ghcr.io/exivity/use
+    image: docker.io/exivity/use

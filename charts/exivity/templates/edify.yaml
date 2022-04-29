@@ -34,7 +34,7 @@ spec:
           claimName: exivity-report
       containers:
       - name: edify
-        image: {{ .Values.service.edify.tag | default (printf "exivity-%s" (.Chart.Version)) }}
+        image: {{ .Values.service.edify.image }}:{{ .Values.service.edify.tag | default (printf "exivity-%s" (.Chart.Version)) }}
         imagePullPolicy: Always
         resources:
           requests:
@@ -57,6 +57,7 @@ spec:
         - name: report
           mountPath: /exivity/home/system/report
       imagePullSecrets:
+      - name: regcred
       - name: ghcr
 ---
 # add templated configmap providing the service with the required config.json

@@ -24,7 +24,7 @@ spec:
           claimName: exivity-pigeon-log
       containers:
       - name: pigeon
-        image: {{ .Values.service.pigeon.image }}:{{ .Values.service.pigeon.tag }}
+        image: {{ .Values.service.pigeon.image }}:{{ .Values.service.pigeon.tag | default (printf "exivity-%s" (.Chart.Version)) }}
         imagePullPolicy: Always
         resources:
           requests:
@@ -55,6 +55,7 @@ spec:
         - name: QUEUE_DRIVER
           value: redis
       imagePullSecrets:
+      - name: regcred
       - name: ghcr
 ---
 # pigeon listens to multiple MQ topics, so it gets its own config definition for now

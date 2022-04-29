@@ -40,7 +40,7 @@ spec:
           claimName: exivity-exported
       containers:
       - name: proximity-cli
-        image: {{ .Values.service.proximityCli.tag | default (printf "exivity-%s" (.Chart.Version)) }}
+        image: {{ .Values.service.proximityCli.image }}:{{ .Values.service.proximityCli.tag | default (printf "exivity-%s" (.Chart.Version)) }}
         imagePullPolicy: Always
         resources:
           requests:
@@ -83,6 +83,7 @@ spec:
               name: exivity-jwt-secret
               key: jwt_secret
       imagePullSecrets:
+      - name: regcred
       - name: ghcr
 ---
 # add templated configmap providing the service with the required config.json

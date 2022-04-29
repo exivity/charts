@@ -28,7 +28,7 @@ spec:
           claimName: exivity-chronos-log
       containers:
       - name: chronos
-        image: {{ .Values.service.chronos.tag | default (printf "exivity-%s" (.Chart.Version)) }}
+        image: {{ .Values.service.chronos.image }}:{{ .Values.service.chronos.tag | default (printf "exivity-%s" (.Chart.Version)) }}
         imagePullPolicy: Always
         resources:
           requests:
@@ -45,6 +45,7 @@ spec:
         - name: log
           mountPath: /exivity/home/log/chronos
       imagePullSecrets:
+      - name: regcred
       - name: ghcr
 ---
 apiVersion: v1

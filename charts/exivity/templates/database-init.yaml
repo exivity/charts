@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: database-init
-        image: {{ .Values.service.dbInit.tag | default (printf "exivity-%s" (.Chart.Version)) }}
+        image: {{ .Values.service.dbInit.image }}:{{ .Values.service.dbInit.tag | default (printf "exivity-%s" (.Chart.Version)) }}
         imagePullPolicy: Always
         env:
         - name: PGUSER
@@ -23,6 +23,7 @@ spec:
           value: {{ .Values.postgresql.fullnameOverride }}
       restartPolicy: Never
       imagePullSecrets:
+      - name: regcred
       - name: ghcr
   backoffLimit: 4
   completions: 1

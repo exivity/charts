@@ -37,7 +37,7 @@ spec:
           claimName: exivity-use-log
       containers:
       - name: use
-        image: {{ .Values.service.use.tag | default (printf "exivity-%s" (.Chart.Version)) }}
+        image: {{ .Values.service.use.image }}:{{ .Values.service.use.tag | default (printf "exivity-%s" (.Chart.Version)) }}
         imagePullPolicy: Always
         resources:
           requests:
@@ -70,6 +70,7 @@ spec:
         - name: RUN_DELAY
           value: "10"
       imagePullSecrets:
+      - name: regcred
       - name: ghcr
 ---
 # add templated configmap providing the service with the required config.json

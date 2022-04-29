@@ -28,7 +28,7 @@ spec:
           claimName: exivity-griffon-log
       containers:
       - name: griffon
-        image: {{ .Values.service.griffon.tag | default (printf "exivity-%s" (.Chart.Version)) }}
+        image: {{ .Values.service.griffon.image }}:{{ .Values.service.griffon.tag | default (printf "exivity-%s" (.Chart.Version)) }}
         imagePullPolicy: Always
         resources:
           requests:
@@ -45,6 +45,7 @@ spec:
         - name: log
           mountPath: /exivity/home/log/griffon
       imagePullSecrets:
+      - name: regcred
       - name: ghcr
 ---
 apiVersion: v1

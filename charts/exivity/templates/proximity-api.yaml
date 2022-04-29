@@ -67,6 +67,9 @@ spec:
       - name: extracted
         persistentVolumeClaim:
           claimName: exivity-extracted
+      - name: exivity-lock
+        configMap:
+          name: exivity-lock
       containers:
       - name: proximity-api
         image: {{ .Values.service.proximityApi.image }}:{{ .Values.service.proximityApi.tag | default (printf "exivity-%s" (.Chart.Version)) }}
@@ -109,6 +112,8 @@ spec:
           mountPath: /exivity/home/import
         - name: report
           mountPath: /exivity/home/system/report
+        - name: exivity-lock
+          mountPath: /exivity/program
         env:
         - name: EXIVITY_APP_KEY
           valueFrom:
@@ -132,6 +137,7 @@ spec:
         - name: QUEUE_CONNECTION
           value: sync
       imagePullSecrets:
+      - name: regcred
       - name: ghcr
 ---
 apiVersion: v1
@@ -201,4 +207,25 @@ metadata:
     {{- include "exivity.default_labels" . | indent 4 }}
 data:
   license.key: {{ .Values.license }}
+{{ end }}
+---
+{{- if .Values.license }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: exivity-lock
+  labels:
+    exivity.k8s/component: proximity-api
+    {{- include "exivity.default_labels" . | indent 4 }}
+data:
+  exivity.lock: |
+    {
+        "version": "{{ .Chart.Version }}",
+        "components": {
+            "exivity-helm-chart": {
+                "ref": "{{ .Chart.Version }}",
+                "hash": "{{ .Chart.Description }}"
+            }
+        }
+    }
 {{ end }}

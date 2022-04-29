@@ -25,7 +25,7 @@ spec:
           claimName: exivity-horizon-log
       containers:
       - name: horizon
-        image: {{ .Values.service.horizon.tag | default (printf "exivity-%s" (.Chart.Version)) }}
+        image: {{ .Values.service.horizon.image }}:{{ .Values.service.horizon.tag | default (printf "exivity-%s" (.Chart.Version)) }}
         imagePullPolicy: Always
         resources:
           requests:
@@ -42,6 +42,7 @@ spec:
         - name: log
           mountPath: /exivity/home/log/merlin
       imagePullSecrets:
+      - name: regcred
       - name: ghcr
 ---
 # add templated configmap providing the service with the required config.json

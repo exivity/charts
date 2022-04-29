@@ -19,6 +19,7 @@ jobs:
         - glass
         - griffon
         - horizon
+        - pigeon
         - proximity-api
         - proximity-cli
         - transcript
