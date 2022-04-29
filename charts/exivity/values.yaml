@@ -37,15 +37,13 @@ service:
   edify:
     image: docker.io/exivity/edify
   glass:
-    image: ghcr.io/exivity/glass
-    tag: feat-unpriv
+    image: docker.io/exivity/glass
   griffon:
     image: docker.io/exivity/griffon
   horizon:
     image: docker.io/exivity/horizon
   pigeon:
-    image: ghcr.io/exivity/pigeon
-    tag: k8s
+    image: docker.io/exivity/pigeon
   proximityApi:
     image: docker.io/exivity/proximity-api
   proximityCli:
