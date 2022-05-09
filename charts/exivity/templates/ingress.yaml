@@ -13,9 +13,9 @@ spec:
   tls:
   - hosts:
     - {{ .Values.ingress.host }}
-    secretName: exivity-tls
+    secretName: {{ .Values.ingress.tlsSecret }}
   rules:
-  - host: {{ .Values.host }}
+  - host: {{ .Values.ingress.host }}
     http:
       paths:
         - path: '/v1'

@@ -1,6 +1,7 @@
 ingress:
   enable: true
   host: localhost
+  tslSecret: exivity-tls
 
 storage:
   singleNode: true
@@ -8,6 +9,7 @@ storage:
 
 # bitnami/postgresql chart config
 postgresql:
+  enabled: true
   image:
     tag: 12.10.0
     pullPolicy: Always
@@ -22,12 +24,12 @@ database:
   initialise: true
 
 rabbitmq:
+  enabled: true
   user: guest
   password: guest
   vhost: /
   host: rabbit
   port: 5672
-  useExternalServers: false
 
 service:
   chronos:

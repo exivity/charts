@@ -38,3 +38,33 @@ To uninstall the chart:
 To delete the PVCs associated with the release:
 
     kubectl delete pvc -l app.kubernetes.io/instance=exivity
+
+## Parameters
+
+### Common Params
+| Name                           | Description                                             | Default Value |
+|--------------------------------|---------------------------------------------------------|---------------|
+| ingress.enable                 | enable creation of an Ingress object                    | true          |
+| ingress.host                   | define ingress host                                     | localhost     |
+| ingress.tlsSecret              | define name for TLS secret                              | exivity-tls   |
+| storage.singleNode             | set all shared PVC accessmodes to 'ReadWriteOne'        | true          |
+| storage.helmResourcePolicyKeep | set helmResourcePolicyKeep for PVCs                     | false         |
+| postgresql.enabled             | install an instance of Postgresql                       | true          |
+| postgresql.auth.database       | name of the database to be used                         | exivity       |
+| postgresql.auth.username       | user for the database                                   | exivity       |
+| postgresql.auth.password       | password for the database                               | Password12!   |
+| database.initialise            | create the 'database-init' Job, applying all migrations | true          |
+| rabbitmq.enabled               | install an instance of RabbitMQ                         | true          |
+| rabbitmq.user                  | username for RabbitMQ                                   | guest         |
+| rabbitmq.password              | password for RabbitMQ                                   | guest         |
+| rabbitmq.host                  | hostname for the RabbitMQ service                       | rabbit        |
+| rabbitmq.vhost                 | vhost for the RabbitMQ service                          | /             |
+| rabbitmq.port                  | port for the RabbitMQ service                           | 5672          |
+
+### Image Params
+All of the services can be defined following this schema.
+
+| Name                        | Description                                         | Default Value                   |
+|-----------------------------|-----------------------------------------------------|---------------------------------|
+| service.<servicename>.image | name of the image                                   | docker.io/exivity/<servicename> |
+| service.<servicename>.tag   | tag of the image, references the Helm Chart version | exivity-<chartversion>          |

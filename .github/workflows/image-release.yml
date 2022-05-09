@@ -26,11 +26,11 @@ jobs:
         - use
     steps:
     - name: release images with tags
-      uses: exivity/actions/docker-retag-image@chore/build-script-retag-action
+      uses: exivity/actions/retag-image@chore/build-script-retag-action
       with:
-        oldTag: develop
-        newTag: ${{ github.ref_name }}
-        name: ${{ matrix.name }}
-      env:
-        DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
-        DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
+        source-name: ${{ matrix.name }}
+        source-tag: develop
+        target-name: ${{ matrix.name }}
+        target-tag: ${{ github.ref_name }}
+        target-user: ${{ secrets.DOCKER_HUB_USER }}
+        target-password: ${{ secrets.DOCKER_HUB_TOKEN }}
