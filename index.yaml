@@ -1,0 +1,293 @@
+apiVersion: v1
+entries:
+  exivity:
+  - apiVersion: v2
+    created: "2022-05-09T14:07:30.391021771Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.22
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: 69f6396dcf9c4f65a4d3fa877308ae43187cd664f65d2be4a99fa1c0b69c1e40
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.24/exivity-0.2.24.tgz
+    version: 0.2.24
+  - apiVersion: v2
+    created: "2022-04-29T13:22:52.972873764Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.22
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: 3d0c211d9d9972adc19e1bd9ddfc01cd5db8f424131c867b4e30818edde71d74
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.23/exivity-0.2.23.tgz
+    version: 0.2.23
+  - apiVersion: v2
+    created: "2022-04-29T12:41:11.660719121Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.22
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: 91f53388b26be43eab3a04ac507975ad77047d61d7502d8cf81f72d70f303aa8
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.22/exivity-0.2.22.tgz
+    version: 0.2.22
+  - apiVersion: v2
+    created: "2022-04-29T08:27:39.623547279Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.22
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: 3c8b6333b0a2e8da0fa163188ea3f9aedf451fadb059fa530e633381a64788d6
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.21/exivity-0.2.21.tgz
+    version: 0.2.21
+  - apiVersion: v2
+    created: "2022-04-29T08:13:23.529083714Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.22
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: 487a920d2b323540beeba2ce54e2fe24ad3b9e4e1dc151d5396cda5df90a40b5
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.20/exivity-0.2.20.tgz
+    version: 0.2.20
+  - apiVersion: v2
+    created: "2022-04-28T20:25:54.947779717Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.22
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: b45224385099a8af5788b9f4dbb1fe2d848ef3c6eff0fa86cca79071fcb20c3e
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.19/exivity-0.2.19.tgz
+    version: 0.2.19
+  - apiVersion: v2
+    created: "2022-04-28T15:00:06.175323727Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.22
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: a0cf486d7e665fcf7a0baf6cbc3f851982a9e364db8ff3dcba6722f53e1652da
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.18/exivity-0.2.18.tgz
+    version: 0.2.18
+  - apiVersion: v2
+    created: "2022-04-28T14:58:37.645087178Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.22
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: 1a4e66c7e7f204f81159bb99e096a5a75cceb211a6da3a5d7036f69871941a83
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.17/exivity-0.2.17.tgz
+    version: 0.2.17
+  - apiVersion: v2
+    created: "2022-04-28T14:44:22.638103472Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.22
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: 6ea39bf170f86e0ea9bf36f77a28c599c9c2cd92a979b495714150410b03fe09
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.16/exivity-0.2.16.tgz
+    version: 0.2.16
+  - apiVersion: v2
+    created: "2022-04-28T13:23:25.063541157Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.22
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: 03a2e0c195b20294f0f10d8c5976935362cb07cea8e082b49a2b2c2330fcbdbc
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.14/exivity-0.2.14.tgz
+    version: 0.2.14
+  - apiVersion: v2
+    created: "2022-04-28T13:17:26.742978801Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.22
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: 179b1b98a4273f42cdc6e5f214faa864f46d92d33359a9e635e6028c6f48cd1b
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.13/exivity-0.2.13.tgz
+    version: 0.2.13
+  - apiVersion: v2
+    created: "2022-04-28T12:33:19.142501915Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.22
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: ffff2b843e5eb51bab5b7657c807d123e7019ee5e67adbc1ec4469ad59015aa6
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.12/exivity-0.2.12.tgz
+    version: 0.2.12
+  - apiVersion: v2
+    created: "2022-04-28T12:29:01.152362322Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.22
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: 7bc5f820db88a40378fbc685a8ca9cad18e08fad1964db7a6825c091cba6fd8c
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.11/exivity-0.2.11.tgz
+    version: 0.2.11
+  - apiVersion: v2
+    created: "2022-04-28T12:06:58.391235032Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.22
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: 900aca5709173f34d9fa475b25861be17d44fed51b7e1d5fb1f81aaf3f069b35
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.10/exivity-0.2.10.tgz
+    version: 0.2.10
+  - apiVersion: v2
+    created: "2022-04-25T14:22:23.142953985Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.22
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: 8edb3c7135a02764f90972878d988bcef8ab1d1ad9faf8792a0d4271b24f5fe9
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.9/exivity-0.2.9.tgz
+    version: 0.2.9
+  - apiVersion: v2
+    created: "2022-04-25T14:01:26.214753035Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.22
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: 4d7c556f63bf9df0f19fd53da999d4f3490bdc995934900522aa0e73a5958476
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.8/exivity-0.2.8.tgz
+    version: 0.2.8
+  - apiVersion: v2
+    created: "2022-04-22T09:28:03.035310743Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.22
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: 33add8a76f54e830ca0b55b5e0d35b86232fadef78c7ab40afe7e07d8f1c224b
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.7/exivity-0.2.7.tgz
+    version: 0.2.7
+  - apiVersion: v2
+    created: "2022-04-21T09:11:13.33625457Z"
+    dependencies:
+    - name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.6.0
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: 7884c197fe3858dab3fa4df235c68753ae94e075dad3806239a9764e8270a4ac
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.6/exivity-0.2.6.tgz
+    version: 0.2.6
+  - apiVersion: v2
+    created: "2022-04-21T08:56:51.72179274Z"
+    dependencies:
+    - name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.6.0
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: 884990f6ff6508d02ccd810a5d3b45e5723cb0624e4e469f26549e87a3a5723d
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.5/exivity-0.2.5.tgz
+    version: 0.2.5
+  - apiVersion: v2
+    created: "2022-04-15T12:09:20.651584002Z"
+    dependencies:
+    - name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.6.0
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: 843013a170e23e93ec2fe79e8bef619e95791f8eee8bfcb2a06edd3a20799687
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.4/exivity-0.2.4.tgz
+    version: 0.2.4
+  - apiVersion: v2
+    created: "2022-04-15T09:55:38.569175225Z"
+    dependencies:
+    - name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.6.0
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: 8e0f8fd1d2d161774204a5d73c01a78db29218cdfa0dfec0b7f63034881391a4
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.3/exivity-0.2.3.tgz
+    version: 0.2.3
+  - apiVersion: v2
+    created: "2022-04-14T10:26:15.16590956Z"
+    dependencies:
+    - name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.6.0
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: db6529e657f66be1bb1c14fc30d895fa7328d5e9fd96d5ef5f6f04ad76c58a68
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.2/exivity-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
+    created: "2022-04-14T10:10:03.916897129Z"
+    dependencies:
+    - name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.6.0
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: e0a34b616880ad37029ff81eddd3706314d74ea85f03d63f8b92e41fc6efd7d1
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.1/exivity-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
+    created: "2022-04-12T09:03:19.367052127Z"
+    dependencies:
+    - name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.6.0
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: d2538b24978d8698683a7c6914aa7731f9a9721997b0dc5d280672833310e29e
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.0/exivity-0.2.0.tgz
+    version: 0.2.0
+generated: "2022-04-12T09:03:19.204043631Z"
