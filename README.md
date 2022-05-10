@@ -42,6 +42,7 @@ To delete the PVCs associated with the release:
 ## Parameters
 
 ### Common Params
+
 | Name                           | Description                                             | Default Value |
 |--------------------------------|---------------------------------------------------------|---------------|
 | ingress.enable                 | enable creation of an Ingress object                    | true          |
@@ -66,5 +67,5 @@ All of the services can be defined following this schema.
 
 | Name                        | Description                                         | Default Value                   |
 |-----------------------------|-----------------------------------------------------|---------------------------------|
-| service.<servicename>.image | name of the image                                   | docker.io/exivity/<servicename> |
-| service.<servicename>.tag   | tag of the image, references the Helm Chart version | exivity-<chartversion>          |
+| service.servicename.image | name of the image                                   | docker.io/exivity/servicename |
+| service.servicename.tag   | tag of the image, references the Helm Chart version | exivity-chartversion          |
