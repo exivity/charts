@@ -148,6 +148,7 @@ metadata:
     exivity.k8s/component: proximity-api
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
+  type: {{ .Values.ingress.ServiceType }}
   selector:
     exivity.k8s/component: proximity-api
     {{- include "exivity.default_labels" . | indent 4 }}

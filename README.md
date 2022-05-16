@@ -47,6 +47,7 @@ To delete the PVCs associated with the release:
 |----------------------------------|---------------------------------------------------------|--------------------|
 | `ingress.enable`                 | enable creation of an Ingress object                    | `true`             |
 | `ingress.host`                   | define ingress host                                     | `localhost`        |
+| `ingress.serviceType`            | define Type for published Services                      | `LoadBalancer`     |
 | `ingress.tlsSecret`              | define name for TLS secret                              | `exivity-tls`      |
 | `storage.singleNode`             | set all shared PVC accessmodes to 'ReadWriteOne'        | `true`             |
 | `storage.helmResourcePolicyKeep` | set helmResourcePolicyKeep for PVCs                     | `false`            |

@@ -48,6 +48,7 @@ metadata:
     exivity.k8s/component: glass
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
+  type: {{ .Values.ingress.ServiceType }}
   selector:
     exivity.k8s/component: glass
     {{- include "exivity.default_labels" . | indent 4 }}

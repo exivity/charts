@@ -2,6 +2,7 @@ ingress:
   enable: true
   host: localhost
   tslSecret: exivity-tls
+  serviceType: LoadBalancer
 
 storage:
   singleNode: true
