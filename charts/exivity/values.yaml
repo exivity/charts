@@ -9,7 +9,7 @@ storage:
 
 # bitnami/postgresql chart config
 postgresql:
-  enabled: true
+  install: true
   image:
     tag: 12.10.0
     pullPolicy: Always
@@ -24,7 +24,7 @@ database:
   initialise: true
 
 rabbitmq:
-  enabled: true
+  install: true
   user: guest
   password: guest
   vhost: /

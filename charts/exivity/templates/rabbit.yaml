@@ -1,8 +1,8 @@
-{{if .Values.rabbitmq.enabled}}
+{{if .Values.rabbitmq.install}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: rabbit
+  name: {{ .Values.rabbitmq.host }}
   labels:
     exivity.k8s/component: rabbitmq
     {{- include "exivity.default_labels" . | indent 4 }}
@@ -26,7 +26,7 @@ spec:
   selector:
     matchLabels:
       exivity.k8s/component: rabbitmq
-  serviceName: rabbit
+  serviceName: {{ .Values.rabbitmq.host }}
   replicas: 1
   template:
     metadata:
