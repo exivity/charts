@@ -29,7 +29,7 @@ jobs:
       uses: exivity/actions/retag-image@chore/build-script-retag-action
       with:
         source-name: ${{ matrix.name }}
-        source-tag: master
+        source-tag: develop
         target-name: ${{ matrix.name }}
         target-tag: ${{ github.ref_name }}
         target-user: ${{ secrets.DOCKER_HUB_USER }}
