@@ -1,7 +1,8 @@
 ingress:
   enable: true
-  host: localhost
-  tslSecret: exivity-tls
+  host: exivity
+  ingressClassName: nginx
+  tlsSecret: exivity-tls
   serviceType: LoadBalancer
 
 storage:

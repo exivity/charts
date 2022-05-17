@@ -136,6 +136,10 @@ spec:
           value: file
         - name: QUEUE_CONNECTION
           value: sync
+        {{- if .Values.ingress.trustedProxy }}
+        - name: TRUSTED_PROXY
+          value: '{{ printf "%s" (.Values.ingress.trustedProxy) }}'
+        {{- end }}
       imagePullSecrets:
       - name: regcred
       - name: ghcr
@@ -148,7 +152,7 @@ metadata:
     exivity.k8s/component: proximity-api
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
-  type: {{ .Values.ingress.ServiceType }}
+  type: {{ .Values.ingress.serviceType }}
   selector:
     exivity.k8s/component: proximity-api
     {{- include "exivity.default_labels" . | indent 4 }}
