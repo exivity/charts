@@ -1,0 +1,9 @@
+ingress:
+  enable: true
+  host: localhost
+  ingressClassName: nginx
+  tlsSecret: exivity-tls
+
+storage:
+  singleNode: true
+  helmResourcePolicyKeep: false
