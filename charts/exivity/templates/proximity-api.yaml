@@ -120,11 +120,13 @@ spec:
             secretKeyRef:
               name: exivity-app-key
               key: app_key
+        {{- if .Values.license }}
         - name: EXIVITY_LICENSE_KEY
           valueFrom:
             secretKeyRef:
               name: exivity-license
               key: license_key
+        {{- end }}
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:
@@ -214,7 +216,6 @@ data:
   license.key: {{ .Values.license }}
 {{ end }}
 ---
-{{- if .Values.license }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -233,4 +234,3 @@ data:
             }
         }
     }
-{{ end }}
