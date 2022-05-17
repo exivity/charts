@@ -16,7 +16,7 @@
 1. add the repo: `helm repo add exivity https://charts.exivity.com`
 1. verify the repo is added: `helm search repo exivity`
 1. create a namespace: `kubectl create ns exivity-quickstart`
-1. install the helm-chart: `helm install -n exivity-quickstart exivity-quickstart exivity-quickstart/exivity -f https://raw.githubusercontent.com/exivity/charts/main/charts/exivity/examples/quickstart-config.yaml --set appKey=$(openssl rand -hex 16) --set JWTSecret=$(openssl rand -hex 16)`
+1. install the helm-chart: `helm install -n exivity-quickstart exivity-quickstart exivity-quickstart/exivity -f https://raw.githubusercontent.com/exivity/charts/main/charts/exivity/examples/quickstart-config.yaml`
 
 !!
 ## Verify Installation
