@@ -2,6 +2,19 @@ apiVersion: v1
 entries:
   exivity:
   - apiVersion: v2
+    created: "2022-05-17T10:13:19.424750892Z"
+    dependencies:
+    - condition: postgresql.install
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.22
+    description: The chart to deploy Exivity to a kubernetes cluster
+    digest: 0bced77f61f505dd53a27703f5eab36d4144a27ecee02b089e9e1d7b72d79dcb
+    name: exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-0.2.27/exivity-0.2.27.tgz
+    version: 0.2.27
+  - apiVersion: v2
     created: "2022-05-16T10:06:28.750887571Z"
     dependencies:
     - condition: postgresql.install
