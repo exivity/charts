@@ -1,6 +1,6 @@
 ingress:
   enable: true
-  host: exivity
+  host: exivity-quickstart.local
   ingressClassName: nginx
   generateCert: true
 
