@@ -25,7 +25,7 @@ spec:
           - configMap:
               name: exivity-license-pub
           {{- if .Values.license }}
-          - configMap:
+          - secret:
               name: exivity-license-key
           {{- end }}
       - name: log
@@ -124,8 +124,8 @@ spec:
         - name: EXIVITY_LICENSE_KEY
           valueFrom:
             secretKeyRef:
-              name: exivity-license
-              key: license_key
+              name: exivity-license-key
+              key: "license.key"
         {{- end }}
         - name: JWT_SECRET
           valueFrom:
@@ -203,18 +203,6 @@ data:
     2g1z1jmVroQ2It26qK8XpbFyuV8gc+b3cc/HT8MCLGVCwjl/chmkz2doWPJPLaOh
     BIy2eaNHtH2KDZCXVhQTB8MCAwEAAQ==
     -----END PUBLIC KEY-----
----
-{{- if .Values.license }}
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: exivity-license-key
-  labels:
-    exivity.k8s/component: proximity-api
-    {{- include "exivity.default_labels" . | indent 4 }}
-data:
-  license.key: {{ .Values.license }}
-{{ end }}
 ---
 apiVersion: v1
 kind: ConfigMap

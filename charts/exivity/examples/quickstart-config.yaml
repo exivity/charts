@@ -1,8 +1,8 @@
 ingress:
   enable: true
-  host: localhost
+  host: exivity
   ingressClassName: nginx
-  tlsSecret: exivity-tls
+  generateCert: true
 
 storage:
   singleNode: true

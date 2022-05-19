@@ -16,9 +16,8 @@
 1. add the repo: `helm repo add exivity https://charts.exivity.com`
 1. verify the repo is added: `helm search repo exivity`
 1. create a namespace: `kubectl create ns exivity-quickstart`
-1. install the helm-chart: `helm install -n exivity-quickstart exivity-quickstart exivity-quickstart/exivity -f https://raw.githubusercontent.com/exivity/charts/main/charts/exivity/examples/quickstart-config.yaml`
+1. install the helm-chart: `helm install -n exivity-quickstart exivity-quickstart exivity/exivity -f https://raw.githubusercontent.com/exivity/charts/main/charts/exivity/examples/quickstart-config.yaml`
 
-!!
 ## Verify Installation
 1. enable ingress, on minikube this can be done with `minikube addons enable ingress`
 1. browse to [localhost](https://localhost)

@@ -43,29 +43,30 @@ To delete the PVCs associated with the release:
 
 ### Common Params
 
-| Name                             | Description                                                                   | Default Value      |
-|----------------------------------|-------------------------------------------------------------------------------|--------------------|
-| `ingress.enable`                 | enable creation of an Ingress object                                          | `true`             |
-| `ingress.host`                   | define ingress host                                                           | `localhost`        |
-| `ingress.ingressClassName`       | set ingressClassName for the ingress                                          | `nginx`            |
-| `ingress.serviceType`            | define Type for published Services                                            | `LoadBalancer`     |
-| `ingress.tlsSecret`              | define name for TLS secret                                                    | `exivity-tls`      |
-| `ingress.trustedProxy`           | define a list of [trusted proxies](https://github.com/fideloper/TrustedProxy) |                    |
-| `storage.singleNode`             | set all shared PVC accessmodes to 'ReadWriteOne'                              | `true`             |
-| `storage.helmResourcePolicyKeep` | set helmResourcePolicyKeep for PVCs                                           | `false`            |
-| `storage.storageClass`           | set storageClassName for PVCs                                                 |                    |
-| `postgresql.install`             | install an instance of Postgresql                                             | `true`             |
-| `postgresql.auth.database`       | name of the database to be used                                               | `exivity`          |
-| `postgresql.auth.username`       | user for the database                                                         | `exivity`          |
-| `postgresql.auth.password`       | password for the database                                                     | `Password12!`      |
-| `database.initialise`            | create the 'database-init' Job, applying all migrations                       | `true`             |
-| `database.fullnameOverride`      | sets the Servicename for the PSQL Service endpoint                            | `exivity-postgres` |
-| `rabbitmq.install`               | install an instance of RabbitMQ                                               | `true`             |
-| `rabbitmq.user`                  | username for RabbitMQ                                                         | `guest`            |
-| `rabbitmq.password`              | password for RabbitMQ                                                         | `guest`            |
-| `rabbitmq.host`                  | hostname for the RabbitMQ service                                             | `rabbit`           |
-| `rabbitmq.vhost`                 | vhost for the RabbitMQ service                                                | `/`                |
-| `rabbitmq.port`                  | port for the RabbitMQ service                                                 | `5672`             |
+| Name                             | Description                                              | Default Value      |
+|----------------------------------|----------------------------------------------------------|--------------------|
+| `ingress.enable`                 | enable creation of an Ingress object                     | `true`             |
+| `ingress.host`                   | define ingress host                                      | `localhost`        |
+| `ingress.ingressClassName`       | set ingressClassName for the ingress                     | `nginx`            |
+| `ingress.generateCert`           | generate a self-signed cert using the given hostname     | `true`             |
+| `ingress.serviceType`            | define Type for published Services                       | `LoadBalancer`     |
+| `ingress.tlsSecret`              | define name for TLS secret to be use in the ingress      | `exivity-tls`      |
+| `ingress.trustedProxy`           | define a list of trusted proxies for PHP Laravel         |                    |
+| `storage.helmResourcePolicyKeep` | set helmResourcePolicyKeep for PVCs                      | `true`             |
+| `storage.sharedVolumeAccessMode` | set accessMode for shared volumes                        | `ReadWriteMany`    |
+| `storage.storageClass`           | set storageClassName for PVCs                            |                    |
+| `postgresql.install`             | install an instance of Postgresql                        | `true`             |
+| `postgresql.auth.database`       | name of the database to be used                          | `exivity`          |
+| `postgresql.auth.username`       | user for the database                                    | `exivity`          |
+| `postgresql.auth.password`       | password for the database                                | `Password12!`      |
+| `database.initialise`            | create the 'database-init' Job, applying all migrations  | `true`             |
+| `database.fullnameOverride`      | sets the Servicename for the PSQL service                | `exivity-postgres` |
+| `rabbitmq.install`               | install an instance of RabbitMQ                          | `true`             |
+| `rabbitmq.user`                  | username for RabbitMQ                                    | `guest`            |
+| `rabbitmq.password`              | password for RabbitMQ                                    | `guest`            |
+| `rabbitmq.host`                  | sets the Servicename for the RabbitMQ service            | `rabbit`           |
+| `rabbitmq.vhost`                 | vhost for the RabbitMQ service                           | `/`                |
+| `rabbitmq.port`                  | port for the RabbitMQ service                            | `5672`             |
 
 ### Image Params
 All of the services can be defined following this schema.
@@ -73,4 +74,4 @@ All of the services can be defined following this schema.
 | Name                        | Description                                         | Default Value                   |
 |-----------------------------|-----------------------------------------------------|---------------------------------|
 | `service.servicename.image` | name of the image                                   | `docker.io/exivity/servicename` |
-| `service.servicename.tag`   | tag of the image, references the Helm Chart version | `exivity-chartversion`          |
+| `service.servicename.tag`   | tag of the image, references the Helm Chart version | `exivity-$CHARTVERSION`         |

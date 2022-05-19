@@ -72,13 +72,6 @@ spec:
             secretKeyRef:
               name: exivity-app-key
               key: app_key
-        {{- if .Values.license }}
-        - name: EXIVITY_LICENSE_KEY
-          valueFrom:
-            secretKeyRef:
-              name: exivity-license
-              key: license_key
-        {{- end }}
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:

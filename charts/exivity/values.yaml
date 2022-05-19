@@ -3,11 +3,12 @@ ingress:
   host: exivity
   ingressClassName: nginx
   tlsSecret: exivity-tls
+  generateCert: true
   serviceType: LoadBalancer
 
 storage:
-  singleNode: true
-  helmResourcePolicyKeep: false
+  helmResourcePolicyKeep: true
+  sharedVolumeAccessMode: ReadWriteMany
 
 # bitnami/postgresql chart config
 postgresql:
