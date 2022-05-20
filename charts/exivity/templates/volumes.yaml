@@ -10,11 +10,7 @@ metadata:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
-{{- if .Values.storage.singleNode }}
-  - ReadWriteOnce
-{{- else }}
-  - ReadWriteMany
-{{- end }}
+  - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
       storage: 1Gi
@@ -34,11 +30,7 @@ metadata:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
-{{- if .Values.storage.singleNode }}
-  - ReadWriteOnce
-{{- else }}
-  - ReadWriteMany
-{{- end }}
+  - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
       storage: 1Gi
@@ -58,11 +50,7 @@ metadata:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
-{{- if .Values.storage.singleNode }}
-  - ReadWriteOnce
-{{- else }}
-  - ReadWriteMany
-{{- end }}
+  - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
       storage: 1Gi
@@ -82,11 +70,7 @@ metadata:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
-{{- if .Values.storage.singleNode }}
-  - ReadWriteOnce
-{{- else }}
-  - ReadWriteMany
-{{- end }}
+  - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
       storage: 1Gi
@@ -106,11 +90,7 @@ metadata:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
-{{- if .Values.storage.singleNode }}
-  - ReadWriteOnce
-{{- else }}
-  - ReadWriteMany
-{{- end }}
+  - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
       storage: 1Gi

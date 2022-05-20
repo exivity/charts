@@ -34,7 +34,7 @@ spec:
                 number: 80
 {{ end }}
 ---
-{{- if eq .Values.ingress.host "exivity" }}
+{{- if .Values.ingress.generateCert }}
 apiVersion: v1
 kind: Secret
 metadata:

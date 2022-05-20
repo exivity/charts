@@ -74,7 +74,7 @@ metadata:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
-  - ReadWriteOnce
+  - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
       storage: 1Gi
