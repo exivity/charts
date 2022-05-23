@@ -87,7 +87,7 @@ data:
         "heartbeatPeriod": 5,
         "programs": {
           "pigeon": {
-            "path": "server/php/php",
+            "path": "/usr/bin/php",
             "queue": "PIGEON",
             "CPU": 0,
             "RAM": 0
