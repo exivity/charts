@@ -26,8 +26,8 @@
     kubectl create ns exivity-quickstart
     ```
 1. install the helm-chart:
-    ```helm install -n exivity-quickstart exivity-quickstart exivity/exivity -f https://raw.git
-    hubusercontent.com/exivity/charts/main/charts/exivity/examples/quickstart-config.yaml
+    ```
+    helm install -n exivity-quickstart exivity-quickstart exivity/exivity -f https://raw.githubusercontent.com/exivity/charts/main/charts/exivity/examples/quickstart-config.yaml
     ```
 
 ## Verify Installation
