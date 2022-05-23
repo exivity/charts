@@ -41,6 +41,8 @@ service:
     image: docker.io/exivity/db
   edify:
     image: docker.io/exivity/edify
+  executor:
+    image: docker.io/exivity/executor
   glass:
     image: docker.io/exivity/glass
   griffon:

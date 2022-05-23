@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: executor
+  labels:
+    exivity.k8s/component: executor
+    {{- include "exivity.default_labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      exivity.k8s/component: executor
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        exivity.k8s/component: executor
+        {{- include "exivity.default_labels" . | indent 8 }}
+    spec:
+      volumes:
+      - name: config-file
+        configMap:
+          name: app-config-executor
+      - name: config
+        persistentVolumeClaim:
+          claimName: exivity-etl-config
+      - name: import
+        persistentVolumeClaim:
+          claimName: exivity-import
+      - name: report
+        persistentVolumeClaim:
+          claimName: exivity-report
+      - name: exported
+        persistentVolumeClaim:
+          claimName: exivity-exported
+      - name: extracted
+        persistentVolumeClaim:
+          claimName: exivity-extracted
+      containers:
+      - name: executor
+        image: {{ .Values.service.executor.image }}:{{ .Values.service.executor.tag | default (printf "exivity-%s" (.Chart.Version)) }}
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "50Mi"
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+        volumeMounts:
+        - name: config
+          mountPath: /exivity/home/system/config
+        - name: exported
+          mountPath: /exivity/home/exported
+        - name: extracted
+          mountPath: /exivity/home/system/extracted
+        - name: import
+          mountPath: /exivity/home/import
+        - name: report
+          mountPath: /exivity/home/system/report
+      imagePullSecrets:
+      - name: regcred
+      - name: ghcr
+---
+# add templated configmap providing the service with the required config.json
+{{- include "exivity.config" (dict "Values" .Values "appname" "executor" "path" "/bin/executor" "queue" "REPORT") }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: exivity-executor-log
+  labels:
+    exivity.k8s/component: executor
+    {{- include "exivity.default_labels" . | indent 4 }}
+spec:
+  accessModes:
+  - {{ .Values.storage.sharedVolumeAccessMode }}
+  resources:
+    requests:
+      storage: 100Mi
+{{- if .Values.storage.storageClass }}
+  storageClassName: {{ .Values.storage.storageClass }}
+{{ end }}
