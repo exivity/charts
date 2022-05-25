@@ -27,8 +27,11 @@ spec:
             claimName: exivity-extracted
       containers:
         - name: dummy-data
-          image: ghcr.io/exivity/dummy-data:master
+          image: exivity/dummy-data:master
           imagePullPolicy: Always
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
           volumeMounts:
             - name: config
               mountPath: /exivity/home/system/config
@@ -42,8 +45,9 @@ spec:
               mountPath: /exivity/home/import
             - name: report
               mountPath: /exivity/home/system/report
-          restartPolicy: Never
-          imagePullSecrets:
-            - name: { { .Values.imagePullSecret } }
+      imagePullSecrets:
+        - name: regcred
+        - name: ghcr
+      restartPolicy: Never
   backoffLimit: 4
   completions: 1
