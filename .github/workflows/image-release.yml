@@ -16,6 +16,7 @@ jobs:
         - chronos
         - db
         - edify
+        - executor
         - glass
         - griffon
         - horizon
