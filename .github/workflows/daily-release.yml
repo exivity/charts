@@ -2,7 +2,7 @@ name: Daily build
 
 on:
   schedule:
-  - cron:  '0 4 * * *'
+    - cron: "0 4 * * *"
   workflow_dispatch:
 
 jobs:
@@ -11,25 +11,25 @@ jobs:
     strategy:
       matrix:
         name:
-        - chronos
-        - db
-        - edify
-        - executor
-        - glass
-        - griffon
-        - horizon
-        - pigeon
-        - proximity-api
-        - proximity-cli
-        - transcript
-        - use
+          - chronos
+          - db
+          - edify
+          - executor
+          - glass
+          - griffon
+          - horizon
+          - pigeon
+          - proximity-api
+          - proximity-cli
+          - transcript
+          - use
     steps:
-    - name: release images with tags
-      uses: exivity/actions/retag-image@chore/build-script-retag-action
-      with:
-        source-name: ${{ matrix.name }}
-        source-tag: develop
-        target-name: ${{ matrix.name }}
-        target-tag: daily
-        target-user: ${{ secrets.DOCKER_HUB_USER }}
-        target-password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: release images with tags
+        uses: exivity/actions/retag-image@main
+        with:
+          source-name: ${{ matrix.name }}
+          source-tag: develop
+          target-name: ${{ matrix.name }}
+          target-tag: daily
+          target-user: ${{ secrets.DOCKER_HUB_USER }}
+          target-password: ${{ secrets.DOCKER_HUB_TOKEN }}
