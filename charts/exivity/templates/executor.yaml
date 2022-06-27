@@ -35,6 +35,9 @@ spec:
       - name: extracted
         persistentVolumeClaim:
           claimName: exivity-extracted
+      - name: log
+        persistentVolumeClaim:
+          claimName: exivity-executor-log
       containers:
       - name: executor
         image: {{ .Values.service.executor.image }}:{{ .Values.service.executor.tag | default (printf "exivity-%s" (.Chart.Version)) }}
@@ -49,6 +52,8 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /exivity/home/system/config
+        - name: config-file
+          mountPath: /exivity/home/system
         - name: exported
           mountPath: /exivity/home/exported
         - name: extracted
@@ -57,6 +62,8 @@ spec:
           mountPath: /exivity/home/import
         - name: report
           mountPath: /exivity/home/system/report
+        - name: log
+          mountPath: /exivity/home/log/merlin
       imagePullSecrets:
       - name: regcred
       - name: ghcr
