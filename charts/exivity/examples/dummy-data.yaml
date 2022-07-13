@@ -27,7 +27,7 @@ spec:
             claimName: exivity-extracted
       containers:
         - name: dummy-data
-          image: exivity/dummy-data:master
+          image: exivity/dummy-data:main
           imagePullPolicy: Always
           securityContext:
             runAsUser: 1000
