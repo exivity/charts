@@ -9,10 +9,10 @@ metadata:
   labels:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
-  ingressClassName: nginx
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
   tls:
   - hosts:
-    - {{ .Values.ingress.host }}
+      - {{ .Values.ingress.host }}
     secretName: {{ .Values.ingress.tlsSecret }}
   rules:
   - host: {{ .Values.ingress.host }}
@@ -34,7 +34,7 @@ spec:
                 number: 80
 {{ end }}
 ---
-{{- if eq .Values.ingress.host "localhost" }}
+{{- if .Values.ingress.generateCert }}
 apiVersion: v1
 kind: Secret
 metadata:

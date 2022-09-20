@@ -77,7 +77,7 @@ spec:
       - name: ghcr
 ---
 # add templated configmap providing the service with the required config.json
-{{- include "exivity.config" (dict "Values" .Values "appname" "transcript" "path" "/bin/transcript" "queue" "TRANSFORM") }}
+{{- include "exivity.config" (dict "Values" .Values "appname" "transcript" "path" "/exivity/program/bin/transcript" "queue" "TRANSFORM") }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -88,7 +88,7 @@ metadata:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
-  - ReadWriteOnce
+  - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
       storage: 100Mi

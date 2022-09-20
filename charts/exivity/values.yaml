@@ -1,15 +1,18 @@
 ingress:
   enable: true
-  host: localhost
-  tslSecret: exivity-tls
+  host: exivity
+  ingressClassName: nginx
+  tlsSecret: exivity-tls
+  generateCert: true
+  serviceType: LoadBalancer
 
 storage:
-  singleNode: true
-  helmResourcePolicyKeep: false
+  helmResourcePolicyKeep: true
+  sharedVolumeAccessMode: ReadWriteMany
 
 # bitnami/postgresql chart config
 postgresql:
-  enabled: true
+  install: true
   image:
     tag: 12.10.0
     pullPolicy: Always
@@ -24,7 +27,7 @@ database:
   initialise: true
 
 rabbitmq:
-  enabled: true
+  install: true
   user: guest
   password: guest
   vhost: /
@@ -38,6 +41,8 @@ service:
     image: docker.io/exivity/db
   edify:
     image: docker.io/exivity/edify
+  executor:
+    image: docker.io/exivity/executor
   glass:
     image: docker.io/exivity/glass
   griffon:

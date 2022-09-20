@@ -1,4 +1,4 @@
-# Some text explaining this stuff goed here
+# Default labels for exivity k8s objects
 {{- define "exivity.default_labels" }}
 exivity.k8s/app: exivity
 exivity.k8s/name: {{ .Release.Name }}

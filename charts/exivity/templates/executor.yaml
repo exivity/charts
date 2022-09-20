@@ -1,43 +1,46 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: use
+  name: executor
   labels:
-    exivity.k8s/component: use
+    exivity.k8s/component: executor
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   selector:
     matchLabels:
-      exivity.k8s/component: use
+      exivity.k8s/component: executor
   replicas: 1
   template:
     metadata:
       labels:
-        exivity.k8s/component: use
+        exivity.k8s/component: executor
         {{- include "exivity.default_labels" . | indent 8 }}
     spec:
       volumes:
+      - name: config-file
+        configMap:
+          name: app-config-executor
       - name: config
         persistentVolumeClaim:
           claimName: exivity-etl-config
-      - name: config-file
-        configMap:
-          name: app-config-use
+      - name: import
+        persistentVolumeClaim:
+          claimName: exivity-import
+      - name: report
+        persistentVolumeClaim:
+          claimName: exivity-report
       - name: exported
         persistentVolumeClaim:
           claimName: exivity-exported
       - name: extracted
         persistentVolumeClaim:
           claimName: exivity-extracted
-      - name: import
-        persistentVolumeClaim:
-          claimName: exivity-import
       - name: log
         persistentVolumeClaim:
-          claimName: exivity-use-log
+          claimName: exivity-executor-log
       containers:
-      - name: use
-        image: {{ .Values.service.use.image }}:{{ .Values.service.use.tag | default (printf "exivity-%s" (.Chart.Version)) }}
+      - name: executor
+        image: {{ .Values.service.executor.image }}:{{ .Values.service.executor.tag | default (printf "exivity-%s" (.Chart.Version)) }}
         imagePullPolicy: Always
         resources:
           requests:
@@ -57,31 +60,23 @@ spec:
           mountPath: /exivity/home/system/extracted
         - name: import
           mountPath: /exivity/home/import
+        - name: report
+          mountPath: /exivity/home/system/report
         - name: log
           mountPath: /exivity/home/log/merlin
-        - name: log
-          mountPath: /exivity/home/log/use
-        env:
-        - name: EXIVITY_APP_KEY
-          valueFrom:
-            secretKeyRef:
-              name: exivity-app-key
-              key: app_key
-        - name: RUN_DELAY
-          value: "10"
       imagePullSecrets:
       - name: regcred
       - name: ghcr
 ---
 # add templated configmap providing the service with the required config.json
-{{- include "exivity.config" (dict "Values" .Values "appname" "use" "path" "/bin/use" "queue" "EXTRACT") }}
+{{- include "exivity.config" (dict "Values" .Values "appname" "executor" "path" "${program}" "queue" "EXECUTE") }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: exivity-use-log
+  name: exivity-executor-log
   labels:
-    exivity.k8s/component: use
+    exivity.k8s/component: executor
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:

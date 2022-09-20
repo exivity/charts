@@ -87,7 +87,7 @@ data:
         "heartbeatPeriod": 5,
         "programs": {
           "pigeon": {
-            "path": "server/php/php",
+            "path": "/usr/bin/php",
             "queue": "PIGEON",
             "CPU": 0,
             "RAM": 0
@@ -136,7 +136,7 @@ metadata:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
-  - ReadWriteOnce
+  - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
       storage: 100Mi

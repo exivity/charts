@@ -1,0 +1,9 @@
+ingress:
+  enable: true
+  host: exivity-quickstart.local
+  ingressClassName: nginx
+  generateCert: true
+
+storage:
+  singleNode: true
+  helmResourcePolicyKeep: false

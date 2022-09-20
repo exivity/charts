@@ -59,6 +59,9 @@ data:
             "path": "{{ .path }}",
             "queue": "{{ .queue}}",
             "CPU": 0,
+            {{- if eq .appname "use" }}
+            "params": "${params}",
+            {{- end }}
             "RAM": 0
           }
         }

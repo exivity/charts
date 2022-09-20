@@ -25,7 +25,7 @@ spec:
           - configMap:
               name: exivity-license-pub
           {{- if .Values.license }}
-          - configMap:
+          - secret:
               name: exivity-license-key
           {{- end }}
       - name: log
@@ -120,11 +120,13 @@ spec:
             secretKeyRef:
               name: exivity-app-key
               key: app_key
+        {{- if .Values.license }}
         - name: EXIVITY_LICENSE_KEY
           valueFrom:
             secretKeyRef:
-              name: exivity-license
-              key: license_key
+              name: exivity-license-key
+              key: "license.key"
+        {{- end }}
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:
@@ -136,6 +138,10 @@ spec:
           value: file
         - name: QUEUE_CONNECTION
           value: sync
+        {{- if .Values.ingress.trustedProxy }}
+        - name: TRUSTED_PROXY
+          value: '{{ printf "%s" (.Values.ingress.trustedProxy) }}'
+        {{- end }}
       imagePullSecrets:
       - name: regcred
       - name: ghcr
@@ -148,6 +154,7 @@ metadata:
     exivity.k8s/component: proximity-api
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
+  type: {{ .Values.ingress.serviceType }}
   selector:
     exivity.k8s/component: proximity-api
     {{- include "exivity.default_labels" . | indent 4 }}
@@ -197,19 +204,6 @@ data:
     BIy2eaNHtH2KDZCXVhQTB8MCAwEAAQ==
     -----END PUBLIC KEY-----
 ---
-{{- if .Values.license }}
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: exivity-license-key
-  labels:
-    exivity.k8s/component: proximity-api
-    {{- include "exivity.default_labels" . | indent 4 }}
-data:
-  license.key: {{ .Values.license }}
-{{ end }}
----
-{{- if .Values.license }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -228,4 +222,3 @@ data:
             }
         }
     }
-{{ end }}

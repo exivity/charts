@@ -48,6 +48,7 @@ metadata:
     exivity.k8s/component: glass
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
+  type: {{ .Values.ingress.serviceType }}
   selector:
     exivity.k8s/component: glass
     {{- include "exivity.default_labels" . | indent 4 }}
@@ -65,7 +66,7 @@ metadata:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
-  - ReadWriteOnce
+  - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
       storage: 1Gi
