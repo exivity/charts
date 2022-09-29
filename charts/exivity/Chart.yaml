@@ -1,6 +1,6 @@
 apiVersion: v2
 name: exivity
-version: '3.8.5'
+version: '3.9.0'
 description: The chart to deploy Exivity to a kubernetes cluster
 dependencies:
 - name: postgresql
