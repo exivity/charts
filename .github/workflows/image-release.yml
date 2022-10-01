@@ -30,7 +30,7 @@ jobs:
         uses: exivity/actions/retag-image@main
         with:
           source-name: ${{ matrix.name }}
-          source-tag: develop
+          source-tag: main
           target-name: ${{ matrix.name }}
           target-tag: ${{ github.ref_name }}
           target-user: ${{ secrets.DOCKER_HUB_USER }}
