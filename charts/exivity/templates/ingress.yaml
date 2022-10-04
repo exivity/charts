@@ -6,6 +6,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.allow-http: 'false'
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/use-regex: 'true' 
   labels:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
@@ -18,7 +19,7 @@ spec:
   - host: {{ .Values.ingress.host }}
     http:
       paths:
-        - path: '/v1'
+        - path: /v[0-9]+?
           pathType: Prefix
           backend:
             service:
