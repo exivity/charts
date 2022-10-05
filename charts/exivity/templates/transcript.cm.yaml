@@ -1,0 +1,2 @@
+# add templated configmap providing the service with the required config.json
+{{- include "exivity.config" (dict "Values" .Values "appname" "transcript" "path" "/exivity/program/bin/transcript" "queue" "TRANSFORM") }}

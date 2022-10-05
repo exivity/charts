@@ -1,0 +1,16 @@
+apiVersion: v1
+kind:       PersistentVolumeClaim
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-transcript-log
+  labels:
+    exivity.k8s/component: transcript
+    {{- include "exivity.default_labels" . | indent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.storage.sharedVolumeAccessMode }}
+  resources:
+    requests:
+      storage: 100Mi
+{{- if .Values.storage.storageClass }}
+  storageClassName: {{ .Values.storage.storageClass }}
+{{ end }}
