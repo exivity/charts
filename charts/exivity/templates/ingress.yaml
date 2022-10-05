@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: exivity-ingress
+  name: {{ include "exivity.fullname" $ -}}-ingress
   annotations:
     kubernetes.io/ingress.allow-http: 'false'
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
@@ -30,7 +30,7 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: glass
+              name: {{ include "exivity.fullname" $ -}}-glass
               port:
                 number: 80
 {{ end }}
