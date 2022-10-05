@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind:       Deployment
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-edify
+  labels:
+    exivity.k8s/component: edify
+    {{- include "exivity.default_labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      exivity.k8s/component: edify
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        exivity.k8s/component: edify
+        {{- include "exivity.default_labels" . | indent 8 }}
+    spec:
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: exivity-etl-config
+        - name: config-file
+          configMap:
+            name: app-config-edify
+        - name: extracted
+          persistentVolumeClaim:
+            claimName: exivity-extracted
+        - name: log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-edify-log
+        - name: report
+          persistentVolumeClaim:
+            claimName: exivity-report
+      containers:
+        - name:            edify
+          image: {{ .Values.service.edify.image }}:{{ .Values.service.edify.tag | default (printf "exivity-%s" (.Chart.Version)) }}
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu:    "25m"
+              memory: "50Mi"
+          securityContext:
+            runAsUser:  1000
+            runAsGroup: 1000
+          volumeMounts:
+            - name:      config
+              mountPath: /exivity/home/system/config
+            - name:      config-file
+              mountPath: /exivity/home/system
+            - name:      extracted
+              mountPath: /exivity/home/system/extracted
+            - name:      log
+              mountPath: /exivity/home/log/edify
+            - name:      log
+              mountPath: /exivity/home/log/merlin
+            - name:      report
+              mountPath: /exivity/home/system/report
+      imagePullSecrets:
+        - name: regcred
+        - name: ghcr
