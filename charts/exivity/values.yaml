@@ -12,10 +12,10 @@ storage:
 
 # bitnami/postgresql chart config
 postgresql:
-  install: true
   image:
     tag: 12.10.0
     pullPolicy: Always
+  enabled: true
   auth:
     database: exivity
     username: exivity
