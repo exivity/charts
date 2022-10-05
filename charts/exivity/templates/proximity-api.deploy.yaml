@@ -118,19 +118,19 @@ spec:
             - name: EXIVITY_APP_KEY
               valueFrom:
                 secretKeyRef:
-                  name: exivity-app-key
+                  name: {{ include "exivity.fullname" $ -}}-app-key
                   key:  app_key
         {{- if .Values.license }}
             - name: EXIVITY_LICENSE_KEY
               valueFrom:
                 secretKeyRef:
-                  name: exivity-license-key
+                  name: {{ include "exivity.fullname" $ -}}-license-key
                   key:  "license.key"
         {{- end }}
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: exivity-jwt-secret
+                  name: {{ include "exivity.fullname" $ -}}-jwt-secret
                   key:  jwt_secret
             - name:  REDIS_HOST
               value: exivity-redis-master

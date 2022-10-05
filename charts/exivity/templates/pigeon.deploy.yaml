@@ -44,7 +44,7 @@ spec:
             - name: EXIVITY_APP_KEY
               valueFrom:
                 secretKeyRef:
-                  name: exivity-app-key
+                  name: {{ include "exivity.fullname" $ -}}-app-key
                   key:  app_key
             - name:  REDIS_HOST
               value: exivity-redis-master
