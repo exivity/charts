@@ -1,0 +1,2 @@
+# add templated configmap providing the service with the required config.json
+{{- include "exivity.config" (dict "Values" .Values "appname" "proximity-cli" "path" "/usr/bin/php" "queue" "PROXIMITY") }}
