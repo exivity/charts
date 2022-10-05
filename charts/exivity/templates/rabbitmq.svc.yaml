@@ -1,0 +1,17 @@
+{{if .Values.rabbitmq.install}}
+apiVersion: v1
+kind:       Service
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-{{- .Values.rabbitmq.host }}
+  labels:
+    exivity.k8s/component: rabbitmq
+    {{- include "exivity.default_labels" . | indent 4 }}
+spec:
+  type:      ClusterIP
+  ports:
+    - port: {{ .Values.rabbitmq.port }}
+  clusterIP: None
+  selector:
+    exivity.k8s/component: rabbitmq
+    {{- include "exivity.default_labels" . | indent 4 }}
+{{end}}
