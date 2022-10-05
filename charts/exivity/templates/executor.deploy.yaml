@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind:       Deployment
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-executor
+  labels:
+    exivity.k8s/component: executor
+    {{- include "exivity.default_labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      exivity.k8s/component: executor
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        exivity.k8s/component: executor
+        {{- include "exivity.default_labels" . | indent 8 }}
+    spec:
+      volumes:
+        - name: config-file
+          configMap:
+            name: app-config-executor
+        - name: config
+          persistentVolumeClaim:
+            claimName: exivity-etl-config
+        - name: import
+          persistentVolumeClaim:
+            claimName: exivity-import
+        - name: report
+          persistentVolumeClaim:
+            claimName: exivity-report
+        - name: exported
+          persistentVolumeClaim:
+            claimName: exivity-exported
+        - name: extracted
+          persistentVolumeClaim:
+            claimName: exivity-extracted
+        - name: log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-executor-log
+      containers:
+        - name:            executor
+          image: {{ .Values.service.executor.image }}:{{ .Values.service.executor.tag | default (printf "exivity-%s" (.Chart.Version)) }}
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu:    "25m"
+              memory: "50Mi"
+          securityContext:
+            runAsUser:  1000
+            runAsGroup: 1000
+          volumeMounts:
+            - name:      config
+              mountPath: /exivity/home/system/config
+            - name:      config-file
+              mountPath: /exivity/home/system
+            - name:      exported
+              mountPath: /exivity/home/exported
+            - name:      extracted
+              mountPath: /exivity/home/system/extracted
+            - name:      import
+              mountPath: /exivity/home/import
+            - name:      report
+              mountPath: /exivity/home/system/report
+            - name:      log
+              mountPath: /exivity/home/log/merlin
+      imagePullSecrets:
+        - name: regcred
+        - name: ghcr
