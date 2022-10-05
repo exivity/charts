@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind:       Deployment
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-pigeon
+  labels:
+    exivity.k8s/component: pigeon
+spec:
+  selector:
+    matchLabels:
+      exivity.k8s/component: pigeon
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        exivity.k8s/component: pigeon
+        {{- include "exivity.default_labels" . | indent 8 }}
+    spec:
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "exivity.fullname" $ -}}-pigeon-config
+        - name: log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-pigeon-log
+      containers:
+        - name:            pigeon
+          image: {{ .Values.service.pigeon.image }}:{{ .Values.service.pigeon.tag | default (printf "exivity-%s" (.Chart.Version)) }}
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu:    "25m"
+              memory: "50Mi"
+          securityContext:
+            runAsUser:  1000
+            runAsGroup: 1000
+          volumeMounts:
+            - name:      config
+              mountPath: /exivity/home/system
+            - name:      log
+              mountPath: /exivity/home/log/merlin
+            - name:      log
+              mountPath: /exivity/home/log/pigeon
+          env:
+            - name: EXIVITY_APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: exivity-app-key
+                  key:  app_key
+            - name:  REDIS_HOST
+              value: exivity-redis-master
+            - name:  REDIS_PORT
+              value: '6379'
+            - name:  CACHE_DRIVER
+              value: redis
+            - name:  QUEUE_DRIVER
+              value: redis
+      imagePullSecrets:
+        - name: regcred
+        - name: ghcr

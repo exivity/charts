@@ -1,0 +1,68 @@
+# pigeon listens to multiple MQ topics, so it gets its own config definition for now
+# TODO: get some PHP guru to fix it so we don't need merlin here.
+apiVersion: v1
+kind:       ConfigMap
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-pigeon-config
+  labels:
+    exivity.k8s/component: pigeon
+    {{- include "exivity.default_labels" . | indent 4 }}
+data:
+  config.json: |-
+    {
+      "db": {
+        "driver": "postgres",
+        "parameters": {
+          "host":            "{{ .Values.postgresql.fullnameOverride }}",
+          "port":            5432,
+          "dbname":          "{{ .Values.postgresql.auth.dbname }}",
+          "user":            "{{ .Values.postgresql.auth.username }}",
+          "password":        "{{ .Values.postgresql.auth.password }}",
+          "connect_timeout": 10,
+          "sslmode":         "disable"
+        }
+      },
+      "merlin": {
+        "reservedCPU":     1,
+        "heartbeatPeriod": 5,
+        "programs": {
+          "pigeon": {
+            "path":  "/usr/bin/php",
+            "queue": "PIGEON",
+            "CPU":   0,
+            "RAM":   0
+          },
+          "workflow_ended": {
+            "component": "pigeon",
+            "path":      "/usr/bin/php",
+            "queue":     "WORKFLOW_EVENT",
+            "topic":     "evt.workflow_status.griffon.#",
+            "params":    "common/pigeon/pigeon.phar event:post workflow_ended `${payload}`",
+            "CPU":       0.25,
+            "RAM":       250
+          },
+          "report_published": {
+            "component": "pigeon",
+            "path":      "/usr/bin/php",
+            "queue":     "REPORT_PUBLISHED",
+            "topic":     "evt.report_published.proximity.#",
+            "params":    "common/pigeon/pigeon.phar event:post report_published `${payload}`",
+            "CPU":       0.25,
+            "RAM":       250
+          }
+        }
+      },
+      "mq": {
+        "servers": [
+          {
+            "host":   "{{ .Values.rabbitmq.host }}",
+            "port": {{ .Values.rabbitmq.port }},
+            "secure": false
+          }
+        ],
+        "user":         "{{ .Values.rabbitmq.user }}",
+        "password":     "{{ .Values.rabbitmq.password }}",
+        "vhost":        "/",
+        "redialPeriod": 5
+      }
+    }
