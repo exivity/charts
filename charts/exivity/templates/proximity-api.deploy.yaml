@@ -1,0 +1,147 @@
+apiVersion: apps/v1
+kind:       Deployment
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-proximity-api
+  labels:
+    exivity.k8s/component: proximity-api
+    {{- include "exivity.default_labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      exivity.k8s/component: proximity-api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        exivity.k8s/component: proximity-api
+        {{- include "exivity.default_labels" . | indent 8 }}
+    spec:
+      volumes:
+        - name: projected
+          projected:
+            sources:
+              - configMap:
+                  name: app-config-default
+              - configMap:
+                  name: {{ include "exivity.fullname" $ -}}-license-pub
+          {{- if .Values.license }}
+              - secret:
+                  name: {{ include "exivity.fullname" $ -}}-license-key
+          {{- end }}
+        - name: log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-proximity-api-log
+        - name: log-chronos
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-chronos-log
+        - name: log-edify
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-edify-log
+        - name: log-griffon
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-griffon-log
+        - name: log-horizon
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-horizon-log
+        - name: log-pigeon
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-pigeon-log
+        - name: log-transcript
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-transcript-log
+        - name: log-use
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-use-log
+        - name: config
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-etl-config
+        - name: import
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-import
+        - name: report
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-report
+        - name: exported
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-exported
+        - name: extracted
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-extracted
+        - name: exivity-lock
+          configMap:
+            name: {{ include "exivity.fullname" $ -}}-lock
+      containers:
+        - name:            proximity-api
+          image: {{ .Values.service.proximityApi.image }}:{{ .Values.service.proximityApi.tag | default (printf "exivity-%s" (.Chart.Version)) }}
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu:    "25m"
+              memory: "50Mi"
+          securityContext:
+            runAsUser:  1000
+            runAsGroup: 1000
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name:      config
+              mountPath: /exivity/home/system/config
+            - name:      projected
+              mountPath: /exivity/home/system
+            - name:      exported
+              mountPath: /exivity/home/exported
+            - name:      extracted
+              mountPath: /exivity/home/system/extracted
+            - name:      log
+              mountPath: /exivity/home/log/proximity
+            - name:      log-chronos
+              mountPath: /exivity/home/log/chronos
+            - name:      log-edify
+              mountPath: /exivity/home/log/edify
+            - name:      log-griffon
+              mountPath: /exivity/home/log/griffon
+            - name:      log-horizon
+              mountPath: /exivity/home/log/horizon
+            - name:      log-pigeon
+              mountPath: /exivity/home/log/pigeon
+            - name:      log-transcript
+              mountPath: /exivity/home/log/transcript
+            - name:      log-use
+              mountPath: /exivity/home/log/use
+            - name:      import
+              mountPath: /exivity/home/import
+            - name:      report
+              mountPath: /exivity/home/system/report
+            - name:      exivity-lock
+              mountPath: /exivity/program
+          env:
+            - name: EXIVITY_APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: exivity-app-key
+                  key:  app_key
+        {{- if .Values.license }}
+            - name: EXIVITY_LICENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: exivity-license-key
+                  key:  "license.key"
+        {{- end }}
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: exivity-jwt-secret
+                  key:  jwt_secret
+            - name:  REDIS_HOST
+              value: exivity-redis-master
+            - name:  CACHE_DRIVER
+              value: file
+            - name:  QUEUE_CONNECTION
+              value: sync
+        {{- if .Values.ingress.trustedProxy }}
+            - name:  TRUSTED_PROXY
+              value: '{{ printf "%s" (.Values.ingress.trustedProxy) }}'
+        {{- end }}
+      imagePullSecrets:
+        - name: regcred
+        - name: ghcr

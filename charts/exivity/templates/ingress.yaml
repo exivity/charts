@@ -23,7 +23,7 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: proximity-api
+              name: {{ include "exivity.fullname" $ -}}-proximity-api
               port:
                 number: 80
         - path: '/'

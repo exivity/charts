@@ -1,0 +1,44 @@
+apiVersion: v1
+kind:       ConfigMap
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-license-pub
+  labels:
+    exivity.k8s/component: proximity-api
+    {{- include "exivity.default_labels" . | indent 4 }}
+data:
+  license.pub: |-
+               -----BEGIN PUBLIC KEY-----
+               MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA7PQTdfCtqv7Ls+TZEItu
+               Si0suYMlW4Elt9RVYCC5E6iXLYuKZsT9LZruUaClff7qF6RHC7mfL/LsuZ6fXnjc
+               p+v4l/CTKtkhWQ749ZFOld4Z03oOPlbeeP+mMmHUSNp45ocMqIKg2JLQFAar/FC3
+               uR8nE87ZUACwoWNC4r5XEXZBmgRSp95czn47o2De0uIVuLrEI0sj2g6Tq8kukjue
+               p6vdF8EtnIVNAaqBf5xptwo5CxpYSp0djhT/bU4+A+xJbmwNHVPMMDwaG0yu/hAo
+               DvxLO8wiyNAMUtkl30kgkSOBBBBarURMU5KMD0ifPn+y5M9beqyAnNTD/YRmElJC
+               X/z+/btt8Hb5QaMBQ5ht7GVNHYmbEx+dewA8vL3wX7k5terEimGR/oLjQcXRIpFY
+               9+aEBzes9V5ullabbDVSitlzdewlP48MxkSe40wTnSpyIkt88wTmVeaCyhmGtf31
+               Hsc7hv8osgvCx4nAtEUNIOQeZRW2fz9mlUBwQzmkmFPmBueAx4ON/wctnBU/3s7O
+               NAwOxsx7he46BCNDk/ZKZz4fAsGOqSteUluKPYrSPOJBKuu5y486+iQthm04p/Bw
+               2g1z1jmVroQ2It26qK8XpbFyuV8gc+b3cc/HT8MCLGVCwjl/chmkz2doWPJPLaOh
+               BIy2eaNHtH2KDZCXVhQTB8MCAwEAAQ==
+               -----END PUBLIC KEY-----
+
+---
+
+apiVersion: v1
+kind:       ConfigMap
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-lock
+  labels:
+    exivity.k8s/component: proximity-api
+    {{- include "exivity.default_labels" . | indent 4 }}
+data:
+  exivity.lock: |-
+                {
+                    "version": "{{ .Chart.Version }}",
+                    "components": {
+                        "exivity-helm-chart": {
+                            "ref": "{{ .Chart.Version }}",
+                            "hash": "{{ .Chart.Description }}"
+                        }
+                    }
+                }
