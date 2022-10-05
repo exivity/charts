@@ -22,22 +22,22 @@ spec:
             claimName: {{ include "exivity.fullname" $ -}}-proximity-cli-log
         - name: config
           persistentVolumeClaim:
-            claimName: exivity-etl-config
+            claimName: {{ include "exivity.fullname" $ -}}-etl-config
         - name: config-file
           configMap:
             name: app-config-proximity-cli
         - name: import
           persistentVolumeClaim:
-            claimName: exivity-import
+            claimName: {{ include "exivity.fullname" $ -}}-import
         - name: report
           persistentVolumeClaim:
-            claimName: exivity-report
+            claimName: {{ include "exivity.fullname" $ -}}-report
         - name: extracted
           persistentVolumeClaim:
-            claimName: exivity-extracted
+            claimName: {{ include "exivity.fullname" $ -}}-extracted
         - name: exported
           persistentVolumeClaim:
-            claimName: exivity-exported
+            claimName: {{ include "exivity.fullname" $ -}}-exported
       containers:
         - name:            proximity-cli
           image: {{ .Values.service.proximityCli.image }}:{{ .Values.service.proximityCli.tag | default (printf "exivity-%s" (.Chart.Version)) }}

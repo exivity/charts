@@ -1,7 +1,7 @@
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind:       PersistentVolumeClaim
 metadata:
-  name: exivity-etl-config
+  name: {{ include "exivity.fullname" $ -}}-etl-config
 {{- if .Values.storage.helmResourcePolicyKeep }}
   annotations:
     "helm.sh/resource-policy": keep
@@ -10,18 +10,19 @@ metadata:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
-  - {{ .Values.storage.sharedVolumeAccessMode }}
+    - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
       storage: 1Gi
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}
+
 ---
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind:       PersistentVolumeClaim
 metadata:
-  name: exivity-exported
+  name: {{ include "exivity.fullname" $ -}}-exported
 {{- if .Values.storage.helmResourcePolicyKeep }}
   annotations:
     "helm.sh/resource-policy": keep
@@ -30,18 +31,19 @@ metadata:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
-  - {{ .Values.storage.sharedVolumeAccessMode }}
+    - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
       storage: 1Gi
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}
+
 ---
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind:       PersistentVolumeClaim
 metadata:
-  name: exivity-extracted
+  name: {{ include "exivity.fullname" $ -}}-extracted
 {{- if .Values.storage.helmResourcePolicyKeep }}
   annotations:
     "helm.sh/resource-policy": keep
@@ -50,18 +52,19 @@ metadata:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
-  - {{ .Values.storage.sharedVolumeAccessMode }}
+    - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
       storage: 1Gi
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}
+
 ---
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind:       PersistentVolumeClaim
 metadata:
-  name: exivity-import
+  name: {{ include "exivity.fullname" $ -}}-import
 {{- if .Values.storage.helmResourcePolicyKeep }}
   annotations:
     "helm.sh/resource-policy": keep
@@ -70,18 +73,19 @@ metadata:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
-  - {{ .Values.storage.sharedVolumeAccessMode }}
+    - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
       storage: 1Gi
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}
+
 ---
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind:       PersistentVolumeClaim
 metadata:
-  name: exivity-report
+  name: {{ include "exivity.fullname" $ -}}-report
 {{- if .Values.storage.helmResourcePolicyKeep }}
   annotations:
     "helm.sh/resource-policy": keep
@@ -90,7 +94,7 @@ metadata:
     {{- include "exivity.default_labels" . | indent 4 }}
 spec:
   accessModes:
-  - {{ .Values.storage.sharedVolumeAccessMode }}
+    - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
       storage: 1Gi

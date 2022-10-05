@@ -19,25 +19,25 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: exivity-etl-config
+            claimName: {{ include "exivity.fullname" $ -}}-etl-config
         - name: config-file
           configMap:
             name: app-config-transcript
         - name: exported
           persistentVolumeClaim:
-            claimName: exivity-exported
+            claimName: {{ include "exivity.fullname" $ -}}-exported
         - name: extracted
           persistentVolumeClaim:
-            claimName: exivity-extracted
+            claimName: {{ include "exivity.fullname" $ -}}-extracted
         - name: import
           persistentVolumeClaim:
-            claimName: exivity-import
+            claimName: {{ include "exivity.fullname" $ -}}-import
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-transcript-log
         - name: report
           persistentVolumeClaim:
-            claimName: exivity-report
+            claimName: {{ include "exivity.fullname" $ -}}-report
       containers:
         - name:            transcript
           image: {{ .Values.service.transcript.image }}:{{ .Values.service.transcript.tag | default (printf "exivity-%s" (.Chart.Version)) }}

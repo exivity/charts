@@ -19,19 +19,19 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: exivity-etl-config
+            claimName: {{ include "exivity.fullname" $ -}}-etl-config
         - name: config-file
           configMap:
             name: app-config-edify
         - name: extracted
           persistentVolumeClaim:
-            claimName: exivity-extracted
+            claimName: {{ include "exivity.fullname" $ -}}-extracted
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-edify-log
         - name: report
           persistentVolumeClaim:
-            claimName: exivity-report
+            claimName: {{ include "exivity.fullname" $ -}}-report
       containers:
         - name:            edify
           image: {{ .Values.service.edify.image }}:{{ .Values.service.edify.tag | default (printf "exivity-%s" (.Chart.Version)) }}

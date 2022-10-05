@@ -19,19 +19,19 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: exivity-etl-config
+            claimName: {{ include "exivity.fullname" $ -}}-etl-config
         - name: config-file
           configMap:
             name: app-config-use
         - name: exported
           persistentVolumeClaim:
-            claimName: exivity-exported
+            claimName: {{ include "exivity.fullname" $ -}}-exported
         - name: extracted
           persistentVolumeClaim:
-            claimName: exivity-extracted
+            claimName: {{ include "exivity.fullname" $ -}}-extracted
         - name: import
           persistentVolumeClaim:
-            claimName: exivity-import
+            claimName: {{ include "exivity.fullname" $ -}}-import
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-use-log
