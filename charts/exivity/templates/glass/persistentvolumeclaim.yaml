@@ -1,0 +1,16 @@
+apiVersion: v1
+kind:       PersistentVolumeClaim
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-glass-log
+  labels:
+    app.kubernetes.io/component: griffon
+    {{- include "exivity.labels" $ | indent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.storage.sharedVolumeAccessMode }}
+  resources:
+    requests:
+      storage: 1Gi
+{{- if .Values.storage.storageClass }}
+  storageClassName: {{ .Values.storage.storageClass }}
+{{ end }}

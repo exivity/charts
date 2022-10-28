@@ -1,0 +1,1 @@
+{{- template "exivity.config" (set $ "data" (dict "appname" "horizon" "path" "/bin/horizon" "queue" "BUDGET")) }}

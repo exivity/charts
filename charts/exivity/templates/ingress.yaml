@@ -1,0 +1,60 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind:       Ingress
+metadata:
+  name: {{ include "exivity.fullname" $ }}
+  labels:
+    app.kubernetes.io/component: shared
+    {{- include "exivity.labels" $ | indent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
+  {{- if .Values.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      {{- if (ne .Values.ingress.tls.secret '-') }}
+      secretName: {{ .Values.ingress.tls.secret }}
+      {{- else }}
+      secretName: {{ include "exivity.fullname" $ -}}-tls
+      {{- end }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.ingress.host | quote }}
+      http:
+        paths:
+          - path:     /{version:v\d+}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "exivity.fullname" $ -}}-proximity-api
+                port:
+                  name: http
+          - path:     /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "exivity.fullname" $ -}}-glass
+                port:
+                  name: http
+
+{{- if (and .Values.ingress.tls.enabled (ne .Values.ingress.tls.secret '-')) }}
+---
+apiVersion: v1
+kind:       Secret
+type:       kubernetes.io/tls
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-tls
+  labels:
+    {{- include "exivity.labels" . | indent 4 }}
+data:
+  {{ $ca := genCA "exivity-ca" 365 }}
+  {{ $cert := genSignedCert "exivity-gui" nil (list .Values.ingress.host "localhost") 365 $ca }}
+  tls.crt: {{ $cert.Cert | b64enc }}
+  tls.key: {{ $cert.Key | b64enc }}
+{{ end }}
+
+{{ end }}

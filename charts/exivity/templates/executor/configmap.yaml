@@ -1,0 +1,1 @@
+{{- template "exivity.config" (set $ "data" (dict "root" $ "appname" "executor" "path" "${program}" "queue" "EXECUTE")) }}

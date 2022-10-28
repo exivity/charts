@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind:       Deployment
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-edify
+  labels:
+    app.kubernetes.io/component: edify
+    {{- include "exivity.labels" $ | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: edify
+      {{- include "exivity.matchLabels" $ | indent 6 }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: edify
+        {{- include "exivity.labels" $ | indent 8 }}
+      annotations:
+        checksum/{{- include "exivity.fullname" $ -}}-config-edify: {{ include (print $.Template.BasePath "/edify/configmap.yaml") . | sha256sum }}
+    spec:
+      volumes:
+        - name: config-file
+          configMap:
+            name: {{ include "exivity.fullname" $ -}}-config-edify
+        - name: config
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-etl-config
+        - name: extracted
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-extracted
+        - name: log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-edify-log
+        - name: report
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-report
+      containers:
+        - name:            edify
+          image: {{ include "exivity.image" (set $ "name" "edify") }}
+          imagePullPolicy: {{ .Values.service.edify.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
+          resources:
+            requests:
+              cpu:    "25m"
+              memory: "50Mi"
+          securityContext:
+            runAsUser:  1000
+            runAsGroup: 1000
+          volumeMounts:
+            - name:      config
+              mountPath: /exivity/home/system/config
+            - name:      config-file
+              mountPath: /exivity/home/system
+            - name:      extracted
+              mountPath: /exivity/home/system/extracted
+            - name:      log
+              mountPath: /exivity/home/log/edify
+            - name:      log
+              mountPath: /exivity/home/log/merlin
+            - name:      report
+              mountPath: /exivity/home/system/report
+      {{- with .Values.service.pullSecrets }}
+      imagePullSecrets:
+        {{- range $name := .}}
+        - name: {{ $name }}
+        {{- end }}
+      {{- end }}

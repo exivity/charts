@@ -1,20 +1,11 @@
-{{/*
-# Generate a configmap to be mounted into any container using Merlin to run
-# part of the applications. Takes a dict as an arg;
-# Pass the raw helm `.Values`,
-# for the benefit of Merlin the following three entries can also be passed:
-# `appname`, `path` to the executable, and `queue` to sub on.
-#
-# E.g.
-# {{- include "exivity.config" (dict "appname" "edify" "path" "/bin/edify" "queue" "REPORT") }}
-*/}}
-{{- define "exivity.config" }}
+# pigeon listens to multiple MQ topics, so it gets its own config definition for now
+# TODO: get some PHP guru to fix it so we don't need merlin here.
 apiVersion: v1
-kind: ConfigMap
+kind:       ConfigMap
 metadata:
-  name: {{ include "exivity.fullname" $ -}}-config-{{- $.data.appname | default "shared" }}
+  name: {{ include "exivity.fullname" $ -}}-config-pigeon
   labels:
-    app.kubernetes.io/component: {{ $.data.appname | default "shared" }}
+    app.kubernetes.io/component: pigeon
     {{- include "exivity.labels" $ | indent 4 }}
 data:
   config.json: |-
@@ -44,31 +35,34 @@ data:
           "vhost":        {{ $.Values.rabbitmq.vhost | default "/" | quote }},
           "redialPeriod": 5
       },
-      "chronos": {
-        "heartbeatPeriod": 5,
-        "TTL": 60
-      },
-      "griffon": {
-        "heartbeatPeriod": 5,
-        "TTL": 10
-      {{ if $.data.appname }}
-      },
       "merlin": {
-        "reservedCPU": 0,
+        "reservedCPU":     1,
         "heartbeatPeriod": 5,
         "programs": {
-          "{{ $.data.appname }}": {
-            "component": "{{ $.data.appname }}",
-            "path": "{{ $.data.path }}",
-            "queue": "{{ $.data.queue}}",
-            "CPU": 0,
-            {{- if eq $.data.appname "use" }}
-            "params": "${params}",
-            {{- end }}
-            "RAM": 0
+          "pigeon": {
+            "path":  "/usr/bin/php",
+            "queue": "PIGEON",
+            "CPU":   0,
+            "RAM":   0
+          },
+          "workflow_ended": {
+            "component": "pigeon",
+            "path":      "/usr/bin/php",
+            "queue":     "WORKFLOW_EVENT",
+            "topic":     "evt.workflow_status.griffon.#",
+            "params":    "common/pigeon/pigeon.phar event:post workflow_ended `${payload}`",
+            "CPU":       0.25,
+            "RAM":       250
+          },
+          "report_published": {
+            "component": "pigeon",
+            "path":      "/usr/bin/php",
+            "queue":     "REPORT_PUBLISHED",
+            "topic":     "evt.report_published.proximity.#",
+            "params":    "common/pigeon/pigeon.phar event:post report_published `${payload}`",
+            "CPU":       0.25,
+            "RAM":       250
           }
         }
-      {{ end }}
       }
     }
-{{- end }}
