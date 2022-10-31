@@ -27,11 +27,13 @@ storage:
 # bitnami/postgresql chart config
 postgresql:
   enabled:    true
-  auth:
-    database:         exivity
-    username:         exivity
-    password:         Password12!
-    postgresPassword: Password13!
+  global:
+    postgresql:
+      auth:
+        database:         exivity
+        username:         exivity
+        password:         Password12!
+        postgresPassword: Password13!
 
   initialise: true
   dummyData:  false
@@ -49,7 +51,6 @@ rabbitmq:
   auth:
     username:     user
     password:     pass
-    erlangCookie: ECjRNdTXblcbyAPZP
 
   # If you bring your own MQ
   host:    ""

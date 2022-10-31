@@ -21,9 +21,9 @@ spec:
           imagePullPolicy: {{ .Values.service.dbInit.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
           env:
             - name: PGUSER
-              value: {{ .Values.postgresql.auth.username }}
+              value: {{ .Values.postgresql.global.postgresql.auth.username }}
             - name: PGPASSWORD
-              value: {{ .Values.postgresql.auth.password }}
+              value: {{ .Values.postgresql.global.postgresql.auth.password }}
             - name: PGHOST
               value: {{ $.Values.postgresql.host | default (printf "%s-postgresql" (include "exivity.fullname" $ )) }}
       restartPolicy: Never
