@@ -1,9 +1,20 @@
+# Use your actual license key
+license: "Your license key"
+
 ingress:
-  enable: true
-  host: exivity-quickstart.local
+  enable:           true
+  host:             exivity.local
   ingressClassName: nginx
-  generateCert: true
+  tls:
+    enabled: true
 
 storage:
-  singleNode: true
   helmResourcePolicyKeep: false
+
+postgresql:
+  initialise: true
+  dummyData:  true
+
+service:
+  # This set's the version to use, leave blank to use the chart version
+  tag: daily
