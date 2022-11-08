@@ -48,7 +48,7 @@ spec:
                 port:
                   name: http
 
-{{- if (and .Values.ingress.tls.enabled (ne .Values.ingress.tls.secret '-')) }}
+{{- if (and .Values.ingress.tls.enabled (eq .Values.ingress.tls.secret '-')) }}
 ---
 apiVersion: v1
 kind:       Secret
