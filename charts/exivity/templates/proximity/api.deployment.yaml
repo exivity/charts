@@ -17,7 +17,7 @@ spec:
         {{- include "exivity.labels" $ | indent 8 }}
       annotations:
         checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-        checksum/{{- include "exivity.fullname" $ -}}-license-pub: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
+        checksum/{{- include "exivity.fullname" $ -}}-licence-pub: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-lock: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
     spec:
       volumes:
@@ -27,11 +27,9 @@ spec:
               - configMap:
                   name: {{ include "exivity.fullname" $ -}}-config-shared
               - configMap:
-                  name: {{ include "exivity.fullname" $ -}}-license-pub
-          {{- if .Values.license }}
+                  name: {{ include "exivity.fullname" $ -}}-licence-pub
               - secret:
-                  name: {{ include "exivity.fullname" $ -}}-license-key
-          {{- end }}
+                  name: {{ include "exivity.fullname" $ -}}-licence-key
         - name: exivity-lock
           configMap:
             name: {{ include "exivity.fullname" $ -}}-lock
@@ -75,7 +73,7 @@ spec:
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-extracted
       containers:
-        - name:            proximity-api
+        - name: proximity-api
           image: {{ include "exivity.image" (set $ "name" "proximityApi") }}
           imagePullPolicy: {{ .Values.service.proximityApi.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
           resources:
@@ -126,13 +124,11 @@ spec:
                 secretKeyRef:
                   name: {{ include "exivity.fullname" $ -}}-app-key
                   key:                                     app_key
-        {{- if .Values.license }}
             - name: EXIVITY_LICENSE_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "exivity.fullname" $ -}}-license-key
+                  name: {{ include "exivity.fullname" $ -}}-licence-key
                   key:                                     "license.key"
-        {{- end }}
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:

@@ -1,8 +1,8 @@
 nameOverride:     ""
 fullnameOverride: ""
 
-# Please overwrite this, and use your actual license, as it can only be changed through the Helm chart
-license:          ""
+# Please overwrite this, and use your actual licence or "demo" if you just want to look around, as it can only be changed through the Helm chart
+licence: ""
 
 ingress:
   enabled:          true

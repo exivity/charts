@@ -1,5 +1,5 @@
-# Use your actual license key
-license: "Your license key"
+# Use your actual licence key, or "demo" if you just want to look around
+licence: "Your licence key"
 
 ingress:
   enable:           true
