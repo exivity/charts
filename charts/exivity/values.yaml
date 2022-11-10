@@ -10,14 +10,14 @@ ingress:
   ingressClassName: ""
 
   annotations: { }
-  #  kubernetes.io/ingress.allow-http:         'false'
-  #  nginx.ingress.kubernetes.io/ssl-redirect: 'true'
-  #  nginx.ingress.kubernetes.io/use-regex:    'true'
+  #  kubernetes.io/ingress.allow-http:         "false"
+  #  nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  #  nginx.ingress.kubernetes.io/use-regex:    "true"
 
   tls:
     enabled: false
-    # Existing TLS secret name, or set to '-' to generate a cert
-    secret:  '-'
+    # Existing TLS secret name, or set to "-" to generate a cert
+    secret:  "-"
 
 storage:
   storageClass:           ""

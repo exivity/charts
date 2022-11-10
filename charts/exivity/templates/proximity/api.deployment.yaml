@@ -129,7 +129,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ include "exivity.fullname" $ -}}-licence-key
-                  key:                                     "license.key"
+                  key:                                     license.key
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
@@ -142,8 +142,8 @@ spec:
             - name:  QUEUE_CONNECTION
               value: sync
         {{- if .Values.ingress.trustedProxy }}
-            - name:  TRUSTED_PROXY
-              value: '{{ printf "%s" (.Values.ingress.trustedProxy) }}'
+            - name: TRUSTED_PROXY
+              value: {{ printf "%s" (.Values.ingress.trustedProxy) | quote }}
         {{- end }}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:

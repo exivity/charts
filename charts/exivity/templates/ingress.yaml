@@ -16,7 +16,7 @@ spec:
   tls:
     - hosts:
         - {{ .Values.ingress.host }}
-      {{- if (ne .Values.ingress.tls.secret '-') }}
+      {{- if (ne .Values.ingress.tls.secret "-") }}
       secretName: {{ .Values.ingress.tls.secret }}
       {{- else }}
       secretName: {{ include "exivity.fullname" $ -}}-tls
@@ -48,7 +48,7 @@ spec:
                 port:
                   name: http
 
-{{- if (and .Values.ingress.tls.enabled (eq .Values.ingress.tls.secret '-')) }}
+{{- if (and .Values.ingress.tls.enabled (eq .Values.ingress.tls.secret "-")) }}
 ---
 apiVersion: v1
 kind:       Secret
