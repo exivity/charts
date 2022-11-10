@@ -1,10 +1,10 @@
-{{- if .Values.postgresql.dummyData }}
+{{- if .Values.service.dummyData.enabled }}
 apiVersion: batch/v1
 kind:       Job
 metadata:
-  name: {{ include "exivity.fullname" $ -}}-database-dummy-data
+  name: {{ include "exivity.fullname" $ -}}-dummy-data
   labels:
-    app.kubernetes.io/component: database-dummy-data
+    app.kubernetes.io/component: dummy-data
     {{- include "exivity.labels" $ | indent 4 }}
 spec:
   completions:             1
@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/component: database-dummy-data
+        app.kubernetes.io/component: dummy-data
         {{- include "exivity.labels" $ | indent 8 }}
       annotations:
         checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}

@@ -35,8 +35,6 @@ postgresql:
         password:         Password12!
         postgresPassword: Password13!
 
-  dummyData:  false
-
   # If you bring your own DB
   host:       ""
   port:       ""
@@ -91,6 +89,7 @@ service:
     tag:        ""
     pullPolicy: ""
   dummyData:
+    enabled:    false
     registry:   ""
     repository: exivity/dummy-data
     tag:        "main" # Tag should be changed to match the rest in the future
