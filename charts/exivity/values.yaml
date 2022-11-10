@@ -35,7 +35,6 @@ postgresql:
         password:         Password12!
         postgresPassword: Password13!
 
-  initialise: true
   dummyData:  false
 
   # If you bring your own DB
