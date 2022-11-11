@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind:       Job
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-migration
+  labels:
+    app.kubernetes.io/component: migration
+    {{- include "exivity.labels" $ | indent 4 }}
+spec:
+  completions:             1
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: migration
+        {{- include "exivity.labels" $ | indent 8 }}
+    spec:
+      containers:
+        - name: migration
+          image: {{ include "exivity.image" (set $ "name" "dbInit") }}
+          imagePullPolicy: {{ .Values.service.dbInit.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
+          env:
+            - name: PGUSER
+              value: {{ .Values.postgresql.global.postgresql.auth.username }}
+            - name: PGPASSWORD
+              value: {{ .Values.postgresql.global.postgresql.auth.password }}
+            - name: PGHOST
+              value: {{ $.Values.postgresql.host | default (printf "%s-postgresql" (include "exivity.fullname" $ )) }}
+      restartPolicy: Never
+      {{- with .Values.service.pullSecrets }}
+      imagePullSecrets:
+        {{- range $name := .}}
+        - name: {{ $name }}
+        {{- end }}
+      {{- end }}

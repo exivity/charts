@@ -1,6 +1,13 @@
-# Default labels for exivity k8s objects
-{{- define "exivity.default_labels" }}
-exivity.k8s/app: exivity
-exivity.k8s/name: {{ .Release.Name }}
-exivity.k8s/version: {{ .Chart.Version }}
+{{/* Default labels for Exivity k8s objects */}}
+{{- define "exivity.labels" }}
+{{- include "exivity.matchLabels" . }}
+app.kubernetes.io/version: {{ .Chart.Version }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+
+{{- define "exivity.matchLabels" }}
+app.kubernetes.io/app: {{ .Chart.Name }}
+app.kubernetes.io/name: {{  include "exivity.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}

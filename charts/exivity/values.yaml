@@ -1,64 +1,135 @@
+nameOverride:     ""
+
+# Please overwrite this, and use your actual licence or "demo" if you just want to look around, as it can only be changed through the Helm chart
+licence: ""
+
 ingress:
-  enable: true
-  host: exivity
-  ingressClassName: nginx
-  tlsSecret: exivity-tls
-  generateCert: true
-  serviceType: LoadBalancer
+  enabled:          true
+  host:             exivity
+  ingressClassName: ""
+
+  annotations: { }
+  #  kubernetes.io/ingress.allow-http:         "false"
+  #  nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  #  nginx.ingress.kubernetes.io/use-regex:    "true"
+
+  tls:
+    enabled: false
+    # Existing TLS secret name, or set to "-" to generate a cert
+    secret:  "-"
 
 storage:
+  storageClass:           ""
   helmResourcePolicyKeep: true
   sharedVolumeAccessMode: ReadWriteMany
 
 # bitnami/postgresql chart config
 postgresql:
-  install: true
-  image:
-    tag: 12.10.0
-    pullPolicy: Always
-  auth:
-    database: exivity
-    username: exivity
-    password: Password12!
-    postgresPassword: Password13!
-  fullnameOverride: exivity-postgres
+  enabled:    true
+  global:
+    postgresql:
+      auth:
+        database:         exivity
+        username:         exivity
+        password:         Password12!
+        postgresPassword: Password13!
 
-database:
-  initialise: true
+  # If you bring your own DB
+  host:       ""
+  port:       ""
+
 
 rabbitmq:
-  install: true
-  user: guest
-  password: guest
-  vhost: /
-  host: rabbit
-  port: 5672
+  enabled: true
+  clustering:
+    enabled: false
+
+  auth:
+    username:     user
+    password:     pass
+
+  # If you bring your own MQ
+  host:    ""
+  port:    ""
+  vhost:   ""
 
 service:
-  chronos:
-    image: docker.io/exivity/chronos
-  dbInit:
-    image: docker.io/exivity/db
-  edify:
-    image: docker.io/exivity/edify
-  executor:
-    image: docker.io/exivity/executor
+  registry:   docker.io
+  tag:        ""
+  pullPolicy: IfNotPresent
+
+  pullSecrets: [ ]
+
+  # Front-end components
   glass:
-    image: docker.io/exivity/glass
-  griffon:
-    image: docker.io/exivity/griffon
-  horizon:
-    image: docker.io/exivity/horizon
-  pigeon:
-    image: docker.io/exivity/pigeon
+    registry:    ""
+    repository:  exivity/glass
+    tag:         ""
+    pullPolicy:  ""
+    servicePort: 80
+    serviceType: ClusterIP
   proximityApi:
-    image: docker.io/exivity/proximity-api
+    registry:    ""
+    repository:  exivity/proximity-api
+    tag:         ""
+    pullPolicy:  ""
+    servicePort: 80
+    serviceType: ClusterIP
+
+  # Back-end components
+  chronos:
+    registry:   ""
+    repository: exivity/chronos
+    tag:        ""
+    pullPolicy: ""
+  dbInit:
+    registry:   ""
+    repository: exivity/db
+    tag:        ""
+    pullPolicy: ""
+  dummyData:
+    enabled:    false
+    registry:   ""
+    repository: exivity/dummy-data
+    tag:        "main" # Tag should be changed to match the rest in the future
+    pullPolicy: ""
+  edify:
+    registry:   ""
+    repository: exivity/edify
+    tag:        ""
+    pullPolicy: ""
+  executor:
+    registry:   ""
+    repository: exivity/executor
+    tag:        ""
+    pullPolicy: ""
+  griffon:
+    registry:   ""
+    repository: exivity/griffon
+    tag:        ""
+    pullPolicy: ""
+  horizon:
+    registry:   ""
+    repository: exivity/horizon
+    tag:        ""
+    pullPolicy: ""
+  pigeon:
+    registry:   ""
+    repository: exivity/pigeon
+    tag:        ""
+    pullPolicy: ""
   proximityCli:
-    image: docker.io/exivity/proximity-cli
-  rabbitmq:
-    image: rabbitmq
-    tag: 3.9
+    registry:   ""
+    repository: exivity/proximity-cli
+    tag:        ""
+    pullPolicy: ""
   transcript:
-    image: docker.io/exivity/transcript
+    registry:   ""
+    repository: exivity/transcript
+    tag:        ""
+    pullPolicy: ""
   use:
-    image: docker.io/exivity/use
+    registry:   ""
+    repository: exivity/use
+    tag:        ""
+    pullPolicy: ""

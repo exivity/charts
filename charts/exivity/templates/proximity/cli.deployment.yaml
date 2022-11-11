@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind:       Deployment
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-proximity-cli
+  labels:
+    app.kubernetes.io/component: proximity-cli
+    {{- include "exivity.labels" $ | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: proximity-cli
+      {{- include "exivity.matchLabels" $ | indent 6 }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: proximity-cli
+        {{- include "exivity.labels" $ | indent 8 }}
+      annotations:
+        checksum/{{- include "exivity.fullname" $ -}}-config-proximity-cli: {{ include (print $.Template.BasePath "/proximity/cli.configmap.yaml") . | sha256sum }}
+    spec:
+      volumes:
+        - name: config-file
+          configMap:
+            name: {{ include "exivity.fullname" $ -}}-config-proximity-cli
+        - name: log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-proximity-cli-log
+        - name: config
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-etl-config
+        - name: import
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-import
+        - name: report
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-report
+        - name: extracted
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-extracted
+        - name: exported
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-exported
+      containers:
+        - name:            proximity-cli
+          image: {{ include "exivity.image" (set $ "name" "proximityCli") }}
+          imagePullPolicy: {{ .Values.service.proximityCli.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
+          resources:
+            requests:
+              cpu:    "25m"
+              memory: "50Mi"
+          securityContext:
+            runAsUser:  1000
+            runAsGroup: 1000
+          volumeMounts:
+            - name:      config
+              mountPath: /exivity/home/system/config
+            - name:      config-file
+              mountPath: /exivity/home/system
+            - name:      exported
+              mountPath: /exivity/home/system/exported
+            - name:      extracted
+              mountPath: /exivity/home/system/extracted
+            - name:      log
+              mountPath: /exivity/home/log/merlin
+            - name:      log
+              mountPath: /exivity/home/log/proximity
+            - name:      import
+              mountPath: /exivity/home/import
+            - name:      report
+              mountPath: /exivity/home/system/report
+          env:
+            - name: EXIVITY_APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ -}}-app-key
+                  key:                                     app_key
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ -}}-jwt-secret
+                  key:                                     jwt_secret
+      {{- with .Values.service.pullSecrets }}
+      imagePullSecrets:
+        {{- range $name := .}}
+        - name: {{ $name }}
+        {{- end }}
+      {{- end }}

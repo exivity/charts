@@ -1,0 +1,10 @@
+Installed Exivity as `{{ include "exivity.fullname" $ }}`.
+It can take a few minutes for the containers to download and start up.
+
+{{ if $.Values.ingress.enabled -}}
+You can start using Exivity at: http{{- if $.Values.ingress.tls.enabled -}}s{{- end -}}://{{ $.Values.ingress.host }}/
+{{- else -}}
+Exivity is configured without an ingress.
+The ui  is set up as a `{{ $.Values.service.glass.serviceType }}` on port: {{ $.Values.service.glass.servicePort }}
+The api is set up as a `{{ $.Values.service.proximityApi.serviceType }}` on port: {{ $.Values.service.proximityApi.servicePort }}
+{{- end }}

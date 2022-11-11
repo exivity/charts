@@ -1,9 +1,19 @@
-apiVersion: v2
-name: exivity
-version: '3.9.4'
-description: The chart to deploy Exivity to a kubernetes cluster
+apiVersion:  v2
+
+version:     3.9.4
+
+name:        exivity
+home:        https://exivity.com/
+description: Exivity is a metering and billing solution for hybrid clouds.
+sources:
+  - https://github.com/exivity/charts/tree/main/charts/exivity
+
 dependencies:
-- name: postgresql
-  condition: postgresql.install
-  repository: https://charts.bitnami.com/bitnami
-  version: '11.1.22'
+  - name:       postgresql
+    condition:  postgresql.enabled
+    repository: https://charts.bitnami.com/bitnami
+    version:    11.9.13
+  - name:       rabbitmq
+    condition:  rabbitmq.enabled
+    repository: https://charts.bitnami.com/bitnami
+    version:    11.1.1

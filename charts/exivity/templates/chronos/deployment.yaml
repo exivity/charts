@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind:       Deployment
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-chronos
+  labels:
+    app.kubernetes.io/component: chronos
+    {{- include "exivity.labels" $ | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: chronos
+      {{- include "exivity.matchLabels" $ | indent 6 }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: chronos
+        {{- include "exivity.labels" $ | indent 8 }}
+      annotations:
+        checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      volumes:
+        - name: config-file
+          configMap:
+            name: {{ include "exivity.fullname" $ -}}-config-shared
+        - name: config
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-chronos-config
+        - name: log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-chronos-log
+      containers:
+        - name:            chronos
+          image: {{ include "exivity.image" (set $ "name" "chronos") }}
+          imagePullPolicy: {{ .Values.service.chronos.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
+          resources:
+            requests:
+              cpu:    "25m"
+              memory: "50Mi"
+          securityContext:
+            runAsUser:  1000
+            runAsGroup: 1000
+          volumeMounts:
+            - name:      config
+              mountPath: /exivity/home/system/config
+            - name:      config-file
+              mountPath: /exivity/home/system
+            - name:      log
+              mountPath: /exivity/home/log/chronos
+      {{- with .Values.service.pullSecrets }}
+      imagePullSecrets:
+        {{- range $name := .}}
+        - name: {{ $name }}
+        {{- end }}
+      {{- end }}

@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind:       Deployment
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-pigeon
+  labels:
+    app.kubernetes.io/component: pigeon
+    {{- include "exivity.labels" $ | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: pigeon
+      {{- include "exivity.matchLabels" $ | indent 6 }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: pigeon
+        {{- include "exivity.labels" $ | indent 8 }}
+      annotations:
+        checksum/{{- include "exivity.fullname" $ -}}-config-pigeon: {{ include (print $.Template.BasePath "/pigeon/configmap.yaml") . | sha256sum }}
+    spec:
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "exivity.fullname" $ -}}-config-pigeon
+        - name: log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-pigeon-log
+      containers:
+        - name:            pigeon
+          image: {{ include "exivity.image" (set $ "name" "pigeon") }}
+          imagePullPolicy: {{ .Values.service.pigeon.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
+          resources:
+            requests:
+              cpu:    "25m"
+              memory: "50Mi"
+          securityContext:
+            runAsUser:  1000
+            runAsGroup: 1000
+          volumeMounts:
+            - name:      config
+              mountPath: /exivity/home/system
+            - name:      log
+              mountPath: /exivity/home/log/merlin
+            - name:      log
+              mountPath: /exivity/home/log/pigeon
+          env:
+            - name: EXIVITY_APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ -}}-app-key
+                  key:  app_key
+            - name:  REDIS_HOST
+              value: exivity-redis-master
+            - name:  REDIS_PORT
+              value: "6379"
+            - name:  CACHE_DRIVER
+              value: redis
+            - name:  QUEUE_DRIVER
+              value: redis
+      {{- with .Values.service.pullSecrets }}
+      imagePullSecrets:
+        {{- range $name := .}}
+        - name: {{ $name }}
+        {{- end }}
+      {{- end }}
