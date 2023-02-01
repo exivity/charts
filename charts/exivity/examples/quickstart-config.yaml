@@ -1,5 +1,4 @@
-# Use your actual licence key, or "demo" if you just want to look around
-licence: "Your licence key"
+licence: demo
 
 ingress:
   enable:           true
@@ -11,10 +10,9 @@ ingress:
 storage:
   helmResourcePolicyKeep: false
 
-postgresql:
-  initialise: true
-  dummyData:  true
-
 service:
-  # This set's the version to use, leave blank to use the chart version
+  # This set's the version to use, remove to use chart version
   tag: daily
+
+  dummyData:
+    enabled: true
