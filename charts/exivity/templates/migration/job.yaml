@@ -20,11 +20,15 @@ spec:
           imagePullPolicy: {{ .Values.service.dbInit.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
           env:
             - name: PGUSER
-              value: {{ .Values.postgresql.global.postgresql.auth.username }}
+              value: {{ $.Values.postgresql.global.postgresql.auth.username | quote }}
             - name: PGPASSWORD
-              value: {{ .Values.postgresql.global.postgresql.auth.password }}
+              value: {{ $.Values.postgresql.global.postgresql.auth.password | quote }}
+            - name: PGDATABASE
+              value: {{ $.Values.postgresql.global.postgresql.auth.database | quote }}
             - name: PGHOST
-              value: {{ $.Values.postgresql.host | default (printf "%s-postgresql" (include "exivity.fullname" $ )) }}
+              value: {{ $.Values.postgresql.host | default (printf "%s-postgresql" (include "exivity.fullname" $ )) | quote }}
+            - name: PGPORT
+              value: {{ $.Values.postgresql.port | default 5432 | quote}}
       restartPolicy: Never
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
