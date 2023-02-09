@@ -1,0 +1,14 @@
+name: semantic-pull-request
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+
+jobs:
+  semantic-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: exivity/actions/semantic-pull-request@main

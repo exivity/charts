@@ -1,0 +1,15 @@
+name: ping
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: exivity/actions/release@main
+        with:
+          mode: ping
+          gh-token: ${{ secrets.GH_BOT_TOKEN }}
