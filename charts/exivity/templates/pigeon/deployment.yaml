@@ -25,6 +25,12 @@ spec:
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-pigeon-log
+        - name: exported
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-exported
+        - name: import
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-import
       containers:
         - name:            pigeon
           image: {{ include "exivity.image" (set $ "name" "pigeon") }}
@@ -43,6 +49,10 @@ spec:
               mountPath: /exivity/home/log/merlin
             - name:      log
               mountPath: /exivity/home/log/pigeon
+            - name:      import
+              mountPath: /exivity/home/import
+            - name:      exported
+              mountPath: /exivity/home/exported
           env:
             - name: EXIVITY_APP_KEY
               valueFrom:
