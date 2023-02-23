@@ -1,1 +1,1 @@
-{{- template "exivity.config" (set $ "data" (dict "appname" "use" "path" "/bin/use" "queue" "EXTRACT")) }}
+{{- template "exivity.config" (set $ "data" (dict "appname" "use" "path" "/exivity/program/bin/use" "queue" "EXTRACT")) }}
