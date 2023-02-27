@@ -29,6 +29,9 @@ spec:
               - secret:
                   name: {{ include "exivity.fullname" $ -}}-licence-key
         - name: config
+          configMap:
+            name: {{ include "exivity.fullname" $ -}}-config-pigeon
+        - name: etl-config
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-etl-config
         - name: log
@@ -52,7 +55,7 @@ spec:
             runAsUser:  1000
             runAsGroup: 1000
           volumeMounts:
-            - name:      config
+            - name:      etl-config
               mountPath: /exivity/home/system/config
             - name:      projected
               mountPath: /exivity/home/system
