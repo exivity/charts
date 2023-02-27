@@ -19,9 +19,18 @@ spec:
         checksum/{{- include "exivity.fullname" $ -}}-config-pigeon: {{ include (print $.Template.BasePath "/pigeon/configmap.yaml") . | sha256sum }}
     spec:
       volumes:
+        - name: projected
+          projected:
+            sources:
+              - configMap:
+                  name: {{ include "exivity.fullname" $ -}}-config-shared
+              - configMap:
+                  name: {{ include "exivity.fullname" $ -}}-licence-pub
+              - secret:
+                  name: {{ include "exivity.fullname" $ -}}-licence-key
         - name: config
-          configMap:
-            name: {{ include "exivity.fullname" $ -}}-config-pigeon
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-etl-config
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-pigeon-log
@@ -44,6 +53,8 @@ spec:
             runAsGroup: 1000
           volumeMounts:
             - name:      config
+              mountPath: /exivity/home/system/config
+            - name:      projected
               mountPath: /exivity/home/system
             - name:      log
               mountPath: /exivity/home/log/merlin
