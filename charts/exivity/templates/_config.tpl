@@ -24,7 +24,7 @@ data:
         "parameters": {
           "host":            {{ $.Values.postgresql.host | default (printf "%s-postgresql" (include "exivity.fullname" $ )) | quote }},
           "port":            {{ $.Values.postgresql.port | default 5432 }},
-          "sslmode":         {{ $.Values.postgresql.global.postgresql.auth.sslmode | "disable" }},
+          "sslmode":         {{ $.Values.postgresql.sslmode | default "disable" | quote }},
           "dbname":          {{ $.Values.postgresql.global.postgresql.auth.database | quote }},
           "user":            {{ $.Values.postgresql.global.postgresql.auth.username | quote }},
           "password":        {{ $.Values.postgresql.global.postgresql.auth.password | quote }},

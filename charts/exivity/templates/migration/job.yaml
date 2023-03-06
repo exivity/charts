@@ -60,7 +60,7 @@ spec:
                   name: {{ include "exivity.fullname" $ -}}-postgresql
                   key:                                      password
               {{- else }}
-              value: $.Values.postgresql.global.postgresql.auth.password
+              value: {{ $.Values.postgresql.global.postgresql.auth.password | quote }}
               {{- end }}
             - name: PG_DATABASE
               value: {{ $.Values.postgresql.global.postgresql.auth.database | quote }}
