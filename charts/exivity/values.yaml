@@ -60,9 +60,10 @@ rabbitmq:
     password:     pass
 
   # If you bring your own MQ
-  host:    ""
-  port:    ""
-  vhost:   ""
+  host:   ""
+  port:   ""
+  vhost:  ""
+  secure: false
 
 service:
   registry:   docker.io

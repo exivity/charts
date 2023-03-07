@@ -27,7 +27,7 @@ data:
               {
                   "host":   {{ $.Values.rabbitmq.host | default (printf "%s-rabbitmq" (include "exivity.fullname" $ )) | quote }},
                   "port":   {{ $.Values.rabbitmq.port | default 5672 }},
-                  "secure": false
+                  "secure": {{ $.Values.rabbitmq.secure | default false}}
               }
           ],
           "user":         {{ $.Values.rabbitmq.auth.username | quote }},
