@@ -3,7 +3,7 @@ name: Release Images
 on:
   push:
     tags:
-      - "*"
+      - "exivity-*"
   workflow_dispatch:
 
 jobs:
