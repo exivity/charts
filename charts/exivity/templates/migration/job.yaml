@@ -38,6 +38,8 @@ spec:
               value: {{ $.Values.postgresql.global.postgresql.auth.database | quote }}
             - name: PG_USER
               value: {{ $.Values.postgresql.global.postgresql.auth.username | quote }}
+            - name: PG_SSLMODE
+              value: {{ $.Values.postgresql.sslmode | default "disable" | quote  }}
       containers:
         - name: migration
           image: {{ include "exivity.image" (set $ "name" "dbInit") }}
@@ -46,7 +48,7 @@ spec:
             - "-path"
             - "./migrations"
             - "-database"
-            - "postgres://$(PG_USER):$(PG_PASSWORD)@$(PG_HOST):$(PG_PORT)/$(PG_DATABASE)?sslmode=disable"
+            - "postgres://$(PG_USER):$(PG_PASSWORD)@$(PG_HOST):$(PG_PORT)/$(PG_DATABASE)?sslmode=$(PG_SSLMODE)"
             - "up"
           env:
             - name: PG_USER
@@ -58,7 +60,7 @@ spec:
                   name: {{ include "exivity.fullname" $ -}}-postgresql
                   key:                                      password
               {{- else }}
-              value: $.Values.postgresql.global.postgresql.auth.password
+              value: {{ $.Values.postgresql.global.postgresql.auth.password | quote }}
               {{- end }}
             - name: PG_DATABASE
               value: {{ $.Values.postgresql.global.postgresql.auth.database | quote }}
@@ -66,6 +68,8 @@ spec:
               value: {{ $.Values.postgresql.host | default (printf "%s-postgresql" (include "exivity.fullname" $ )) | quote }}
             - name: PG_PORT
               value: {{ $.Values.postgresql.port | default 5432 | quote}}
+            - name: PG_SSLMODE
+              value: {{ $.Values.postgresql.sslmode | default "disable" | quote  }}
       restartPolicy: Never
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:

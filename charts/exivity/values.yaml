@@ -48,6 +48,8 @@ postgresql:
   host:       ""
   # -- Bring your own DB port
   port:       ""
+  # -- Bring your own DB sslmode: enable/disable
+  sslmode:    ""
 
 
 rabbitmq:
@@ -63,6 +65,8 @@ rabbitmq:
   host:    ""
   port:    ""
   vhost:   ""
+  # TLS connection: true/false
+  secure:  ""
 
 service:
   registry:   docker.io
