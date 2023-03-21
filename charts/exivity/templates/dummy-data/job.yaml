@@ -6,6 +6,8 @@ metadata:
   labels:
     app.kubernetes.io/component: dummy-data
     {{- include "exivity.labels" $ | indent 4 }}
+  annotations:
+    argocd.argoproj.io/sync: exclude
 spec:
   completions:             1
   ttlSecondsAfterFinished: 300
