@@ -71,6 +71,8 @@ spec:
                   key:                                     app_key
             - name:  RUN_DELAY
               value: "10"
+            - name: EXIVITY_BACKEND_LOG_LEVEL
+              value: "{{ .Values.logLevel.backend }}"
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
         {{- range $name := .}}
