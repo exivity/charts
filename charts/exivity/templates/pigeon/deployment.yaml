@@ -67,6 +67,8 @@ spec:
               value: redis
             - name:  QUEUE_DRIVER
               value: redis
+            - name:  EXIVITY_BACKEND_LOG_LEVEL
+              value: "{{ .Values.logLevel.backend }}"
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
         {{- range $name := .}}

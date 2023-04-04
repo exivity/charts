@@ -79,6 +79,8 @@ spec:
                 secretKeyRef:
                   name: {{ include "exivity.fullname" $ -}}-jwt-secret
                   key:                                     jwt_secret
+            - name: EXIVITY_BACKEND_LOG_LEVEL
+              value: "{{ .Values.logLevel.backend }}"
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
         {{- range $name := .}}

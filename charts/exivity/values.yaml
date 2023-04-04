@@ -148,3 +148,6 @@ service:
     repository: exivity/use
     tag:        ""
     pullPolicy: ""
+
+logLevel:
+  backend: "info"

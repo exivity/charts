@@ -74,6 +74,8 @@ spec:
                 secretKeyRef:
                   name: {{ include "exivity.fullname" $ -}}-app-key
                   key:  app_key
+            - name: EXIVITY_BACKEND_LOG_LEVEL
+              value: "{{ .Values.logLevel.backend }}"
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
         {{- range $name := .}}
