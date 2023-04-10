@@ -83,6 +83,8 @@ service:
     pullPolicy:  ""
     servicePort: 80
     serviceType: ClusterIP
+    nodeName: ""
+    nodeSelector: {}
   proximityApi:
     registry:    ""
     repository:  exivity/proximity-api
@@ -90,6 +92,8 @@ service:
     pullPolicy:  ""
     servicePort: 80
     serviceType: ClusterIP
+    nodeName: ""
+    nodeSelector: {}
 
   # Back-end components
   chronos:
@@ -97,57 +101,79 @@ service:
     repository: exivity/chronos
     tag:        ""
     pullPolicy: ""
+    nodeName: ""
+    nodeSelector: {}
   dbInit:
     registry:   ""
     repository: exivity/db
     tag:        ""
     pullPolicy: ""
+    nodeName: ""
+    nodeSelector: {}
   dummyData:
     enabled:    false
     registry:   ""
     repository: exivity/dummy-data
     tag:        "main" # Tag should be changed to match the rest in the future
     pullPolicy: ""
+    nodeName: ""
+    nodeSelector: {}
   edify:
     registry:   ""
     repository: exivity/edify
     tag:        ""
     pullPolicy: ""
+    nodeName: ""
+    nodeSelector: {}
   executor:
     registry:   ""
     repository: exivity/executor
     tag:        ""
     pullPolicy: ""
+    nodeName: ""
+    nodeSelector: {}
   griffon:
     registry:   ""
     repository: exivity/griffon
     tag:        ""
     pullPolicy: ""
+    nodeName: ""
+    nodeSelector: {}
   horizon:
     registry:   ""
     repository: exivity/horizon
     tag:        ""
     pullPolicy: ""
+    nodeName: ""
+    nodeSelector: {}
   pigeon:
     registry:   ""
     repository: exivity/pigeon
     tag:        ""
     pullPolicy: ""
+    nodeName: ""
+    nodeSelector: {}
   proximityCli:
     registry:   ""
     repository: exivity/proximity-cli
     tag:        ""
     pullPolicy: ""
+    nodeName: ""
+    nodeSelector: {}
   transcript:
     registry:   ""
     repository: exivity/transcript
     tag:        ""
     pullPolicy: ""
+    nodeName: ""
+    nodeSelector: {}
   use:
     registry:   ""
     repository: exivity/use
     tag:        ""
     pullPolicy: ""
+    nodeName: ""
+    nodeSelector: {}
 
 logLevel:
   backend: "info"
