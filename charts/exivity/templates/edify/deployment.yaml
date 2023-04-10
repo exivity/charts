@@ -6,6 +6,7 @@ metadata:
     app.kubernetes.io/component: edify
     {{- include "exivity.labels" $ | indent 4 }}
 spec:
+  replicas: {{ .Values.service.edify.replicas }}
   selector:
     matchLabels:
       app.kubernetes.io/component: edify

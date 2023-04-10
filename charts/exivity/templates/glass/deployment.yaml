@@ -6,6 +6,7 @@ metadata:
     app.kubernetes.io/component: glass
     {{- include "exivity.labels" $ | indent 4 }}
 spec:
+  replicas: {{ .Values.service.glass.replicas }}
   selector:
     matchLabels:
       app.kubernetes.io/component: glass

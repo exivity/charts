@@ -83,6 +83,7 @@ service:
     pullPolicy:  ""
     servicePort: 80
     serviceType: ClusterIP
+    replicas:    1
   proximityApi:
     registry:    ""
     repository:  exivity/proximity-api
@@ -90,6 +91,7 @@ service:
     pullPolicy:  ""
     servicePort: 80
     serviceType: ClusterIP
+    replicas:    1
 
   # Back-end components
   chronos:
@@ -97,6 +99,7 @@ service:
     repository: exivity/chronos
     tag:        ""
     pullPolicy: ""
+    replicas:   1
   dbInit:
     registry:   ""
     repository: exivity/db
@@ -113,41 +116,49 @@ service:
     repository: exivity/edify
     tag:        ""
     pullPolicy: ""
+    replicas:   1
   executor:
     registry:   ""
     repository: exivity/executor
     tag:        ""
     pullPolicy: ""
+    replicas:   1
   griffon:
     registry:   ""
     repository: exivity/griffon
     tag:        ""
     pullPolicy: ""
+    replicas:   1
   horizon:
     registry:   ""
     repository: exivity/horizon
     tag:        ""
     pullPolicy: ""
+    replicas:   1
   pigeon:
     registry:   ""
     repository: exivity/pigeon
     tag:        ""
     pullPolicy: ""
+    replicas:   1
   proximityCli:
     registry:   ""
     repository: exivity/proximity-cli
     tag:        ""
     pullPolicy: ""
+    replicas:   1
   transcript:
     registry:   ""
     repository: exivity/transcript
     tag:        ""
     pullPolicy: ""
+    replicas:   1
   use:
     registry:   ""
     repository: exivity/use
     tag:        ""
     pullPolicy: ""
+    replicas:   1
 
 logLevel:
   backend: "info"
