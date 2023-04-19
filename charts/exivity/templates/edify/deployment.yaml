@@ -72,7 +72,7 @@ spec:
       nodeName: {{ .Values.service.edify.nodeName }}
       {{- end }}
       {{- with .Values.service.edify.nodeSelector }}
-      imagePullSecrets:
+      nodeSelector:
         {{- range $key, $val := .}}
         - {{$key}}: {{ $val }}
         {{- end }}

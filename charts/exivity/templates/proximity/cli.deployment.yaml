@@ -92,7 +92,7 @@ spec:
       nodeName: {{ .Values.service.proximityCli.nodeName }}
       {{- end }}
       {{- with .Values.service.proximityCli.nodeSelector }}
-      imagePullSecrets:
+      nodeSelector:
         {{- range $key, $val := .}}
         - {{$key}}: {{ $val }}
         {{- end }}

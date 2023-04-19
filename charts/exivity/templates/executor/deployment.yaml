@@ -80,7 +80,7 @@ spec:
       nodeName: {{ .Values.service.executor.nodeName }}
       {{- end }}
       {{- with .Values.service.executor.nodeSelector }}
-      imagePullSecrets:
+      nodeSelector:
         {{- range $key, $val := .}}
         - {{$key}}: {{ $val }}
         {{- end }}

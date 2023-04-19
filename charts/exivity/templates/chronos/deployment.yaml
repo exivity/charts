@@ -60,7 +60,7 @@ spec:
       nodeName: {{ .Values.service.chronos.nodeName }}
       {{- end }}
       {{- with .Values.service.chronos.nodeSelector }}
-      imagePullSecrets:
+      nodeSelector:
         {{- range $key, $val := .}}
         - {{$key}}: {{ $val }}
         {{- end }}

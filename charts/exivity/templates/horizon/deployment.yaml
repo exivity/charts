@@ -57,7 +57,7 @@ spec:
       nodeName: {{ .Values.service.horizon.nodeName }}
       {{- end }}
       {{- with .Values.service.horizon.nodeSelector }}
-      imagePullSecrets:
+      nodeSelector:
         {{- range $key, $val := .}}
         - {{$key}}: {{ $val }}
         {{- end }}
