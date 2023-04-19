@@ -72,7 +72,7 @@ spec:
       nodeName: {{ .Values.service.dummyData.nodeName }}
       {{- end }}
       {{- with .Values.service.dummyData.nodeSelector }}
-      imagePullSecrets:
+      nodeSelector:
         {{- range $key, $val := .}}
         - {{$key}}: {{ $val }}
         {{- end }}

@@ -60,7 +60,7 @@ spec:
       nodeName: {{ .Values.service.griffon.nodeName }}
       {{- end }}
       {{- with .Values.service.griffon.nodeSelector }}
-      imagePullSecrets:
+      nodeSelector:
         {{- range $key, $val := .}}
         - {{$key}}: {{ $val }}
         {{- end }}

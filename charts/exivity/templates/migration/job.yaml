@@ -81,7 +81,7 @@ spec:
       nodeName: {{ .Values.service.dbInit.nodeName }}
       {{- end }}
       {{- with .Values.service.dbInit.nodeSelector }}
-      imagePullSecrets:
+      nodeSelector:
         {{- range $key, $val := .}}
         - {{$key}}: {{ $val }}
         {{- end }}
