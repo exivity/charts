@@ -6,6 +6,7 @@ metadata:
     app.kubernetes.io/component: use
     {{- include "exivity.labels" $ | indent 4 }}
 spec:
+  replicas: {{ .Values.service.use.replicas }}
   selector:
     matchLabels:
       app.kubernetes.io/component: use

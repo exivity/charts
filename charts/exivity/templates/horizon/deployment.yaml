@@ -6,6 +6,7 @@ metadata:
     app.kubernetes.io/component: horizon
     {{- include "exivity.labels" $ | indent 4 }}
 spec:
+  replicas: {{ .Values.service.horizon.replicas }}
   selector:
     matchLabels:
       app.kubernetes.io/component: horizon

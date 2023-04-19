@@ -83,8 +83,10 @@ service:
     pullPolicy:  ""
     servicePort: 80
     serviceType: ClusterIP
+    replicas:    1
     nodeName: ""
     nodeSelector: {}
+    
   proximityApi:
     registry:    ""
     repository:  exivity/proximity-api
@@ -92,6 +94,7 @@ service:
     pullPolicy:  ""
     servicePort: 80
     serviceType: ClusterIP
+    replicas:    1
     nodeName: ""
     nodeSelector: {}
 
@@ -101,8 +104,10 @@ service:
     repository: exivity/chronos
     tag:        ""
     pullPolicy: ""
+    replicas:   1
     nodeName: ""
     nodeSelector: {}
+
   dbInit:
     registry:   ""
     repository: exivity/db
@@ -110,6 +115,7 @@ service:
     pullPolicy: ""
     nodeName: ""
     nodeSelector: {}
+    
   dummyData:
     enabled:    false
     registry:   ""
@@ -118,60 +124,76 @@ service:
     pullPolicy: ""
     nodeName: ""
     nodeSelector: {}
+    
   edify:
     registry:   ""
     repository: exivity/edify
     tag:        ""
     pullPolicy: ""
+    replicas:   1
     nodeName: ""
     nodeSelector: {}
+
   executor:
     registry:   ""
     repository: exivity/executor
     tag:        ""
     pullPolicy: ""
+    replicas:   1
     nodeName: ""
     nodeSelector: {}
+
   griffon:
     registry:   ""
     repository: exivity/griffon
     tag:        ""
     pullPolicy: ""
+    replicas:   1
     nodeName: ""
     nodeSelector: {}
+    
   horizon:
     registry:   ""
     repository: exivity/horizon
     tag:        ""
     pullPolicy: ""
+    replicas:   1
     nodeName: ""
     nodeSelector: {}
+
   pigeon:
     registry:   ""
     repository: exivity/pigeon
     tag:        ""
     pullPolicy: ""
+    replicas:   1
     nodeName: ""
     nodeSelector: {}
+
   proximityCli:
     registry:   ""
     repository: exivity/proximity-cli
     tag:        ""
     pullPolicy: ""
+    replicas:   1
     nodeName: ""
     nodeSelector: {}
+
   transcript:
     registry:   ""
     repository: exivity/transcript
     tag:        ""
     pullPolicy: ""
+    replicas:   1
     nodeName: ""
     nodeSelector: {}
+
   use:
     registry:   ""
     repository: exivity/use
     tag:        ""
     pullPolicy: ""
+    replicas:   1
     nodeName: ""
     nodeSelector: {}
 
