@@ -80,7 +80,7 @@ spec:
       {{- if .Values.service.dbInit.nodeName }}
       nodeName: {{ .Values.service.dbInit.nodeName }}
       {{- end }}
-      {{- with .Values.service.dbInit.nodeSelectors }}
+      {{- with .Values.service.dbInit.nodeSelector }}
       imagePullSecrets:
         {{- range $key, $val := .}}
         - {{$key}}: {{ $val }}

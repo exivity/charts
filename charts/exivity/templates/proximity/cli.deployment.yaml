@@ -91,7 +91,7 @@ spec:
       {{- if .Values.service.proximityCli.nodeName }}
       nodeName: {{ .Values.service.proximityCli.nodeName }}
       {{- end }}
-      {{- with .Values.service.proximityCli.nodeSelectors }}
+      {{- with .Values.service.proximityCli.nodeSelector }}
       imagePullSecrets:
         {{- range $key, $val := .}}
         - {{$key}}: {{ $val }}

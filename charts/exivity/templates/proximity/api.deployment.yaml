@@ -155,7 +155,7 @@ spec:
       {{- if .Values.service.proximityApi.nodeName }}
       nodeName: {{ .Values.service.proximityApi.nodeName }}
       {{- end }}
-      {{- with .Values.service.proximityApi.nodeSelectors }}
+      {{- with .Values.service.proximityApi.nodeSelector }}
       imagePullSecrets:
         {{- range $key, $val := .}}
         - {{$key}}: {{ $val }}
