@@ -86,7 +86,7 @@ spec:
       {{- if .Values.service.transcript.nodeName }}
       nodeName: {{ .Values.service.transcript.nodeName }}
       {{- end }}
-      {{- with .Values.service.transcript.nodeSelectors }}
+      {{- with .Values.service.transcript.nodeSelector }}
       imagePullSecrets:
         {{- range $key, $val := .}}
         - {{$key}}: {{ $val }}

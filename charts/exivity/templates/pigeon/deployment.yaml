@@ -79,7 +79,7 @@ spec:
       {{- if .Values.service.pigeon.nodeName }}
       nodeName: {{ .Values.service.pigeon.nodeName }}
       {{- end }}
-      {{- with .Values.service.pigeon.nodeSelectors }}
+      {{- with .Values.service.pigeon.nodeSelector }}
       imagePullSecrets:
         {{- range $key, $val := .}}
         - {{$key}}: {{ $val }}

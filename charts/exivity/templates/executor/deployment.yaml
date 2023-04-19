@@ -79,7 +79,7 @@ spec:
       {{- if .Values.service.executor.nodeName }}
       nodeName: {{ .Values.service.executor.nodeName }}
       {{- end }}
-      {{- with .Values.service.executor.nodeSelectors }}
+      {{- with .Values.service.executor.nodeSelector }}
       imagePullSecrets:
         {{- range $key, $val := .}}
         - {{$key}}: {{ $val }}

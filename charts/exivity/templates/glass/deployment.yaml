@@ -48,7 +48,7 @@ spec:
       {{- if .Values.service.glass.nodeName }}
       nodeName: {{ .Values.service.glass.nodeName }}
       {{- end }}
-      {{- with .Values.service.glass.nodeSelectors }}
+      {{- with .Values.service.glass.nodeSelector }}
       imagePullSecrets:
         {{- range $key, $val := .}}
         - {{$key}}: {{ $val }}
