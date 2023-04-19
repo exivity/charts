@@ -53,3 +53,12 @@ spec:
         - name: {{ $name }}
         {{- end }}
       {{- end }}
+      {{- if .Values.service.horizon.nodeName }}
+      nodeName: {{ .Values.service.horizon.nodeName }}
+      {{- end }}
+      {{- with .Values.service.horizon.nodeSelectors }}
+      imagePullSecrets:
+        {{- range $key, $val := .}}
+        - {{$key}}: {{ $val }}
+        {{- end }}
+      {{- end }}

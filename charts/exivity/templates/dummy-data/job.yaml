@@ -68,4 +68,13 @@ spec:
         - name: {{ $name }}
         {{- end }}
       {{- end }}
+      {{- if .Values.service.dummyData.nodeName }}
+      nodeName: {{ .Values.service.dummyData.nodeName }}
+      {{- end }}
+      {{- with .Values.service.dummyData.nodeSelectors }}
+      imagePullSecrets:
+        {{- range $key, $val := .}}
+        - {{$key}}: {{ $val }}
+        {{- end }}
+      {{- end }}
 {{- end }}

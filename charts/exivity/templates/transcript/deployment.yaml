@@ -83,3 +83,12 @@ spec:
         - name: {{ $name }}
         {{- end }}
       {{- end }}
+      {{- if .Values.service.transcript.nodeName }}
+      nodeName: {{ .Values.service.transcript.nodeName }}
+      {{- end }}
+      {{- with .Values.service.transcript.nodeSelectors }}
+      imagePullSecrets:
+        {{- range $key, $val := .}}
+        - {{$key}}: {{ $val }}
+        {{- end }}
+      {{- end }}
