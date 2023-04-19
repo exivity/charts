@@ -73,7 +73,7 @@ spec:
       {{- end }}
       {{- with .Values.service.edify.nodeSelector }}
       nodeSelector:
-        {{- range $key, $val := .}}
-        - {{$key}}: {{ $val }}
+        {{ range $key, $val := . }}
+        {{ $key }}: {{ $val }}
         {{- end }}
       {{- end }}

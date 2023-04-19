@@ -73,8 +73,7 @@ spec:
       {{- end }}
       {{- with .Values.service.dummyData.nodeSelector }}
       nodeSelector:
-        {{- range $key, $val := .}}
-        - {{$key}}: {{ $val }}
+        {{ range $key, $val := . }}
+        {{ $key }}: {{ $val }}
         {{- end }}
-      {{- end }}
-{{- end }}
+      {{- end }}{{- end }}

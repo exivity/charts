@@ -93,7 +93,7 @@ spec:
       {{- end }}
       {{- with .Values.service.proximityCli.nodeSelector }}
       nodeSelector:
-        {{- range $key, $val := .}}
-        - {{$key}}: {{ $val }}
+        {{ range $key, $val := . }}
+        {{ $key }}: {{ $val }}
         {{- end }}
       {{- end }}
