@@ -41,8 +41,16 @@ spec:
     resource:
       name: memory
       target:
-        type: Utilization
+        type: AverageValue
         averageUtilization: {{ (index .Values.service .name).autoscaling.averageMemoryValue }}
+  {{- end}}
+  {{- if (index .Values.service .name).autoscaling.averageCustomValue }}
+  - type: {{ (index .Values.service .name).autoscaling.customType | default "Resource" }}
+    resource:
+      name: {{ (index .Values.service .name).autoscaling.customResource }}
+      target:
+        type: AverageValue
+        averageUtilization: {{ (index .Values.service .name).autoscaling.averageCustomValue }}
   {{- end}}
   {{- if and (not (index .Values.service .name).autoscaling.averageMemoryValue) (not (index .Values.service .name).autoscaling.averageMemoryUtilization) (not (index .Values.service .name).autoscaling.averageCPUUtilization) }}
     []
