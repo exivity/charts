@@ -65,3 +65,4 @@ spec:
         {{ $key }}: {{ $val }}
         {{- end }}
       {{- end }}
+{{ include "exivity.autoscaler" (set $ "name" "griffon") }}
