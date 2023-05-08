@@ -7,6 +7,6 @@ livenessProbe:
       - list=$(df 2>&1 | grep -i 'Stale file handle'); [ ${#list} -ne 0 ] && exit 1 || exit 0
   initialDelaySeconds: 10
   periodSeconds: 20
-  timeoutSeconds: 2
+  timeoutSeconds: 5
   failureThreshold: 2
 {{- end }}
