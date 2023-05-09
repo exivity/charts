@@ -142,6 +142,7 @@ spec:
               value: file
             - name:  QUEUE_CONNECTION
               value: sync
+          {{- include "exivity.nfs-liveness" $ | indent 10}}
         {{- if .Values.ingress.trustedProxy }}
             - name: TRUSTED_PROXY
               value: {{ printf "%s" (.Values.ingress.trustedProxy) | quote }}

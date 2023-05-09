@@ -50,6 +50,7 @@ spec:
               mountPath: /exivity/home/system/config
             - name:      log
               mountPath: /exivity/home/log/griffon
+          {{- include "exivity.nfs-liveness" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
         {{- range $name := .}}
