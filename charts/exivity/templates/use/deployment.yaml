@@ -74,6 +74,7 @@ spec:
               value: "10"
             - name: EXIVITY_BACKEND_LOG_LEVEL
               value: "{{ .Values.logLevel.backend }}"
+          {{- include "exivity.nfs-liveness" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
         {{- range $name := .}}

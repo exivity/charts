@@ -62,6 +62,7 @@ spec:
               mountPath: /exivity/home/log/merlin
             - name:      report
               mountPath: /exivity/home/system/report
+          {{- include "exivity.nfs-liveness" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
         {{- range $name := .}}
