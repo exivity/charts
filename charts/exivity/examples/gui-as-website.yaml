@@ -1,0 +1,22 @@
+# Example ingress settings for use in your exivity values.yaml, when hosting the GUI as a website
+
+ingress:
+  # Enable ingress
+  enabled: true
+  # Host/domain name to create the ingress route for
+  host: gui-as-website.exivity.host
+  # Use the nginx ingress
+  ingressClassName: nginx
+  tls:
+    # enable TLS
+    enabled: true
+    # TLS secret name
+    secret: "exivity-tls"
+  serviceType: "LoadBalancer"
+  annotations:
+    # cert-manager cluster-issuer to get the certificate from
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    # force redirect to HTTPS
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # only allow HTTPS traffic
+    kubernetes.io/ingress.allow-http: "false"

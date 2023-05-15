@@ -1,0 +1,25 @@
+# Example postgresql settings for use in your exivity values.yaml, when wanting to deploy a larger PostgreSQL instance
+
+postgresql:
+  # -- Install PostgreSQL
+  enabled: true
+  primary:
+    # -- Size of the persistent volume
+    persistence:
+      size: 50Gi
+    # -- Size of the buffers and memory used by PostgreSQL
+    extendedConfiguration: |
+      shared_buffers = 2GB
+      work_mem = 32MB
+      wal_buffers = 64MB
+  global:
+    postgresql:
+      auth:
+        # -- Database name
+        database:         exivity
+        # -- Database username
+        username:         exivity
+        # -- Database password
+        password:         Password12!
+        # -- Database root password, not needed when you bring your own DB
+        postgresPassword: Password13!

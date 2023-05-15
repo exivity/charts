@@ -1,0 +1,21 @@
+# Example rabbitmq settings for use in your exivity values.yaml, when using a separately hosted RabbitMQ instance
+
+rabbitmq:
+  # -- Don't deploy a RabbitMQ instance on the cluster
+  enabled: false
+  clustering:
+    enabled: false
+
+  # -- The username and password to connect to your RabbitMQ instance
+  auth:
+    username:     user
+    password:     pass
+
+  # -- Your own RabbitMQ host
+  host:    "exivity.rabbitmq.your.host"
+  # -- Your own RabbitMQ port
+  port:    5672
+  # -- Your own RabbitMQ vhost
+  vhost:   "/"
+  # TLS connection: true/false
+  secure:  true
