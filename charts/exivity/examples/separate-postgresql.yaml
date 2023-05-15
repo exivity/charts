@@ -1,0 +1,23 @@
+# Example postgresql settings for use in your exivity values.yaml, when using a separately hosted PostgreSQL instance
+
+postgresql:
+  # -- Don't deploy a PostgreSQL instance on the cluster
+  enabled: false
+  global:
+    postgresql:
+      auth:
+        # -- Database name
+        database:         exivity
+        # -- Database username
+        username:         exivity
+        # -- Database password
+        password:         Password12!
+        # -- Database root password, not needed when you bring your own DB
+        postgresPassword: Password13!
+
+  # -- Your own DB host
+  host:       "exivity.postgres.your.host"
+  # -- Your own DB port
+  port:       5432
+  # -- Your own DB sslmode: enable/disable
+  sslmode:    "enable"
