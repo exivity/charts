@@ -1,0 +1,38 @@
+licence: "rhOUyEtI5iTy9yIRvNIZt9Bb/vHat5D5LMeHpjXM4XRjZACgFGy51GN4hmDKdpCLPjmcQK/bmcW3Kueh8CAOfK057IFxSqdGLXcgSV/zYUr6n5v8e+ozzhfEgd3HbqESFR4xNGg4qsHLi5BSiLLt9SqVjXOXZH4Rt69ZeXPxC34dxSESvZI3umwTxVqAkrMiXrHCMSANJ8CY1I4wo1WU9f1yWx6t08ebQtg0FfvY5Ep6JRSDoe8hILb+o6u56SP3AN+uDHU4V/ciqYA3+zXoJ05ZPhkQ2no5jce/MuG0c+AE47xOSR8UTnjMXXHwLgaVm4tEmoxq6BfDwBMGKOEpl0G0Z6BnhRiIsRlZtZ5ZN9AWw2pEp5aWJmkMHVVEgCdShkCOeNh4k83ZYe7QrP+QBnwFph3Xqpd6wZeeU37vXM/bQk0SAlHBmPNgy++MJv4CStt4x6tonG3+0detOXfXc/aqtxlu8l/hHBd7/aa/tnD9IvkIDmw7bGFJLSkQPIRo7/Bc0dM+bnzUXW2eUTan39vIv/px90NO7uUhFLnquIDsRAciI2ccx2Hhn09grDyX3zsO03KPpAT787EZ8hiI/ZhC9S/xKJUyi5hSZA7V0BBQvxGMXGuI/kZ9vXp/IYzKENhUSeuI0WnCO3sWHrL4g0FPAR0bg3nS0Y14ahQjWiE="
+
+storage:
+  storageClass: nfs-dev-v3
+
+service:
+  glass:
+    replicas: 2
+
+  proximityApi:
+    replicas: 2
+
+  proximityCli:
+    replicas: 2
+
+  chronos:
+    replicas: 2
+
+  edify:
+    replicas: 2
+
+  executor:
+    replicas: 2
+
+  griffon:
+    replicas: 2
+
+  horizon:
+    replicas: 2
+
+  pigeon:
+    replicas: 2
+
+  transcript:
+    replicas: 2
+
+  use:
+    replicas: 2
