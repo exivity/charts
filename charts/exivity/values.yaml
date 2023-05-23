@@ -86,6 +86,7 @@ service:
     replicas:    1
     nodeName: ""
     nodeSelector: {}
+    autoscaling: {}
     
   proximityApi:
     registry:    ""
@@ -97,6 +98,9 @@ service:
     replicas:    1
     nodeName: ""
     nodeSelector: {}
+    autoscaling:
+      averageCPUUtilization: 70
+      averageMemoryUtilization: 70
 
   # Back-end components
   chronos:
@@ -107,6 +111,7 @@ service:
     replicas:   1
     nodeName: ""
     nodeSelector: {}
+    autoscaling: {}
 
   dbInit:
     registry:   ""
@@ -115,6 +120,7 @@ service:
     pullPolicy: ""
     nodeName: ""
     nodeSelector: {}
+    autoscaling: {}
     
   dummyData:
     enabled:    false
@@ -124,6 +130,7 @@ service:
     pullPolicy: ""
     nodeName: ""
     nodeSelector: {}
+    autoscaling: {}
     
   edify:
     registry:   ""
@@ -133,6 +140,7 @@ service:
     replicas:   1
     nodeName: ""
     nodeSelector: {}
+    autoscaling: {}
 
   executor:
     registry:   ""
@@ -142,6 +150,7 @@ service:
     replicas:   1
     nodeName: ""
     nodeSelector: {}
+    autoscaling: {}
 
   griffon:
     registry:   ""
@@ -151,6 +160,7 @@ service:
     replicas:   1
     nodeName: ""
     nodeSelector: {}
+    autoscaling: {}
     
   horizon:
     registry:   ""
@@ -160,6 +170,7 @@ service:
     replicas:   1
     nodeName: ""
     nodeSelector: {}
+    autoscaling: {}
 
   pigeon:
     registry:   ""
@@ -169,6 +180,7 @@ service:
     replicas:   1
     nodeName: ""
     nodeSelector: {}
+    autoscaling: {}
 
   proximityCli:
     registry:   ""
@@ -178,6 +190,7 @@ service:
     replicas:   1
     nodeName: ""
     nodeSelector: {}
+    autoscaling: {}
 
   transcript:
     registry:   ""
@@ -187,6 +200,7 @@ service:
     replicas:   1
     nodeName: ""
     nodeSelector: {}
+    autoscaling: {}
 
   use:
     registry:   ""
@@ -196,6 +210,7 @@ service:
     replicas:   1
     nodeName: ""
     nodeSelector: {}
+    autoscaling: {}
 
 logLevel:
   backend: "info"
