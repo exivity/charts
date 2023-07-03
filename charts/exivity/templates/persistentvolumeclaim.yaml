@@ -17,7 +17,7 @@ spec:
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}
-{{- if (eq .Values.storage.storageClass "nfs" }}
+{{- if (eq .Values.storage.storageClass "nfs") }}
   mountOptions:
     - hard
     - retrans=3
@@ -49,7 +49,7 @@ spec:
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}
-{{- if (eq .Values.storage.storageClass "nfs" }}
+{{- if (eq .Values.storage.storageClass "nfs") }}
   mountOptions:
     - hard
     - retrans=3
@@ -81,7 +81,7 @@ spec:
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}
-{{- if (eq .Values.storage.storageClass "nfs" }}
+{{- if (eq .Values.storage.storageClass "nfs") }}
   mountOptions:
     - hard
     - retrans=3
@@ -113,7 +113,7 @@ spec:
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}
-{{- if (eq .Values.storage.storageClass "nfs" }}
+{{- if (eq .Values.storage.storageClass "nfs") }}
   mountOptions:
     - hard
     - retrans=3
@@ -145,7 +145,7 @@ spec:
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}
-{{- if (eq .Values.storage.storageClass "nfs" }}
+{{- if (eq .Values.storage.storageClass "nfs") }}
   mountOptions:
     - hard
     - retrans=3
