@@ -133,6 +133,8 @@ service:
     replicas:   1
     nodeName: ""
     nodeSelector: {}
+    # custom edify cache path
+    # tmpPath: "/tmp"
 
   executor:
     registry:   ""
