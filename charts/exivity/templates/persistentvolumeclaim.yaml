@@ -17,17 +17,6 @@ spec:
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}
-{{- if (eq .Values.storage.storageClass "nfs") }}
-  mountOptions:
-    - hard
-    - retrans=3
-    - proto=tcp
-    - nfsvers=4.2
-    - rsize=4096
-    - wsize=4096
-    - noatime
-    - nodiratime
-{{ end }}
 
 ---
 apiVersion: v1
@@ -48,17 +37,6 @@ spec:
       storage: 1Gi
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
-{{ end }}
-{{- if (eq .Values.storage.storageClass "nfs") }}
-  mountOptions:
-    - hard
-    - retrans=3
-    - proto=tcp
-    - nfsvers=4.2
-    - rsize=4096
-    - wsize=4096
-    - noatime
-    - nodiratime
 {{ end }}
 
 ---
@@ -81,17 +59,6 @@ spec:
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}
-{{- if (eq .Values.storage.storageClass "nfs") }}
-  mountOptions:
-    - hard
-    - retrans=3
-    - proto=tcp
-    - nfsvers=4.2
-    - rsize=4096
-    - wsize=4096
-    - noatime
-    - nodiratime
-{{ end }}
 
 ---
 apiVersion: v1
@@ -113,17 +80,6 @@ spec:
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}
-{{- if (eq .Values.storage.storageClass "nfs") }}
-  mountOptions:
-    - hard
-    - retrans=3
-    - proto=tcp
-    - nfsvers=4.2
-    - rsize=4096
-    - wsize=4096
-    - noatime
-    - nodiratime
-{{ end }}
   
 ---
 apiVersion: v1
@@ -144,15 +100,4 @@ spec:
       storage: 1Gi
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
-{{ end }}
-{{- if (eq .Values.storage.storageClass "nfs") }}
-  mountOptions:
-    - hard
-    - retrans=3
-    - proto=tcp
-    - nfsvers=4.2
-    - rsize=4096
-    - wsize=4096
-    - noatime
-    - nodiratime
 {{ end }}
