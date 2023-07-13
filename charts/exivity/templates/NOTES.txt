@@ -1,4 +1,17 @@
-Installed Exivity as `{{ include "exivity.fullname" $ }}`.
+{{- if not .Release.IsUpgrade }}
+Thank you for choosing Exivity!
+
+{{- if not (and (empty .Values.secret.appKey) (empty .Values.secret.jwtSecret)) }}
+You have chosen to provide your own secrets.
+{{- else }}
+You have chosen to let Exivity generate secrets for you.
+{{- end }}
+{{- end }}
+{{- if not (and (empty .Values.secret.appKey) (empty .Values.secret.jwtSecret)) }}
+PLEASE REMOVE YOUR SECRETS FROM YOUR `values.yaml` FILE BEFORE COMMITTING TO SOURCE CONTROL!
+{{- end}}
+
+{{ if not .Release.IsUpgrade -}}Installed{{- else -}}Upgraded{{- end }} Exivity v{{ .Chart.Version }} as `{{ include "exivity.fullname" $ }}`.
 It can take a few minutes for the containers to download and start up.
 
 {{ if $.Values.ingress.enabled -}}
