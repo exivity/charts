@@ -2,7 +2,7 @@
 nameOverride: ""
 
 # -- Please overwrite this, and use your actual licence or "demo" if you just want to look around, as it can only be changed through the Helm chart
-licence:      ""
+licence: "BRSkcR43BrZSq0mAEOxzMGpk37QILuSO7wmJD+Xj8afv5kuGunNTecjBHC7P0Bp/otnWXLMMmRjiqXzMKBSa8r2oKxo43wG/DUpy6o/l8+ZQB3Zo6YD/GXMe/CoIKLRLdYHbntRHHqd24X8aXxgjwQsQdS5Qn1LUtDdl7JhGjo2/oy0b+AZJmHdrrpzMs3FDhhidrhntzL1N+OWCBbLy751PgQzl/2hdYKxj9FaxWiF+3r0pnhn+CSs6W4qHqyauZlS7SkTW4Tq8BMhJMy3X75btOSLwzArs5G8mPAPuKEobIbzftImJ9J2cTPl6LcvzflTaB7BwNYoaiW7tR1oDG+vHL7kk776ALKqvydqqtiioeNaB+SAiugmieWGFH0S+y1mRVe+5kWJ4J+Q55UPzlvYGSw1vPfDEmL5LI6GJO0wFjYejoIHFFiTtnDaREKWV+KNBO66cCVsihN+RaKqbDVwzExsjDUpcf2u+QFtNi2sR3tXR6T0DOLQYBjPKY0dPhf/WPXrwlZY6O7ScmuKn6ZQBOV9GXePLpKIw4r0nc2HDJjknh7bH7/cfk5RCtk5daynmF207v8YPV2MT4UwgquuILUnLXc3HY9rKVOlm7ruDJyIiPSSOgZ7yo9R1kY0BDm8d71L0qi6SdutSWWA2zJcQvkTZWrsNyGGHFk2xYPo="
 
 # -- Override secrets, this is only used on first install.
 # -- Please DO NOT leave these values propagated in your values.yaml after first install, on upgrade the values are copied from the previous release.
@@ -30,7 +30,7 @@ ingress:
     secret:  "-"
 
 storage:
-  storageClass:           ""
+  storageClass: ""
   helmResourcePolicyKeep: true
   sharedVolumeAccessMode: ReadWriteMany
 
@@ -75,11 +75,11 @@ rabbitmq:
   secure:  ""
 
 service:
-  registry:   docker.io
-  tag:        ""
+  registry:   ghcr.io
+  tag:        main
   pullPolicy: IfNotPresent
 
-  pullSecrets: [ ]
+  pullSecrets: ['ghcr']
 
   # Front-end components
   glass:
@@ -123,8 +123,8 @@ service:
     nodeSelector: {}
     
   dummyData:
-    enabled:    false
-    registry:   ""
+    enabled:    true
+    registry:   "docker.io"
     repository: exivity/dummy-data
     tag:        "main" # Tag should be changed to match the rest in the future
     pullPolicy: ""
@@ -179,9 +179,9 @@ service:
     nodeSelector: {}
 
   proximityCli:
-    registry:   ""
+    registry:   ghcr.io
     repository: exivity/proximity-cli
-    tag:        ""
+    tag:        fix-5491-add-zip-support-to-docker-build
     pullPolicy: ""
     replicas:   1
     nodeName: ""

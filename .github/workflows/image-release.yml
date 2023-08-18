@@ -26,11 +26,15 @@ jobs:
           - transcript
           - use
     steps:
+      - name: Extract version and set output
+        id: extract_version
+        run: echo "version=v${GITHUB_REF#refs/tags/exivity-}" >> $GITHUB_OUTPUT
+
       - name: release images with tags
         uses: exivity/actions/retag-image@main
         with:
           source-name: ${{ matrix.name }}
-          source-tag: main
+          source-tag: ${{ steps.extract_version.outputs.version }}
           target-name: ${{ matrix.name }}
           target-tag: ${{ github.ref_name }}
           target-user: ${{ secrets.DOCKER_HUB_USER }}
