@@ -4,8 +4,8 @@ nameOverride: ""
 # -- Please overwrite this, and use your actual licence or "demo" if you just want to look around, as it can only be changed through the Helm chart
 licence:      ""
 
-# -- Override secrets, this is only used on first install.
-# -- Please DO NOT leave these values propagated in your values.yaml after first install, on upgrade the values are copied from the previous release.
+# -- Override secrets, this is only used on first install
+# -- Please DO NOT leave these values propagated in your values.yaml after first install, on upgrade the values are copied from the previous release
 secret:
   appKey:    ""
   jwtSecret: ""
