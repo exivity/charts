@@ -2,6 +2,26 @@ apiVersion: v1
 entries:
   exivity:
   - apiVersion: v2
+    created: "2023-08-21T16:47:33.287837275Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.9.13
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.1
+    description: Exivity is a metering and billing solution for hybrid clouds.
+    digest: 18c26453bdad088404fa4c92a44391c8b1acca91d70076e87698b027cb1c46a9
+    home: https://exivity.com/
+    name: exivity
+    sources:
+    - https://github.com/exivity/charts/tree/main/charts/exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-3.19.2/exivity-3.19.2.tgz
+    version: 3.19.2
+  - apiVersion: v2
     created: "2023-08-18T11:52:03.211980897Z"
     dependencies:
     - condition: postgresql.enabled
