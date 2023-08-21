@@ -142,6 +142,8 @@ spec:
               value: file
             - name:  QUEUE_CONNECTION
               value: sync
+            - name: NGINX_LOG_PATH
+              value: /var/log/nginx
         {{- if .Values.ingress.trustedProxy }}
             - name: TRUSTED_PROXY
               value: {{ printf "%s" (.Values.ingress.trustedProxy) | quote }}
