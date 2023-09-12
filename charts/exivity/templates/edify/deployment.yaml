@@ -40,9 +40,7 @@ spec:
           image: {{ include "exivity.image" (set $ "name" "edify") }}
           imagePullPolicy: {{ .Values.service.edify.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
           resources:
-            requests:
-              cpu:    "25m"
-              memory: "50Mi"
+            {{- toYaml .Values.service.edify.resources | nindent 12 }}
           env:
             - name: EXIVITY_BACKEND_LOG_LEVEL
               value: "{{ .Values.logLevel.backend }}"

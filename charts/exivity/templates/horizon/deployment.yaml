@@ -31,9 +31,7 @@ spec:
           image: {{ include "exivity.image" (set $ "name" "horizon") }}
           imagePullPolicy: {{ .Values.service.horizon.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
           resources:
-            requests:
-              cpu:    "25m"
-              memory: "50Mi"
+            {{- toYaml .Values.service.horizon.resources | nindent 12 }}
           env:
             - name: EXIVITY_BACKEND_LOG_LEVEL
               value: "{{ .Values.logLevel.backend }}"
