@@ -40,6 +40,8 @@ spec:
               value: {{ $.Values.postgresql.global.postgresql.auth.username | quote }}
             - name: PG_SSLMODE
               value: {{ $.Values.postgresql.sslmode | default "disable" | quote  }}
+          resources:
+            {{- toYaml .Values.service.dbInit.waitForServer.resources | nindent 12 }}
       containers:
         - name: migration
           image: {{ include "exivity.image" (set $ "name" "dbInit") }}
@@ -70,6 +72,8 @@ spec:
               value: {{ $.Values.postgresql.port | default 5432 | quote}}
             - name: PG_SSLMODE
               value: {{ $.Values.postgresql.sslmode | default "disable" | quote  }}
+          resources:
+            {{- toYaml .Values.service.dbInit.migration.resources | nindent 12 }}
       restartPolicy: Never
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:

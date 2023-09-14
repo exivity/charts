@@ -26,6 +26,8 @@ spec:
           env:
             - name:  PROXIMITY_API
               value: "{{ include "exivity.fullname" $ -}}-proximity-api:{{- .Values.service.proximityApi.servicePort }}"
+          resources:
+            {{- toYaml .Values.service.dummyData.resources | nindent 12 }}
           securityContext:
             runAsUser:  1000
             runAsGroup: 1000

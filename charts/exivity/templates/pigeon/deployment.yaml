@@ -37,9 +37,7 @@ spec:
           image: {{ include "exivity.image" (set $ "name" "pigeon") }}
           imagePullPolicy: {{ .Values.service.pigeon.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
           resources:
-            requests:
-              cpu:    "25m"
-              memory: "50Mi"
+            {{- toYaml .Values.service.pigeon.resources | nindent 12 }}
           securityContext:
             runAsUser:  1000
             runAsGroup: 1000

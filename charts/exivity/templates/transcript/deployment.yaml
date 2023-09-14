@@ -46,9 +46,7 @@ spec:
           image: {{ include "exivity.image" (set $ "name" "transcript") }}
           imagePullPolicy: {{ .Values.service.transcript.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
           resources:
-            requests:
-              cpu:    "25m"
-              memory: "50Mi"
+            {{- toYaml .Values.service.transcript.resources | nindent 12 }}
           securityContext:
             runAsUser:  1000
             runAsGroup: 1000
