@@ -110,7 +110,7 @@ service:
     resources:
       requests:
         cpu:    "25m"
-        memory: "50Mi"
+        memory: "384Mi"
 
   # Back-end components
   chronos:
