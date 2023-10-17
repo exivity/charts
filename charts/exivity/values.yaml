@@ -17,6 +17,8 @@ ingress:
   host:             exivity
   # -- Set on ingress, if empty it's not set
   ingressClassName: ""
+  # set nginx trusted proxy, required for SSO
+  #trustedProxy: "*"
 
   annotations: { }
   #  kubernetes.io/ingress.allow-http:         "false"
