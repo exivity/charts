@@ -17,8 +17,26 @@ ingress:
   host:             exivity
   # -- Set on ingress, if empty it's not set
   ingressClassName: ""
-  # set nginx trusted proxy, required for SSO
-  #trustedProxy: "*"
+
+  # Configure trusted proxies for the Proximity service API to correctly handle headers like HTTP_X_FORWARDED_PROTO.
+  # This setting should be used when the service is behind a proxy or LoadBalancer, such as Traefik, which is acting as the Kubernetes cluster's load balancer.
+  # The value should be the IP address of the load balancer.
+  #
+  # Examples:
+  #
+  # - Single IP address:
+  #   trustedProxy: '10.0.0.1'
+  #
+  # - CIDR notation for a range like the default value for a DigitalOcean Kubernetes cluster:
+  #   trustedProxy: '10.244.0.0/16'
+  #
+  # - Comma-separated list of entries:
+  #   trustedProxy: '127.0.0.1, 10.244.0.0/16'
+  #
+  # - Wildcard (*) to trust any proxy connecting directly to the Proximity service API:
+  #   trustedProxy: '*'
+  #
+  trustedProxy: ""
 
   annotations: { }
   #  kubernetes.io/ingress.allow-http:         "false"
