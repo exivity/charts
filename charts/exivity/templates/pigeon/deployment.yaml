@@ -32,6 +32,9 @@ spec:
         - name: import
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-import
+        - name: config-volume
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-etl-config
       containers:
         - name:            pigeon
           image: {{ include "exivity.image" (set $ "name" "pigeon") }}
@@ -52,6 +55,8 @@ spec:
               mountPath: /exivity/home/import
             - name:      exported
               mountPath: /exivity/home/exported
+            - name:      config-volume
+              mountPath: /exivity/home/system/config
           env:
             - name: EXIVITY_APP_KEY
               valueFrom:
