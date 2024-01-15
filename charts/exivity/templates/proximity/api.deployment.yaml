@@ -146,6 +146,10 @@ spec:
             - name: TRUSTED_PROXY
               value: {{ printf "%s" (.Values.ingress.trustedProxy) | quote }}
         {{- end }}
+        {{- if .Values.service.proximityApi.phpMemoryLimit }}
+            - name: PHP_MEMORY_LIMIT
+              value: {{ printf "%s" (.Values.service.proximityApi.phpMemoryLimit) | quote }}
+        {{- end }}
           {{- include "exivity.nfs-liveness" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
