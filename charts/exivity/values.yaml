@@ -116,12 +116,15 @@ service:
       requests:
         cpu:    "25m"
         memory: "50Mi"
-    
+
   proximityApi:
     registry:    ""
     repository:  exivity/proximity-api
     tag:         ""
     pullPolicy:  ""
+    # set the PHP memory limit per requests
+    # https://www.php.net/manual/en/ini.core.php#ini.memory-limit
+    phpMemoryLimit: "3G"
     servicePort: 80
     serviceType: ClusterIP
     replicas:    1
@@ -208,7 +211,7 @@ service:
       requests:
         cpu:    "25m"
         memory: "50Mi"
-    
+
   horizon:
     registry:   ""
     repository: exivity/horizon
