@@ -4,7 +4,7 @@ version: '3.22.0'
 
 name:        exivity
 home:        https://exivity.com/
-description: Exivity is a metering and billing solution for hybrid clouds.
+description: Full Financial Visibility - Any Resource
 sources:
   - https://github.com/exivity/charts/tree/main/charts/exivity
 
