@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-config-proximity-migration
+  labels:
+    app.kubernetes.io/component: migrate
+    {{- include "exivity.labels" $ | indent 4 }}
+data:
+  script.sh: |
+    #!/usr/bin/env bash
+    echo "------------------------------------------------------------------------"
+    echo "Running DB Migration"
+    php web/proximity/proximity.phar exivity:migrate-db
+
+    echo "------------------------------------------------------------------------"
+    echo "Create Admin User"
+    php web/proximity/proximity.phar exivity:admin --force $ADMIN_USERNAME $ADMIN_PASSWORD
+

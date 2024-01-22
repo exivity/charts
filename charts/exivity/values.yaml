@@ -10,6 +10,12 @@ secret:
   appKey:    ""
   jwtSecret: ""
 
+admin:
+  # -- Admin user name
+  username: admin
+  # -- Admin user password
+  password: exivity
+
 ingress:
   # -- Enable ingress
   enabled:          true

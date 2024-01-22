@@ -5,6 +5,9 @@ metadata:
   labels:
     app.kubernetes.io/component: migration
     {{- include "exivity.labels" $ | indent 4 }}
+    admin-credential-hash: {{printf "%s-%s" .Values.admin.username .Values.admin.password | sha256sum | trunc 63}}
+    image-migration: {{ include "exivity.image" (set $ "name" "dbInit") | replace ":" "-" | replace "/" "-" }}
+    image-proximity-migration: {{ include "exivity.image" (set $ "name" "proximityCli") | replace ":" "-" | replace "/" "-" }}
 spec:
   completions:             1
   ttlSecondsAfterFinished: 300
@@ -14,44 +17,35 @@ spec:
         app.kubernetes.io/component: migration
         {{- include "exivity.labels" $ | indent 8 }}
     spec:
+      volumes:
+        - name: migration-script
+          configMap:
+            name: {{ include "exivity.fullname" $ -}}-config-proximity-migration
+        - name: config-file
+          configMap:
+            name: {{ include "exivity.fullname" $ -}}-config-proximity-cli
+        - name: log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-proximity-cli-log
+        - name: config
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-etl-config
+        - name: import
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-import
+        - name: report
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-report
+        - name: extracted
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-extracted
+        - name: exported
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-exported
       initContainers:
-        - name: wait-for-server
-          image: {{ include "exivity.image" (set $ "name" "dbInit") }}
-          imagePullPolicy: {{ .Values.service.dbInit.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
-          command:
-            - "/wait.sh"
-          args:
-            - "--host"
-            - "$(PG_HOST)"
-            - "--port"
-            - "$(PG_PORT)"
-            - "--dbname"
-            - "$(PG_DATABASE)"
-            - "--username"
-            - "$(PG_USER)"
-          env:
-            - name: PG_HOST
-              value: {{ $.Values.postgresql.host | default (printf "%s-postgresql" (include "exivity.fullname" $ )) | quote }}
-            - name: PG_PORT
-              value: {{ $.Values.postgresql.port | default 5432 | quote}}
-            - name: PG_DATABASE
-              value: {{ $.Values.postgresql.global.postgresql.auth.database | quote }}
-            - name: PG_USER
-              value: {{ $.Values.postgresql.global.postgresql.auth.username | quote }}
-            - name: PG_SSLMODE
-              value: {{ $.Values.postgresql.sslmode | default "disable" | quote  }}
-          resources:
-            {{- toYaml .Values.service.dbInit.waitForServer.resources | nindent 12 }}
-      containers:
         - name: migration
           image: {{ include "exivity.image" (set $ "name" "dbInit") }}
           imagePullPolicy: {{ .Values.service.dbInit.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
-          args:
-            - "-path"
-            - "./migrations"
-            - "-database"
-            - "postgres://$(PG_USER):$(PG_PASSWORD)@$(PG_HOST):$(PG_PORT)/$(PG_DATABASE)?sslmode=$(PG_SSLMODE)"
-            - "up"
           env:
             - name: PG_USER
               value: {{ $.Values.postgresql.global.postgresql.auth.username | quote }}
@@ -74,6 +68,56 @@ spec:
               value: {{ $.Values.postgresql.sslmode | default "disable" | quote  }}
           resources:
             {{- toYaml .Values.service.dbInit.migration.resources | nindent 12 }}
+      containers:
+        - name:            proximity-migration
+          image: {{ include "exivity.image" (set $ "name" "proximityCli") }}
+          imagePullPolicy: {{ .Values.service.proximityCli.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
+          command:
+            - "/bin/sh"
+            - "/scripts/script.sh"
+          resources:
+            {{- toYaml .Values.service.proximityCli.resources | nindent 12 }}
+          securityContext:
+            runAsUser:  1000
+            runAsGroup: 1000
+          volumeMounts:
+            - name:      config
+              mountPath: /exivity/home/system/config
+            - name: migration-script
+              mountPath: /scripts
+            - name:      config-file
+              mountPath: /exivity/home/system
+            - name:      exported
+              mountPath: /exivity/home/system/exported
+            - name:      extracted
+              mountPath: /exivity/home/system/extracted
+            - name:      log
+              mountPath: /exivity/home/log/merlin
+            - name:      log
+              mountPath: /exivity/home/log/proximity
+            - name:      import
+              mountPath: /exivity/home/import
+            - name:      report
+              mountPath: /exivity/home/system/report
+          envFrom:
+            - secretRef:
+                name: {{ include "exivity.fullname" $ -}}-admin-credentials
+          env:
+            - name: EXIVITY_APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ -}}-app-key
+                  key:                                     app_key
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ -}}-jwt-secret
+                  key:                                     jwt_secret
+            - name: EXIVITY_BACKEND_LOG_LEVEL
+              value: "{{ .Values.logLevel.backend }}"
+            - name: NGINX_LOG_PATH
+              value: /var/log/nginx
+          {{- include "exivity.nfs-liveness" $ | indent 10}}
       restartPolicy: Never
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
