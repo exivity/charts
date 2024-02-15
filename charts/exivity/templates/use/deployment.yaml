@@ -59,9 +59,9 @@ spec:
             - name:      import
               mountPath: /exivity/home/import
             - name:      log
-              mountPath: /exivity/home/log/merlin
-            - name:      log
               mountPath: /exivity/home/log/use
+            - name:      log
+              mountPath: /exivity/home/log/merlin
           env:
             - name: EXIVITY_APP_KEY
               valueFrom:
