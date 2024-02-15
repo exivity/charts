@@ -60,9 +60,9 @@ spec:
             - name:      extracted
               mountPath: /exivity/home/system/extracted
             - name:      log
-              mountPath: /exivity/home/log/merlin
-            - name:      log
               mountPath: /exivity/home/log/proximity
+            - name:      log
+              mountPath: /exivity/home/log/merlin
             - name:      import
               mountPath: /exivity/home/import
             - name:      report
