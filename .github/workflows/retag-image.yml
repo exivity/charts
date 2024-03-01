@@ -1,0 +1,40 @@
+name: retag-image
+on:
+  workflow_dispatch:
+    inputs:
+      source-registry:
+        description: Source image registry
+        required: true
+        default: ghcr.io
+      target-registry:
+        description: Target image registry
+        required: true
+        default: docker.io
+      source-name:
+        description: Source image name
+        required: true
+      source-tag:
+        description: Source image tag
+        required: true
+      target-name:
+        description: Target image name
+        required: true
+      target-tag:
+        description: Target image tag
+        required: true
+
+jobs:
+  retag-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: release images with tags
+        uses: exivity/actions/retag-image@main
+        with:
+          source-registry: ${{ inputs.source-registry }}
+          target-registry: ${{ inputs.target-registry }}
+          source-name: ${{ inputs.source-name }}
+          source-tag: ${{ inputs.source-tag }}
+          target-name: ${{ inputs.target-name }}
+          target-tag: ${{ inputs.target-tag }}
+          target-user: ${{ secrets.DOCKER_HUB_USER }}
+          target-password: ${{ secrets.DOCKER_HUB_TOKEN }}
