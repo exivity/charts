@@ -39,8 +39,7 @@ spec:
             - name:   EXIVITY_BACKEND_LOG_LEVEL
               value:  "{{ .Values.logLevel.backend }}"
           securityContext:
-            runAsUser:  1000
-            runAsGroup: 1000
+            {{- toYaml (default .Values.service.securityContext .Values.service.griffon.securityContext) | nindent 12 }}
           volumeMounts:
             - name:      config-file
               mountPath: /exivity/home/system

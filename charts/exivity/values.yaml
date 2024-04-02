@@ -101,6 +101,12 @@ service:
 
   pullSecrets: [ ]
 
+  # default security context for all components
+  securityContext:
+    allowPrivilegeEscalation: false
+    runAsUser: 1000
+    runAsGroup: 1000
+
   # Front-end components
   glass:
     registry:    ""
@@ -116,6 +122,7 @@ service:
       requests:
         cpu:    "25m"
         memory: "50Mi"
+    securityContext: {}
 
   proximityApi:
     registry:    ""
@@ -134,6 +141,7 @@ service:
       requests:
         cpu:    "25m"
         memory: "400Mi"
+    securityContext: {}
 
   # Back-end components
   chronos:
@@ -148,6 +156,7 @@ service:
       requests:
         cpu:    "25m"
         memory: "50Mi"
+    securityContext: {}
 
   dbInit:
     registry:   ""
@@ -185,6 +194,7 @@ service:
       requests:
         cpu:    "25m"
         memory: "50Mi"
+    securityContext: {}
 
   executor:
     registry:   ""
@@ -198,6 +208,7 @@ service:
       requests:
         cpu:    "25m"
         memory: "50Mi"
+    securityContext: {}
 
   griffon:
     registry:   ""
@@ -211,6 +222,7 @@ service:
       requests:
         cpu:    "25m"
         memory: "50Mi"
+    securityContext: {}
 
   horizon:
     registry:   ""
@@ -224,6 +236,7 @@ service:
       requests:
         cpu:    "25m"
         memory: "50Mi"
+    securityContext: {}
 
   pigeon:
     registry:   ""
@@ -237,6 +250,7 @@ service:
       requests:
         cpu:    "25m"
         memory: "50Mi"
+    securityContext: {}
 
   proximityCli:
     registry:   ""
@@ -250,6 +264,7 @@ service:
       requests:
         cpu:    "25m"
         memory: "50Mi"
+    securityContext: {}
 
   transcript:
     registry:   ""
@@ -263,6 +278,7 @@ service:
       requests:
         cpu:    "25m"
         memory: "50Mi"
+    securityContext: {}
 
   use:
     registry:   ""
@@ -276,6 +292,7 @@ service:
       requests:
         cpu:    "25m"
         memory: "50Mi"
+    securityContext: {}
 
 logLevel:
   backend: "info"

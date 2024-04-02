@@ -42,8 +42,7 @@ spec:
           resources:
             {{- toYaml .Values.service.pigeon.resources | nindent 12 }}
           securityContext:
-            runAsUser:  1000
-            runAsGroup: 1000
+            {{- toYaml (default .Values.service.securityContext .Values.service.pigeon.securityContext) | nindent 12 }}
           volumeMounts:
             - name:      config
               mountPath: /exivity/home/system
