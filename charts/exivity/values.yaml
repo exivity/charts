@@ -283,19 +283,19 @@ service:
           requests:
             cpu:    "25m"
             memory: "50Mi"
-    # caCertificates: In this section, the CA certificates to be used by the service can be specified.
-    # Each entry should be a key-value pair where the key is a descriptive name for the certificate (e.g., 'rootCA', 'intermediateCA')
-    # and the value is the certificate itself.
-    # As many certificates as needed can be added.
-    # 'rootCA.pem' and 'intermediateCA.pem' should be replaced with the names of the actual certificates.
+    # In the following caCertificates section, you can specify the Certificate Authority (CA) certificates that your service uses. 
+    # Each certificate should be listed as a key-value pair, where the key is a name you assign to the certificate for identification 
+    # (like 'rootCA' or 'intermediateCA'), and the value is the actual certificate. You can include as many certificates as necessary 
+    # by replacing the placeholder names like 'rootCA.pem' and 'intermediateCA.pem' with the actual file names of your certificates.
     #
     # Instructions for fetching CA certificates using OpenSSL:
+    # --------------------------------------------------------
     # To fetch and add CA certificates to this configuration, follow the steps below using OpenSSL:
     # 1. Open a terminal on your system.
     # 2. Use the following OpenSSL command to connect to the desired HTTPS server and retrieve the certificate:
     #      echo | openssl s_client -servername <your-server-name> -connect <your-server-name>:443 -showcerts | openssl x509 -outform PEM > your_certificate_name.pem
     #    Replace `<your-server-name>` with the actual server name and `your_certificate_name.pem` with the desired file name for your certificate.
-    # 3. Once you have the certificate, you can add it to the caCertificates section above by replacing the existing placeholders.
+    # 3. Once you have the certificate, you can add it to the caCertificates section below by replacing the existing placeholders.
     #    Ensure the entire certificate text including the "BEGIN CERTIFICATE" and "END CERTIFICATE" lines is correctly pasted under the appropriate key.
     caCertificates:
       # rootCA.pem: |
