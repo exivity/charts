@@ -38,6 +38,31 @@ spec:
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-use-log
+      {{- if gt (len .Values.service.use.caCertificates) 0 }}
+        - name: cert-volume
+          emptyDir: {}
+        - name: ca-certificates
+          secret:
+            secretName: {{ include "exivity.fullname" $ -}}-use-certificates
+      initContainers:
+        - name: install-ca-cert
+          image: {{ include "exivity.image" (set $ "name" "use") }}
+          command: ["sh", "-c", "update-ca-certificates && cp -r /etc/ssl/certs/* /certs/"]
+          volumeMounts:
+            - name: cert-volume
+              mountPath: /certs
+            {{- range $key, $value := .Values.service.use.caCertificates }}
+            - name: ca-certificates
+              mountPath: /usr/local/share/ca-certificates/{{$key}}
+              subPath: {{$key}}
+              readOnly: true
+            {{- end }}
+          resources:
+            {{- toYaml .Values.service.use.initContainers.installCACert.resources | nindent 12 }}
+            limits:
+              cpu: "100m"
+              memory: "50Mi"
+      {{- end }}
       containers:
         - name:            use
           image: {{ include "exivity.image" (set $ "name" "use") }}
@@ -62,6 +87,10 @@ spec:
               mountPath: /exivity/home/log/use
             - name:      log
               mountPath: /exivity/home/log/merlin
+            {{- if gt (len .Values.service.use.caCertificates) 0 }}
+            - name: cert-volume
+              mountPath: /etc/ssl/certs
+            {{- end }}
           env:
             - name: EXIVITY_APP_KEY
               valueFrom:

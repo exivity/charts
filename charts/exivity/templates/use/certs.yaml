@@ -1,0 +1,11 @@
+{{if gt (len .Values.service.use.caCertificates) 0 -}}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-use-certificates
+type: Opaque
+data:
+  {{- range $key, $value := .Values.service.use.caCertificates }}
+  {{ $key }}: {{ $value | b64enc | quote }}
+  {{- end }}
+{{- end }}
