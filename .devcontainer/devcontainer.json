@@ -3,7 +3,7 @@
 {
 	"name": "Kubernetes - Minikube-in-Docker",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
+	"image": "mcr.microsoft.com/devcontainers/python:1-3.12-bullseye",
 
 	"features": {
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
@@ -17,13 +17,13 @@
 				"ms-kubernetes-tools.vscode-kubernetes-tools"
 			]
 		}
-	}
+	},
 	
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "kubectl version",
+	// Install test dependencies inside the container.
+	"postCreateCommand": "pip install -r test/requirements.txt"
 
 	// Use 'postStartCommand' to run commands after the container is created like starting minikube.
 	// "postStartCommand": "nohup bash -c 'minikube start &' > minikube.log 2>&1",

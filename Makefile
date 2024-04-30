@@ -6,7 +6,7 @@ INGRESS_HOSTNAME := exivity.local
 
 # Define Minikube start with a specific driver
 minikube-start:
-	@minikube start
+	@minikube start --memory 8192 --cpus 2
 	@minikube addons enable ingress
 
 # Define Minikube delete
@@ -20,7 +20,8 @@ deploy-exivity-chart:
         --create-namespace \
         --set storage.storageClass=$(NFS_STORAGE_CLASS) \
         --set ingress.host=$(INGRESS_HOSTNAME) \
-        --set ingress.annotations."nginx\.ingress\.kubernetes\.io/rewrite-target"="/"
+        --set ingress.ingressClassName="nginx" \
+        --set logLevel.backend="debug" \
 
 # Deploy NFS Helm chart to Minikube
 # This is a dependency for the exivity Helm chart
@@ -43,10 +44,13 @@ deploy-nfs-chart:
         --set 'storageClass.mountOptions[6]=noatime' \
         --set 'storageClass.mountOptions[7]=nodiratime'
 
+# Deploy all Helm charts
+deploy-charts: deploy-nfs-chart deploy-exivity-chart
+
 # Test Helm chart
 test:
 	@echo "Running tests..."
-	@./test.sh $(INGRESS_HOSTNAME) $$(minikube ip)
+	@python3 test/test.py --hostname $(INGRESS_HOSTNAME) --ip $$(minikube ip)
 
 # Makefile targets
-.PHONY: minikube-start minikube-delete deploy-exivity-chart deploy-nfs-chart test
+.PHONY: minikube-start minikube-delete deploy-charts deploy-exivity-chart deploy-nfs-chart test
