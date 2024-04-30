@@ -1,10 +1,13 @@
 # Constants
 NFS_STORAGE_CLASS := nfs-client
-NFS_CHART_VERSION = 1.8.0
+NFS_CHART_VERSION := 1.8.0
+
+INGRESS_HOSTNAME := exivity.local
 
 # Define Minikube start with a specific driver
 minikube-start:
 	@minikube start
+	@minikube addons enable ingress
 
 # Define Minikube delete
 minikube-delete:
@@ -16,7 +19,8 @@ deploy-exivity-chart:
         --namespace exivity \
         --create-namespace \
         --set storage.storageClass=$(NFS_STORAGE_CLASS) \
-        --set ingress.host=localhost
+        --set ingress.host=$(INGRESS_HOSTNAME) \
+        --set ingress.annotations."nginx\.ingress\.kubernetes\.io/rewrite-target"="/"
 
 # Deploy NFS Helm chart to Minikube
 # This is a dependency for the exivity Helm chart
@@ -42,7 +46,7 @@ deploy-nfs-chart:
 # Test Helm chart
 test:
 	@echo "Running tests..."
-	# Here you can define specific test commands or scripts
+	@./test.sh $(INGRESS_HOSTNAME) $$(minikube ip)
 
 # Makefile targets
 .PHONY: minikube-start minikube-delete deploy-exivity-chart deploy-nfs-chart test
