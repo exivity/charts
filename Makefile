@@ -1,3 +1,7 @@
+# Constants
+NFS_STORAGE_CLASS := nfs-client
+NFS_CHART_VERSION = 1.8.0
+
 # Define Minikube start with a specific driver
 minikube-start:
 	@minikube start
@@ -10,19 +14,21 @@ minikube-delete:
 deploy-exivity-chart:
 	@helm upgrade --install exivity ./charts/exivity \
         --namespace exivity \
-        --create-namespace
+        --create-namespace \
+        --set storage.storageClass=$(NFS_STORAGE_CLASS) \
+        --set ingress.host=localhost
 
 # Deploy NFS Helm chart to Minikube
 # This is a dependency for the exivity Helm chart
 deploy-nfs-chart:
-	@helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
-	@helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
+	@helm repo add nfs-ganesha-server-and-external-provisioner https://kubernetes-sigs.github.io/nfs-ganesha-server-and-external-provisioner/
+	@helm install nfs-server nfs-ganesha-server-and-external-provisioner/nfs-server-provisioner \
+        --version $(NFS_CHART_VERSION) \
         --namespace nfs-server \
         --create-namespace \
-        --set nfs.server=0.0.0.0 \
         --set persistence.enabled=true \
         --set persistence.size=5Gi \
-        --set storageClass.name=nfs-client \
+        --set storageClass.name=$(NFS_STORAGE_CLASS) \
         --set storageClass.allowVolumeExpansion=true \
         --set 'storageClass.mountOptions[0]=nfsvers=4.2' \
         --set 'storageClass.mountOptions[1]=rsize=4096' \
