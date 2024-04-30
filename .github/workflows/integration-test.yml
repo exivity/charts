@@ -48,7 +48,3 @@ jobs:
 
       - name: Run Tests
         run: make test
-
-      - name: Clean up Minikube
-        if: always()
-        run: make minikube-delete
