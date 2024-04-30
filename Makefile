@@ -4,6 +4,8 @@ NFS_CHART_VERSION := 1.8.0
 
 INGRESS_HOSTNAME := exivity.local
 
+HELM_TIMEOUT := 10m
+
 # Define Minikube start with a specific driver
 minikube-start:
 	@minikube start --memory 8192 --cpus 2
@@ -18,10 +20,12 @@ deploy-exivity-chart:
 	@helm upgrade --install exivity ./charts/exivity \
         --namespace exivity \
         --create-namespace \
+        --wait \
+        --timeout $(HELM_TIMEOUT) \
         --set storage.storageClass=$(NFS_STORAGE_CLASS) \
         --set ingress.host=$(INGRESS_HOSTNAME) \
         --set ingress.ingressClassName="nginx" \
-        --set logLevel.backend="debug" \
+        --set logLevel.backend="debug"
 
 # Deploy NFS Helm chart to Minikube
 # This is a dependency for the exivity Helm chart
@@ -31,6 +35,8 @@ deploy-nfs-chart:
         --version $(NFS_CHART_VERSION) \
         --namespace nfs-server \
         --create-namespace \
+        --wait \
+        --timeout $(HELM_TIMEOUT) \
         --set persistence.enabled=true \
         --set persistence.size=5Gi \
         --set storageClass.name=$(NFS_STORAGE_CLASS) \
