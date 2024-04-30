@@ -1,4 +1,4 @@
-{{if gt (len .Values.service.use.caCertificates) 0 -}}
+{{- if gt (len (default "" .Values.service.use.caCertificates)) 0 }}
 apiVersion: v1
 kind: Secret
 metadata:

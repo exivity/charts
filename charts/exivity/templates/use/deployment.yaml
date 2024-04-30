@@ -38,7 +38,7 @@ spec:
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-use-log
-      {{- if gt (len .Values.service.use.caCertificates) 0 }}
+      {{- if gt (len (default "" .Values.service.use.caCertificates)) 0 }}
         - name: cert-volume
           emptyDir: {}
         - name: ca-certificates
