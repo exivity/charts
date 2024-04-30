@@ -87,7 +87,7 @@ spec:
               mountPath: /exivity/home/log/use
             - name:      log
               mountPath: /exivity/home/log/merlin
-            {{- if gt (len .Values.service.use.caCertificates) 0 }}
+            {{- if gt (len (default "" .Values.service.use.caCertificates)) 0 }}
             - name: cert-volume
               mountPath: /etc/ssl/certs
             {{- end }}
