@@ -24,7 +24,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y conntrack
-          pip install requests
+          make install-python-depst
 
       - name: Install Minikube
         run: |

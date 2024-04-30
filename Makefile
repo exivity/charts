@@ -53,10 +53,15 @@ deploy-nfs-chart:
 # Deploy all Helm charts
 deploy-charts: deploy-nfs-chart deploy-exivity-chart
 
+# Install Python dependencies
+install-python-deps:
+	@echo "Installing Python dependencies..."
+	@pip install -r test/requirements.txt
+
 # Test Helm chart
 test:
 	@echo "Running tests..."
 	@python3 test/test.py --hostname $(INGRESS_HOSTNAME) --ip $$(minikube ip)
 
 # Makefile targets
-.PHONY: minikube-start minikube-delete deploy-charts deploy-exivity-chart deploy-nfs-chart test
+.PHONY: minikube-start minikube-delete deploy-charts deploy-exivity-chart deploy-nfs-chart install-python-deps test
