@@ -21,6 +21,7 @@ deploy-exivity-chart:
         --namespace exivity \
         --create-namespace \
         --wait \
+        --wait-for-jobs \
         --timeout $(HELM_TIMEOUT) \
         --set storage.storageClass=$(NFS_STORAGE_CLASS) \
         --set ingress.host=$(INGRESS_HOSTNAME) \

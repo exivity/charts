@@ -43,8 +43,5 @@ jobs:
       - name: Deploy NFS and Exivity Helm charts
         run: make deploy-charts
 
-      - name: Wait for NFS and Exivity to be ready
-        run: sleep 60
-
       - name: Run Tests
         run: make test
