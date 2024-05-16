@@ -1,0 +1,96 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledJob
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-executor
+  labels:
+    app.kubernetes.io/component: executor
+    {{- include "exivity.labels" $ | indent 4 }}
+  annotations:
+    checksum/{{- include "exivity.fullname" $ -}}-config-executor: {{ include (print $.Template.BasePath "/executor/configmap.yaml") . | sha256sum }}
+    checksum/{{- include "exivity.fullname" $ -}}-rabbitmq-credentials: {{ include (print $.Template.BasePath "/rabbitmq/secret.yaml") . | sha256sum }}
+    checksum/{{- include "exivity.fullname" $ -}}-keda-trigger-auth-rabbitmq-conn: {{ include (print $.Template.BasePath "/keda/rabbitmq-authentication.yml") . | sha256sum }}
+spec:
+  jobTargetRef:
+    parallelism: 1                            # [max number of desired pods](https://kubernetes.io/docs/concepts/workloads/controllers/job/#controlling-parallelism)
+    completions: 1                            # [desired number of successfully finished pods](https://kubernetes.io/docs/concepts/workloads/controllers/job/#controlling-parallelism)
+    activeDeadlineSeconds: 600                #  Specifies the duration in seconds relative to the startTime that the job may be active before the system tries to terminate it; value must be positive integer
+    backoffLimit: 6                           # Specifies the number of retries before marking this job failed. Defaults to 6
+    template:
+      spec:
+        volumes:
+          - name: config-file
+            configMap:
+              name: {{ include "exivity.fullname" $ -}}-config-executor
+          - name: config
+            persistentVolumeClaim:
+              claimName: {{ include "exivity.fullname" $ -}}-etl-config
+          - name: import
+            persistentVolumeClaim:
+              claimName: {{ include "exivity.fullname" $ -}}-import
+          - name: report
+            persistentVolumeClaim:
+              claimName: {{ include "exivity.fullname" $ -}}-report
+          - name: exported
+            persistentVolumeClaim:
+              claimName: {{ include "exivity.fullname" $ -}}-exported
+          - name: extracted
+            persistentVolumeClaim:
+              claimName: {{ include "exivity.fullname" $ -}}-extracted
+          - name: log
+            persistentVolumeClaim:
+              claimName: {{ include "exivity.fullname" $ -}}-executor-log
+        containers:
+          - name: executor
+            image: {{ include "exivity.image" (set $ "name" "executor") }}
+            imagePullPolicy: {{ .Values.service.executor.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
+            env:
+              - name: EXIVITY_BACKEND_LOG_LEVEL
+                value: "{{ .Values.logLevel.backend }}"
+            envFrom:
+              - secretRef:
+                  name: {{ include "exivity.fullname" $ -}}-rabbitmq-credentials
+            securityContext:
+              runAsUser:  1000
+              runAsGroup: 1000
+            volumeMounts:
+              - name:      config
+                mountPath: /exivity/home/system/config
+              - name:      config-file
+                mountPath: /exivity/home/system
+              - name:      exported
+                mountPath: /exivity/home/exported
+              - name:      extracted
+                mountPath: /exivity/home/system/extracted
+              - name:      import
+                mountPath: /exivity/home/import
+              - name:      report
+                mountPath: /exivity/home/system/report
+              - name:      log
+                mountPath: /exivity/home/log/merlin
+            {{- include "exivity.nfs-liveness" $ | indent 12}}
+        {{- with .Values.service.pullSecrets }}
+        imagePullSecrets:
+          {{- range $name := .}}
+          - name: {{ $name }}
+          {{- end }}
+        {{- end }}
+        {{- if .Values.service.executor.nodeName }}
+        nodeName: {{ .Values.service.executor.nodeName }}
+        {{- end }}
+        {{- with .Values.service.executor.nodeSelector }}
+        nodeSelector:
+          {{ range $key, $val := . }}
+          {{ $key }}: {{ $val }}
+          {{- end }}
+        {{- end }}
+  triggers:
+  - type: rabbitmq
+    metadata:
+      protocol: auto # Optional. Specifies protocol to use, either amqp or http, or auto to autodetect based on the `host` value. Default value is auto.
+      mode: QueueLength # QueueLength or MessageRate
+      value: "1" # message backlog or publish/sec. target per instance
+      activationValue: "0.5" # Optional. Activation threshold
+      queueName: EXECUTE
+      unsafeSsl: "true"
+    authenticationRef:
+      name: {{ include "exivity.fullname" $ -}}-keda-trigger-auth-rabbitmq-conn

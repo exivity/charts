@@ -50,6 +50,9 @@ spec:
           env:
             - name: EXIVITY_BACKEND_LOG_LEVEL
               value: "{{ .Values.logLevel.backend }}"
+          envFrom:
+            - secretRef:
+                name: {{ include "exivity.fullname" $ -}}-rabbitmq-credentials
           securityContext:
             runAsUser:  1000
             runAsGroup: 1000

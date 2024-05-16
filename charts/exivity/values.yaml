@@ -283,9 +283,9 @@ service:
           requests:
             cpu:    "25m"
             memory: "50Mi"
-    # In the following caCertificates section, you can specify the Certificate Authority (CA) certificates that your service uses. 
-    # Each certificate should be listed as a key-value pair, where the key is a name you assign to the certificate for identification 
-    # (like 'rootCA' or 'intermediateCA'), and the value is the actual certificate. You can include as many certificates as necessary 
+    # In the following caCertificates section, you can specify the Certificate Authority (CA) certificates that your service uses.
+    # Each certificate should be listed as a key-value pair, where the key is a name you assign to the certificate for identification
+    # (like 'rootCA' or 'intermediateCA'), and the value is the actual certificate. You can include as many certificates as necessary
     # by replacing the placeholder names like 'rootCA.pem' and 'intermediateCA.pem' with the actual file names of your certificates.
     #
     # Instructions for fetching CA certificates using OpenSSL:

@@ -1,0 +1,9 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-keda-trigger-auth-rabbitmq-conn
+spec:
+  secretTargetRef:
+    - parameter: host
+      name: {{ include "exivity.fullname" $ -}}-rabbitmq-credentials
+      key: host
