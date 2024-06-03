@@ -94,6 +94,10 @@ rabbitmq:
   # TLS connection: true/false
   secure:  ""
 
+betaFeatures:
+  monitoring:
+    prometheusPushGatewayURL: "http://prometheus-pushgateway.observability.svc.cluster.local:9091"
+
 service:
   registry:   docker.io
   tag:        ""

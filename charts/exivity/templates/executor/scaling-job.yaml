@@ -1,44 +1,50 @@
 apiVersion: keda.sh/v1alpha1
 kind: ScaledJob
 metadata:
-  name: {{ include "exivity.fullname" $ -}}-executor
+  name: {{ include "exivity.fullname" $ }}-executor
   labels:
+    app: {{ include "exivity.fullname" $ }}
     app.kubernetes.io/component: executor
     {{- include "exivity.labels" $ | indent 4 }}
   annotations:
-    checksum/{{- include "exivity.fullname" $ -}}-config-executor: {{ include (print $.Template.BasePath "/executor/configmap.yaml") . | sha256sum }}
-    checksum/{{- include "exivity.fullname" $ -}}-rabbitmq-credentials: {{ include (print $.Template.BasePath "/rabbitmq/secret.yaml") . | sha256sum }}
-    checksum/{{- include "exivity.fullname" $ -}}-keda-trigger-auth-rabbitmq-conn: {{ include (print $.Template.BasePath "/keda/rabbitmq-authentication.yml") . | sha256sum }}
+    checksum/{{- include "exivity.fullname" $ }}-config-executor: {{ include (print $.Template.BasePath "/executor/configmap.yaml") . | sha256sum }}
+    checksum/{{- include "exivity.fullname" $ }}-rabbitmq-credentials: {{ include (print $.Template.BasePath "/rabbitmq/secret.yaml") . | sha256sum }}
+    checksum/{{- include "exivity.fullname" $ }}-keda-trigger-auth-rabbitmq-conn: {{ include (print $.Template.BasePath "/keda/rabbitmq-authentication.yml") . | sha256sum }}
 spec:
   jobTargetRef:
-    parallelism: 1                            # [max number of desired pods](https://kubernetes.io/docs/concepts/workloads/controllers/job/#controlling-parallelism)
-    completions: 1                            # [desired number of successfully finished pods](https://kubernetes.io/docs/concepts/workloads/controllers/job/#controlling-parallelism)
-    activeDeadlineSeconds: 600                #  Specifies the duration in seconds relative to the startTime that the job may be active before the system tries to terminate it; value must be positive integer
-    backoffLimit: 6                           # Specifies the number of retries before marking this job failed. Defaults to 6
+    parallelism: 1
+    completions: 1
+    activeDeadlineSeconds: 90000 # 25 hours
+    backoffLimit: 1
     template:
+      metadata:
+        labels:
+          app: {{ include "exivity.fullname" $ }}
+          app.kubernetes.io/component: executor
+          {{- include "exivity.labels" $ | indent 10 }}
       spec:
         volumes:
           - name: config-file
             configMap:
-              name: {{ include "exivity.fullname" $ -}}-config-executor
+              name: {{ include "exivity.fullname" $ }}-config-executor
           - name: config
             persistentVolumeClaim:
-              claimName: {{ include "exivity.fullname" $ -}}-etl-config
+              claimName: {{ include "exivity.fullname" $ }}-etl-config
           - name: import
             persistentVolumeClaim:
-              claimName: {{ include "exivity.fullname" $ -}}-import
+              claimName: {{ include "exivity.fullname" $ }}-import
           - name: report
             persistentVolumeClaim:
-              claimName: {{ include "exivity.fullname" $ -}}-report
+              claimName: {{ include "exivity.fullname" $ }}-report
           - name: exported
             persistentVolumeClaim:
-              claimName: {{ include "exivity.fullname" $ -}}-exported
+              claimName: {{ include "exivity.fullname" $ }}-exported
           - name: extracted
             persistentVolumeClaim:
-              claimName: {{ include "exivity.fullname" $ -}}-extracted
+              claimName: {{ include "exivity.fullname" $ }}-extracted
           - name: log
             persistentVolumeClaim:
-              claimName: {{ include "exivity.fullname" $ -}}-executor-log
+              claimName: {{ include "exivity.fullname" $ }}-executor-log
         containers:
           - name: executor
             image: {{ include "exivity.image" (set $ "name" "executor") }}
@@ -46,28 +52,39 @@ spec:
             env:
               - name: EXIVITY_BACKEND_LOG_LEVEL
                 value: "{{ .Values.logLevel.backend }}"
+              - name: PUSHGATEWAY_URL
+                value: {{ .Values.betaFeatures.monitoring.prometheusPushGatewayURL | quote }}
+              - name: PUSHGATEWAY_JOB_NAME
+                value: executor
             envFrom:
               - secretRef:
-                  name: {{ include "exivity.fullname" $ -}}-rabbitmq-credentials
+                  name: {{ include "exivity.fullname" $ }}-rabbitmq-credentials
             securityContext:
-              runAsUser:  1000
+              runAsUser: 1000
               runAsGroup: 1000
             volumeMounts:
-              - name:      config
+              - name: config
                 mountPath: /exivity/home/system/config
-              - name:      config-file
+              - name: config-file
                 mountPath: /exivity/home/system
-              - name:      exported
+              - name: exported
                 mountPath: /exivity/home/exported
-              - name:      extracted
+              - name: extracted
                 mountPath: /exivity/home/system/extracted
-              - name:      import
+              - name: import
                 mountPath: /exivity/home/import
-              - name:      report
+              - name: report
                 mountPath: /exivity/home/system/report
-              - name:      log
+              - name: log
                 mountPath: /exivity/home/log/merlin
-            {{- include "exivity.nfs-liveness" $ | indent 12}}
+            ports:
+              - containerPort: 2112
+            livenessProbe:
+              httpGet:
+                path: /healthz
+                port: 8080
+              initialDelaySeconds: 5
+              periodSeconds: 10
         {{- with .Values.service.pullSecrets }}
         imagePullSecrets:
           {{- range $name := .}}
@@ -83,6 +100,7 @@ spec:
           {{ $key }}: {{ $val }}
           {{- end }}
         {{- end }}
+  pollingInterval: 1
   triggers:
   - type: rabbitmq
     metadata:
@@ -93,4 +111,5 @@ spec:
       queueName: EXECUTE
       unsafeSsl: "true"
     authenticationRef:
-      name: {{ include "exivity.fullname" $ -}}-keda-trigger-auth-rabbitmq-conn
+      name: {{ include "exivity.fullname" $ }}-keda-trigger-auth-rabbitmq-conn
+
