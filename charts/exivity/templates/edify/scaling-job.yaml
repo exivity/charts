@@ -1,13 +1,13 @@
 apiVersion: keda.sh/v1alpha1
 kind: ScaledJob
 metadata:
-  name: {{ include "exivity.fullname" $ }}-executor
+  name: {{ include "exivity.fullname" $ }}-edify
   labels:
     app: {{ include "exivity.fullname" $ }}
-    app.kubernetes.io/component: executor
+    app.kubernetes.io/component: edify
     {{- include "exivity.labels" $ | indent 4 }}
   annotations:
-    checksum/{{- include "exivity.fullname" $ }}-config-executor: {{ include (print $.Template.BasePath "/executor/configmap.yaml") . | sha256sum }}
+    checksum/{{- include "exivity.fullname" $ }}-config-edify: {{ include (print $.Template.BasePath "/edify/configmap.yaml") . | sha256sum }}
     checksum/{{- include "exivity.fullname" $ }}-rabbitmq-credentials: {{ include (print $.Template.BasePath "/rabbitmq/secret.yaml") . | sha256sum }}
     checksum/{{- include "exivity.fullname" $ }}-keda-trigger-auth-rabbitmq-conn: {{ include (print $.Template.BasePath "/keda/rabbitmq-authentication.yml") . | sha256sum }}
 spec:
@@ -20,42 +20,40 @@ spec:
       metadata:
         labels:
           app: {{ include "exivity.fullname" $ }}
-          app.kubernetes.io/component: executor
+          app.kubernetes.io/component: edify
           {{- include "exivity.labels" $ | indent 10 }}
       spec:
         volumes:
           - name: config-file
             configMap:
-              name: {{ include "exivity.fullname" $ }}-config-executor
+              name: {{ include "exivity.fullname" $ }}-config-edify
           - name: config
             persistentVolumeClaim:
               claimName: {{ include "exivity.fullname" $ }}-etl-config
-          - name: import
-            persistentVolumeClaim:
-              claimName: {{ include "exivity.fullname" $ }}-import
-          - name: report
-            persistentVolumeClaim:
-              claimName: {{ include "exivity.fullname" $ }}-report
-          - name: exported
-            persistentVolumeClaim:
-              claimName: {{ include "exivity.fullname" $ }}-exported
           - name: extracted
             persistentVolumeClaim:
-              claimName: {{ include "exivity.fullname" $ }}-extracted
+              claimName: {{ include "exivity.fullname" $ -}}-extracted
           - name: log
             persistentVolumeClaim:
-              claimName: {{ include "exivity.fullname" $ }}-executor-log
+              claimName: {{ include "exivity.fullname" $ -}}-edify-log
+          - name: report
+            persistentVolumeClaim:
+              claimName: {{ include "exivity.fullname" $ -}}-report
         containers:
-          - name: executor
-            image: {{ include "exivity.image" (set $ "name" "executor") }}
-            imagePullPolicy: {{ .Values.service.executor.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
+          - name: edify
+            image: {{ include "exivity.image" (set $ "name" "edify") }}
+            imagePullPolicy: {{ .Values.service.edify.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
             env:
               - name: EXIVITY_BACKEND_LOG_LEVEL
                 value: "{{ .Values.logLevel.backend }}"
               - name: PUSHGATEWAY_URL
                 value: {{ .Values.betaFeatures.monitoring.prometheusPushGatewayURL | quote }}
               - name: PUSHGATEWAY_JOB_NAME
-                value: executor
+                value: edify
+              {{- if .Values.service.edify.tmpPath }}
+              - name: EXIVITY_EDIFY_TMP_PATH
+                value: "{{ .Values.service.edify.tmpPath }}"
+              {{- end }}
             envFrom:
               - secretRef:
                   name: {{ include "exivity.fullname" $ }}-rabbitmq-credentials
@@ -65,18 +63,16 @@ spec:
             volumeMounts:
               - name: config
                 mountPath: /exivity/home/system/config
-              - name: config-file
+              - name:      config-file
                 mountPath: /exivity/home/system
-              - name: exported
-                mountPath: /exivity/home/exported
-              - name: extracted
+              - name:      extracted
                 mountPath: /exivity/home/system/extracted
-              - name: import
-                mountPath: /exivity/home/import
-              - name: report
-                mountPath: /exivity/home/system/report
-              - name: log
+              - name:      log
+                mountPath: /exivity/home/log/edify
+              - name:      log
                 mountPath: /exivity/home/log/merlin
+              - name:      report
+                mountPath: /exivity/home/system/report
             ports:
               - containerPort: 2112
             livenessProbe:
@@ -91,13 +87,13 @@ spec:
           - name: {{ $name }}
           {{- end }}
         {{- end }}
-        {{- if .Values.service.executor.nodeName }}
-        nodeName: {{ .Values.service.executor.nodeName }}
+        {{- if .Values.service.edify.nodeName }}
+        nodeName: {{ .Values.service.edify.nodeName }}
         {{- end }}
-        {{- with .Values.service.executor.nodeSelector }}
+        {{- with .Values.service.edify.nodeSelector }}
         nodeSelector:
           {{ range $key, $val := . }}
           {{ $key }}: {{ $val }}
           {{- end }}
         {{- end }}
-{{ include "exivity.scalingJobSpec" (dict "values" $ "queueName" "EXECUTE") | indent 2 }}
+{{ include "exivity.scalingJobSpec" (dict "values" $ "queueName" "REPORT") | indent 2 }}
