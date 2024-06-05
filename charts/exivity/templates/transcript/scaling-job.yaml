@@ -1,0 +1,110 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledJob
+metadata:
+  name: {{ include "exivity.fullname" $ }}-transcript
+  labels:
+    app: {{ include "exivity.fullname" $ }}
+    app.kubernetes.io/component: transcript
+    {{- include "exivity.labels" $ | indent 4 }}
+  annotations:
+    checksum/{{- include "exivity.fullname" $ }}-config-transcript: {{ include (print $.Template.BasePath "/transcript/configmap.yaml") . | sha256sum }}
+    checksum/{{- include "exivity.fullname" $ }}-rabbitmq-credentials: {{ include (print $.Template.BasePath "/rabbitmq/secret.yaml") . | sha256sum }}
+    checksum/{{- include "exivity.fullname" $ }}-keda-trigger-auth-rabbitmq-conn: {{ include (print $.Template.BasePath "/keda/rabbitmq-authentication.yml") . | sha256sum }}
+spec:
+  jobTargetRef:
+    parallelism: 1
+    completions: 1
+    activeDeadlineSeconds: 90000 # 25 hours
+    backoffLimit: 1
+    template:
+      metadata:
+        labels:
+          app: {{ include "exivity.fullname" $ }}
+          app.kubernetes.io/component: transcript
+          {{- include "exivity.labels" $ | indent 10 }}
+      spec:
+        volumes:
+          - name: config-file
+            configMap:
+              name: {{ include "exivity.fullname" $ -}}-config-transcript
+          - name: config
+            persistentVolumeClaim:
+              claimName: {{ include "exivity.fullname" $ -}}-etl-config
+          - name: exported
+            persistentVolumeClaim:
+              claimName: {{ include "exivity.fullname" $ -}}-exported
+          - name: extracted
+            persistentVolumeClaim:
+              claimName: {{ include "exivity.fullname" $ -}}-extracted
+          - name: import
+            persistentVolumeClaim:
+              claimName: {{ include "exivity.fullname" $ -}}-import
+          - name: log
+            persistentVolumeClaim:
+              claimName: {{ include "exivity.fullname" $ -}}-transcript-log
+          - name: report
+            persistentVolumeClaim:
+              claimName: {{ include "exivity.fullname" $ -}}-report
+        containers:
+          - name: transcript
+            image: {{ include "exivity.image" (set $ "name" "transcript") }}
+            imagePullPolicy: {{ .Values.service.transcript.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
+            env:
+              - name: EXIVITY_BACKEND_LOG_LEVEL
+                value: "{{ .Values.logLevel.backend }}"
+              - name: PUSHGATEWAY_URL
+                value: {{ .Values.betaFeatures.monitoring.prometheusPushGatewayURL | quote }}
+              - name: PUSHGATEWAY_JOB_NAME
+                value: transcript
+              - name: EXIVITY_APP_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ include "exivity.fullname" $ -}}-app-key
+                    key:  app_key
+            envFrom:
+              - secretRef:
+                  name: {{ include "exivity.fullname" $ }}-rabbitmq-credentials
+            securityContext:
+              runAsUser: 1000
+              runAsGroup: 1000
+            volumeMounts:
+              - name:      config
+                mountPath: /exivity/home/system/config
+              - name:      config-file
+                mountPath: /exivity/home/system
+              - name:      exported
+                mountPath: /exivity/home/exported
+              - name:      extracted
+                mountPath: /exivity/home/system/extracted
+              - name:      import
+                mountPath: /exivity/home/import
+              - name:      log
+                mountPath: /exivity/home/log/transcript
+              - name:      log
+                mountPath: /exivity/home/log/merlin
+              - name:      report
+                mountPath: /exivity/home/system/report
+            ports:
+              - containerPort: 2112
+            livenessProbe:
+              httpGet:
+                path: /healthz
+                port: 8080
+              initialDelaySeconds: 5
+              periodSeconds: 10
+        {{- with .Values.service.pullSecrets }}
+        imagePullSecrets:
+          {{- range $name := .}}
+          - name: {{ $name }}
+          {{- end }}
+        {{- end }}
+        {{- if .Values.service.transcript.nodeName }}
+        nodeName: {{ .Values.service.transcript.nodeName }}
+        {{- end }}
+        {{- with .Values.service.transcript.nodeSelector }}
+        nodeSelector:
+          {{ range $key, $val := . }}
+          {{ $key }}: {{ $val }}
+          {{- end }}
+        {{- end }}
+{{ include "exivity.scalingJobSpec" (dict "values" $ "queueName" "TRANSFORM") | indent 2 }}
