@@ -46,6 +46,8 @@ spec:
             env:
               - name: EXIVITY_BACKEND_LOG_LEVEL
                 value: "{{ .Values.logLevel.backend }}"
+              - name: LOG_LEVEL
+                value: "{{ .Values.logLevel.backend }}"
               - name: PUSHGATEWAY_URL
                 value: {{ .Values.betaFeatures.monitoring.prometheusPushGatewayURL | quote }}
               - name: PUSHGATEWAY_JOB_NAME
