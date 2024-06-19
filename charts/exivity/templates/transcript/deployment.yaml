@@ -1,3 +1,4 @@
+{{ if not .Values.service.tristan.enable }}
 apiVersion: apps/v1
 kind:       Deployment
 metadata:
@@ -91,3 +92,4 @@ spec:
         {{ $key }}: {{ $val }}
         {{- end }}
       {{- end }}
+{{ end }}

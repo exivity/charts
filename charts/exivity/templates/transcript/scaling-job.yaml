@@ -1,3 +1,4 @@
+{{ if .Values.service.tristan.enable }}
 apiVersion: keda.sh/v1alpha1
 kind: ScaledJob
 metadata:
@@ -49,14 +50,15 @@ spec:
           - name: transcript
             image: {{ include "exivity.image" (set $ "name" "transcript") }}
             imagePullPolicy: {{ .Values.service.transcript.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
+            command: ["/exivity/program/bin/tristan", "-mode", "execute", "-queue", "TRANSFORM", "-program", "/exivity/program/bin/transcript"]
             env:
               - name: EXIVITY_BACKEND_LOG_LEVEL
                 value: "{{ .Values.logLevel.backend }}"
               - name: LOG_LEVEL
                 value: "{{ .Values.logLevel.backend }}"
-              - name: PUSHGATEWAY_URL
-                value: {{ .Values.betaFeatures.monitoring.prometheusPushGatewayURL | quote }}
-              - name: PUSHGATEWAY_JOB_NAME
+              - name: METRIC_SERVER_ADDRESS
+                value: "{{ include "exivity.fullname" $ -}}-tristan:50052"
+              - name: SERVICE
                 value: transcript
               - name: EXIVITY_APP_KEY
                 valueFrom:
@@ -110,3 +112,4 @@ spec:
           {{- end }}
         {{- end }}
 {{ include "exivity.scalingJobSpec" (dict "values" $ "queueName" "TRANSFORM") | indent 2 }}
+{{ end }}

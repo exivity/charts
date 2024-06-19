@@ -1,3 +1,4 @@
+{{ if not .Values.service.tristan.enable }}
 apiVersion: apps/v1
 kind:       Deployment
 metadata:
@@ -48,7 +49,7 @@ spec:
             - name: EXIVITY_EDIFY_TMP_PATH
               value: "{{ .Values.service.edify.tmpPath }}"
             {{- end }}
-          
+
           securityContext:
             runAsUser:  1000
             runAsGroup: 1000
@@ -81,3 +82,4 @@ spec:
         {{ $key }}: {{ $val }}
         {{- end }}
       {{- end }}
+{{ end }}

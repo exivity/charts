@@ -1,0 +1,57 @@
+{{ if .Values.service.tristan.enable }}
+apiVersion: apps/v1
+kind:       Deployment
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-tristan
+  labels:
+    app.kubernetes.io/component: tristan
+    {{- include "exivity.labels" $ | indent 4 }}
+spec:
+  replicas: {{ .Values.service.tristan.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: tristan
+      {{- include "exivity.matchLabels" $ | indent 6 }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: tristan
+        {{- include "exivity.labels" $ | indent 8 }}
+    spec:
+      containers:
+        - name:            tristan
+          image: {{ include "exivity.image" (set $ "name" "tristan") }}
+          imagePullPolicy: {{ .Values.service.tristan.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
+          resources:
+            {{- toYaml .Values.service.tristan.resources | nindent 12 }}
+          securityContext:
+            runAsUser:  1000
+            runAsGroup: 1000
+          env:
+            - name: LOG_LEVEL
+              value: "{{ .Values.logLevel.backend }}"
+          envFrom:
+            - secretRef:
+                name: {{ include "exivity.fullname" $ -}}-rabbitmq-credentials
+          ports:
+            - name: grpc
+              containerPort: 50052
+            - name: metrics
+              containerPort: 2112
+          {{- include "exivity.nfs-liveness" $ | indent 10}}
+      {{- with .Values.service.pullSecrets }}
+      imagePullSecrets:
+        {{- range $name := .}}
+        - name: {{ $name }}
+        {{- end }}
+      {{- end }}
+      {{- if .Values.service.tristan.nodeName }}
+      nodeName: {{ .Values.service.tristan.nodeName }}
+      {{- end }}
+      {{- with .Values.service.tristan.nodeSelector }}
+      nodeSelector:
+        {{ range $key, $val := . }}
+        {{ $key }}: {{ $val }}
+        {{- end }}
+      {{- end }}
+{{ end }}

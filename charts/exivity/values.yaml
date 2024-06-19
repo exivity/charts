@@ -94,10 +94,6 @@ rabbitmq:
   # TLS connection: true/false
   secure:  ""
 
-betaFeatures:
-  monitoring:
-    prometheusPushGatewayURL: "http://prometheus-pushgateway.observability.svc.cluster.local:9091"
-
 service:
   registry:   docker.io
   tag:        ""
@@ -310,6 +306,22 @@ service:
       #   -----BEGIN CERTIFICATE-----
       #   MIIFPDCCB....
       #   -----END CERTIFICATE-----
+
+  # Experimental feature
+  # Tristan will enable enable auto scaling feature and generate metrics for Prometheus
+  tristan:
+    enable: false
+    registry:   ""
+    repository: exivity/tristan
+    tag:        ""
+    pullPolicy: ""
+    replicas:   1
+    nodeName: ""
+    nodeSelector: {}
+    resources:
+      requests:
+        cpu:    "25m"
+        memory: "50Mi"
 
 logLevel:
   backend: "info"
