@@ -38,7 +38,6 @@ spec:
               containerPort: 50052
             - name: metrics
               containerPort: 2112
-          {{- include "exivity.nfs-liveness" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
         {{- range $name := .}}
