@@ -30,6 +30,8 @@ spec:
           env:
             - name: LOG_LEVEL
               value: "{{ .Values.logLevel.backend }}"
+            - name: X_DEAD_LETTER
+              value: "exivity_expired"
           envFrom:
             - secretRef:
                 name: {{ include "exivity.fullname" $ -}}-rabbitmq-credentials
