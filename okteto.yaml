@@ -1,0 +1,10 @@
+deploy:
+  - name: Install dependencies
+    command: helm dependency update charts/exivity
+  - name: Deploy helm chart exivity
+    command: helm upgrade --install exivity charts/exivity --values okteto-values.yaml --atomic
+
+destroy:
+  commands:
+    - name: Destroy helm chart exivity
+      command: helm delete exivity
