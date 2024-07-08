@@ -83,12 +83,7 @@ spec:
                 mountPath: /exivity/home/log/merlin
             ports:
               - containerPort: 2112
-            livenessProbe:
-              httpGet:
-                path: /healthz
-                port: 8080
-              initialDelaySeconds: 5
-              periodSeconds: 10
+            {{- include "exivity.tristan-probes" $ | indent 12}}
         {{- with .Values.service.pullSecrets }}
         imagePullSecrets:
           {{- range $name := .}}
