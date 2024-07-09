@@ -1,0 +1,156 @@
+{{- if .Values.service.dummyData.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-dummy-data-preset
+  labels:
+    app.kubernetes.io/component: {{ $.data.appname | default "shared" }}
+    {{- include "exivity.labels" $ | indent 4 }}
+  annotations:
+    argocd.argoproj.io/sync: exclude
+data:
+  preset.yaml: |-
+    # this date range is inclusive
+    date_range: 2020-01-01 - 2020-12-31
+
+    # delete all existing data?
+    truncate: true
+
+    levels:
+      count: 4 # note that at least as many levels need to be configured under this as the amount specified here
+
+      options:
+        - name: Reseller
+          count: 4-6
+          faker: company.companyName
+          # options:
+          #   - IT Services Inc.
+
+        - name: Customer
+          count: 2-5
+          faker: company.companyName
+          # options:
+          #   - Fresh Bakery Inc
+
+        - name: Department
+          count: 1-3
+          faker: commerce.department
+          options: # note that when using options, at least as many need to be specified as the highest possibility for the count
+            - Testing
+            - QA
+            - Coding
+
+        - name: Region
+          count: 1-5
+          faker: address.country
+          # options:
+          #   - Europe
+
+    services:
+      count: 5-50
+
+      structure:
+        name: $faker.commerce.product
+        description: $faker.commerce.productDescription
+        category: $faker.hacker.noun
+        quantity: 2-1000
+        rate: 0.5-100.0
+        cogs: 0.1-50.0
+
+      options:
+        - name: AWS VM
+          description: Virtual Machine on AWS Cloud
+          category: VM
+          quantity: 2-100
+          model: unprorated
+          interval: individually
+          unit: VM's
+          rate: 10.0-50.0
+          cogs: 1.0-20.0
+
+        - name: CRM Enterprise
+          description: License for CRM Enterprise
+          category: Software
+          quantity: 1-3
+          model: unprorated
+          interval: daily
+          unit: licenses
+          rate: 2.5
+          cogs: 2.2
+
+        - name: MS Office Pro
+          description: License fir Microsoft Office Professional
+          category: Software
+          quantity: 4-10
+          model: unprorated
+          interval: monthly
+          unit: Licenses
+          rate: 1.2
+          cogs: 0.8
+
+        - name: Website Std.
+          description: Standard Website Doman
+          category: Web Services
+          quantity: 1-5
+          model: prorated
+          interval: monthly
+          unit: Websites
+          rate: 15.15
+          cogs: 11.11
+
+    users:
+      count: 5-10
+
+    user_groups:
+      count: 3-4
+      names:
+        - users
+        - managers
+        - marketing
+        - clients
+
+    adjustments:
+      count: 10-20
+      amount: -30 - 30
+      max_account_depth: 2-3
+
+    subscriptions:
+      count: 10-20
+      quantities: 1-10
+      rates: 1-8
+      cogs: 4-10
+
+    budgets:
+      count: 5-15
+      amount: 5000.0-5000000.0
+      max_account_depth: 2-3
+
+    metadata:
+      account_count: 10-20
+      field_count: 4-7
+      account_depth: 2-3
+
+    lookup:
+      row_count: 20-40
+      data:
+        - name: uuid
+          value: $faker.datatype.uuid
+        - name: account_name
+          value: $db.account.name
+
+    workflows:
+      count: 5-10
+      steps:
+        count: 1-4
+      schedules:
+        count: 1-4
+
+    notifications:
+      user_count: 3-5
+      notification_count: 0-2
+
+    environments:
+      count: 2-5
+      variables:
+        count: 1-4
+{{- end }}
