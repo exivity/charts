@@ -6,8 +6,6 @@ metadata:
   labels:
     app.kubernetes.io/component: {{ $.data.appname | default "shared" }}
     {{- include "exivity.labels" $ | indent 4 }}
-  annotations:
-    argocd.argoproj.io/sync: exclude
 data:
   preset.yaml: |-
     # this date range is inclusive
