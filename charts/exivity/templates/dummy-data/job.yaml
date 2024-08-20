@@ -6,8 +6,6 @@ metadata:
   labels:
     app.kubernetes.io/component: dummy-data
     {{- include "exivity.labels" $ | indent 4 }}
-  annotations:
-    argocd.argoproj.io/sync: exclude
 spec:
   completions:             1
   ttlSecondsAfterFinished: 300
@@ -26,6 +24,10 @@ spec:
           env:
             - name:  PROXIMITY_API
               value: "{{ include "exivity.fullname" $ -}}-proximity-api:{{- .Values.service.proximityApi.servicePort }}"
+            - name: PRESET_FILE_PATH
+              value: /exivity/home/system/preset/preset.yaml
+            - name: EXIVITY_HOME_PATH
+              value: /exivity/home
           resources:
             {{- toYaml .Values.service.dummyData.resources | nindent 12 }}
           securityContext:
@@ -44,7 +46,12 @@ spec:
               mountPath: /exivity/home/import
             - name:      report
               mountPath: /exivity/home/system/report
+            - name:      preset-file
+              mountPath: /exivity/home/system/preset
       volumes:
+        - name: preset-file
+          configMap:
+            name: {{ include "exivity.fullname" $ -}}-dummy-data-preset
         - name: config-file
           configMap:
             name: {{ include "exivity.fullname" $ -}}-config-shared
