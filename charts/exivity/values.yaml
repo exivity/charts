@@ -2,19 +2,19 @@
 nameOverride: ""
 
 # -- Please overwrite this, and use your actual licence or "demo" if you just want to look around, as it can only be changed through the Helm chart
-licence:      "demo"
+licence: "demo"
 
 # -- Override secrets, this is only used on first install.
 # -- Please DO NOT leave these values propagated in your values.yaml after first install, on upgrade the values are copied from the previous release.
 secret:
-  appKey:    ""
+  appKey: ""
   jwtSecret: ""
 
 ingress:
   # -- Enable ingress
-  enabled:          true
+  enabled: true
   # -- Host/domain name to create the ingress route for
-  host:             exivity
+  host: exivity
   # -- Set on ingress, if empty it's not set
   ingressClassName: ""
 
@@ -38,7 +38,7 @@ ingress:
   #
   trustedProxy: ""
 
-  annotations: { }
+  annotations: {}
   #  kubernetes.io/ingress.allow-http:         "false"
   #  nginx.ingress.kubernetes.io/ssl-redirect: "true"
   #  nginx.ingress.kubernetes.io/use-regex:    "true"
@@ -47,36 +47,35 @@ ingress:
     # -- Enable TLS handling, disable to terminate TLS before ingress
     enabled: false
     # -- Existing TLS secret name, or set to "-" to generate a cert
-    secret:  "-"
+    secret: "-"
 
 storage:
-  storageClass:           ""
+  storageClass: ""
   helmResourcePolicyKeep: true
   sharedVolumeAccessMode: ReadWriteMany
 
 # bitnami/postgresql chart config
 postgresql:
   # -- Install PostgreSQL
-  enabled:    true
+  enabled: true
   global:
     postgresql:
       auth:
         # -- Database name
-        database:         exivity
+        database: exivity
         # -- Database username
-        username:         exivity
+        username: exivity
         # -- Database password
-        password:         Password12!
+        password: Password12!
         # -- Database root password, not needed when you bring your own DB
         postgresPassword: Password13!
 
   # -- Bring your own DB host
-  host:       ""
+  host: ""
   # -- Bring your own DB port
-  port:       ""
+  port: ""
   # -- Bring your own DB sslmode: enable/disable
-  sslmode:    ""
-
+  sslmode: ""
 
 rabbitmq:
   enabled: true
@@ -84,75 +83,75 @@ rabbitmq:
     enabled: false
 
   auth:
-    username:     user
-    password:     pass
+    username: user
+    password: pass
 
   # If you bring your own MQ
-  host:    ""
-  port:    ""
-  vhost:   ""
+  host: ""
+  port: ""
+  vhost: ""
   # TLS connection: true/false
-  secure:  ""
+  secure: ""
 
 service:
-  registry:   docker.io
-  tag:        ""
+  registry: docker.io
+  tag: ""
   pullPolicy: IfNotPresent
 
-  pullSecrets: [ ]
+  pullSecrets: []
 
   # Front-end components
   glass:
-    registry:    ""
-    repository:  exivity/glass
-    tag:         ""
-    pullPolicy:  ""
+    registry: ""
+    repository: exivity/glass
+    tag: ""
+    pullPolicy: ""
     servicePort: 80
     serviceType: ClusterIP
-    replicas:    1
+    replicas: 1
     nodeName: ""
     nodeSelector: {}
     resources:
       requests:
-        cpu:    "25m"
+        cpu: "25m"
         memory: "50Mi"
 
   proximityApi:
-    registry:    ""
-    repository:  exivity/proximity-api
-    tag:         ""
-    pullPolicy:  ""
+    registry: ""
+    repository: exivity/proximity-api
+    tag: ""
+    pullPolicy: ""
     # set the PHP memory limit per requests
     # https://www.php.net/manual/en/ini.core.php#ini.memory-limit
     phpMemoryLimit: "3G"
     servicePort: 80
     serviceType: ClusterIP
-    replicas:    1
+    replicas: 1
     nodeName: ""
     nodeSelector: {}
     resources:
       requests:
-        cpu:    "25m"
+        cpu: "25m"
         memory: "400Mi"
 
   # Back-end components
   chronos:
-    registry:   ""
+    registry: ""
     repository: exivity/chronos
-    tag:        ""
+    tag: ""
     pullPolicy: ""
-    replicas:   1
+    replicas: 1
     nodeName: ""
     nodeSelector: {}
     resources:
       requests:
-        cpu:    "25m"
+        cpu: "25m"
         memory: "50Mi"
 
   dbInit:
-    registry:   ""
+    registry: ""
     repository: exivity/db
-    tag:        ""
+    tag: ""
     pullPolicy: ""
     nodeName: ""
     nodeSelector: {}
@@ -162,130 +161,130 @@ service:
       resources: {}
 
   dummyData:
-    enabled:    false
-    registry:   ""
+    enabled: false
+    registry: ""
     repository: exivity/dummy-data
-    tag:        "main" # Tag should be changed to match the rest in the future
+    tag: "main" # Tag should be changed to match the rest in the future
     pullPolicy: ""
     nodeName: ""
     nodeSelector: {}
     resources: {}
 
   edify:
-    registry:   ""
+    registry: ""
     repository: exivity/edify
-    tag:        ""
+    tag: ""
     pullPolicy: ""
-    replicas:   1
+    replicas: 1
     nodeName: ""
     nodeSelector: {}
     # custom edify cache path
     # tmpPath: "/tmp"
     resources:
       requests:
-        cpu:    "25m"
+        cpu: "25m"
         memory: "50Mi"
 
   executor:
-    registry:   ""
+    registry: ""
     repository: exivity/executor
-    tag:        ""
+    tag: ""
     pullPolicy: ""
-    replicas:   1
+    replicas: 1
     nodeName: ""
     nodeSelector: {}
     resources:
       requests:
-        cpu:    "25m"
+        cpu: "25m"
         memory: "50Mi"
 
   griffon:
-    registry:   ""
+    registry: ""
     repository: exivity/griffon
-    tag:        ""
+    tag: ""
     pullPolicy: ""
-    replicas:   1
+    replicas: 1
     nodeName: ""
     nodeSelector: {}
     resources:
       requests:
-        cpu:    "25m"
+        cpu: "25m"
         memory: "50Mi"
 
   horizon:
-    registry:   ""
+    registry: ""
     repository: exivity/horizon
-    tag:        ""
+    tag: ""
     pullPolicy: ""
-    replicas:   1
+    replicas: 1
     nodeName: ""
     nodeSelector: {}
     resources:
       requests:
-        cpu:    "25m"
+        cpu: "25m"
         memory: "50Mi"
 
   pigeon:
-    registry:   ""
+    registry: ""
     repository: exivity/pigeon
-    tag:        ""
+    tag: ""
     pullPolicy: ""
-    replicas:   1
+    replicas: 1
     nodeName: ""
     nodeSelector: {}
     resources:
       requests:
-        cpu:    "25m"
+        cpu: "25m"
         memory: "50Mi"
 
   proximityCli:
-    registry:   ""
+    registry: ""
     repository: exivity/proximity-cli
-    tag:        ""
+    tag: ""
     pullPolicy: ""
-    replicas:   1
+    replicas: 1
     nodeName: ""
     nodeSelector: {}
     resources:
       requests:
-        cpu:    "25m"
+        cpu: "25m"
         memory: "50Mi"
 
   transcript:
-    registry:   ""
+    registry: ""
     repository: exivity/transcript
-    tag:        ""
+    tag: ""
     pullPolicy: ""
-    replicas:   1
+    replicas: 1
     nodeName: ""
     nodeSelector: {}
     resources:
       requests:
-        cpu:    "25m"
+        cpu: "25m"
         memory: "50Mi"
 
   use:
-    registry:   ""
+    registry: ""
     repository: exivity/use
-    tag:        ""
+    tag: ""
     pullPolicy: ""
-    replicas:   1
+    replicas: 1
     nodeName: ""
     nodeSelector: {}
     resources:
       requests:
-        cpu:    "25m"
+        cpu: "25m"
         memory: "50Mi"
     # Configuration for the init container that installs CA certificates
     initContainers:
       installCACert:
         resources:
           requests:
-            cpu:    "25m"
+            cpu: "25m"
             memory: "50Mi"
-    # In the following caCertificates section, you can specify the Certificate Authority (CA) certificates that your service uses. 
-    # Each certificate should be listed as a key-value pair, where the key is a name you assign to the certificate for identification 
-    # (like 'rootCA' or 'intermediateCA'), and the value is the actual certificate. You can include as many certificates as necessary 
+    # In the following caCertificates section, you can specify the Certificate Authority (CA) certificates that your service uses.
+    # Each certificate should be listed as a key-value pair, where the key is a name you assign to the certificate for identification
+    # (like 'rootCA' or 'intermediateCA'), and the value is the actual certificate. You can include as many certificates as necessary
     # by replacing the placeholder names like 'rootCA.pem' and 'intermediateCA.pem' with the actual file names of your certificates.
     #
     # Instructions for fetching CA certificates using OpenSSL:
@@ -309,3 +308,10 @@ service:
 
 logLevel:
   backend: "info"
+
+# Prometheus monitoring configuration
+prometheus:
+  metricServer:
+    enabled: false
+    serviceMonitor:
+      enabled: false
