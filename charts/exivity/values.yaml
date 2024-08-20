@@ -1,11 +1,11 @@
-# -- Override deployment name
+# -- Override deployment name (e.g., useful when deploying multiple instances of the application).
 nameOverride: ""
 
 # Set to the actual licence for production environments or "demo" for evaluation purposes.
 licence: "demo"
 
 # Secret keys used for application security. Random values are generated on installation if not set.
-# It is recommended to specify values in production environments and avoid leaving them empty.
+# Random values are generated on installation if not set, but it's recommended to specify values for production.
 secret:
   appKey: "" # Used to encrypt application data. Specify a value for production.
   jwtSecret: "" # Used for signing JWTs. Specify a value for production.
@@ -53,7 +53,7 @@ postgresql:
   # Configuration for using an external PostgreSQL database.
   host: "" # Hostname of the external database server, if applicable.
   port: "" # Port number on which the external database server is accessible.
-  sslmode: "" # SSL mode for database connection: 'enable' or 'disable'.
+  sslmode: "" # SSL mode for database connection: 'disable', 'require', 'verify-ca', or 'verify-full'.
 
   # Example of customizing the embedded Bitnami PostgreSQL chart for larger deployments.
   # For more options and details, refer to the Bitnami PostgreSQL Helm chart: https://bitnami.com/stack/postgresql/helm
@@ -82,7 +82,7 @@ rabbitmq:
   host: "" # Hostname of the external RabbitMQ server, if applicable.
   port: "" # Port number on which the external RabbitMQ server is accessible.
   vhost: "" # Virtual host for RabbitMQ, if applicable.
-  secure: "" # Indicates if the connection to RabbitMQ should be secured (true/false).
+  secure: "" # Indicates if the connection to RabbitMQ should be secured (true/false). Set to true to enable TLS for RabbitMQ communication.
 
 # General service configuration, defaults apply when specific service settings are not provided.
 service:
@@ -91,7 +91,7 @@ service:
   pullPolicy: IfNotPresent # Image pull policy; 'IfNotPresent' only pulls if the image isn't already present.
 
   # List of image pull secrets, used if private Docker registries require authentication.
-  pullSecrets: [] # Example: ["myRegistryKey"]
+  pullSecrets: [] # Example: ["myRegistryKey"] - Use the Kubernetes Secret name that contains the Docker registry credentials.
 
   # Example of an image pull secret in YAML configuration:
   # This configuration is typically applied using a Kubernetes Secret resource.
@@ -320,7 +320,7 @@ service:
       #   [Your Intermediate CA certificate here]
       #   -----END CERTIFICATE-----
 
-# Configuration for log levels across different services.
+# Default log level for backend services. Accepts 'debug', 'info'.
+# Use 'debug' for development environments and 'info' or higher for production to reduce log verbosity.
 logLevel:
-  backend: "info" # Default log level for backend services. Accepts 'debug' or 'info'.
-
+  backend: "info"
