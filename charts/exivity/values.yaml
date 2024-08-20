@@ -7,13 +7,13 @@ licence: "demo"
 # Secret keys used for application security. Random values are generated on installation if not set.
 # It is recommended to specify values in production environments and avoid leaving them empty.
 secret:
-  appKey: ""  # Used to encrypt application data. Specify a value for production.
-  jwtSecret: ""  # Used for signing JWTs. Specify a value for production.
+  appKey: "" # Used to encrypt application data. Specify a value for production.
+  jwtSecret: "" # Used for signing JWTs. Specify a value for production.
 
 ingress:
-  enabled: true  # Indicates if ingress is enabled.
-  host: exivity  # The host or domain name for the ingress route.
-  ingressClassName: ""  # Ingress class name; if empty, no class is set.
+  enabled: true # Indicates if ingress is enabled.
+  host: exivity # The host or domain name for the ingress route.
+  ingressClassName: "" # Ingress class name; if empty, no class is set.
 
   # Trusted proxies are configured for handling headers correctly behind a proxy or load balancer.
   # This is used particularly when services like Traefik act as the load balancer in a Kubernetes cluster.
@@ -21,38 +21,39 @@ ingress:
   # Example values: '10.0.0.1', '10.244.0.0/16', '127.0.0.1, 10.244.0.0/16', or '*'.
   trustedProxy: ""
 
-  annotations: {}
+  annotations:
+    {}
     # Example annotations for ingress behavior:
     # kubernetes.io/ingress.allow-http:         "false"
     # nginx.ingress.kubernetes.io/ssl-redirect: "true"
     # nginx.ingress.kubernetes.io/use-regex:    "true"
 
   tls:
-    enabled: false  # Controls if TLS is handled by ingress; disable if TLS is terminated externally.
-    secret: "-"  # Name of an existing TLS secret or '-' to generate a new certificate.
+    enabled: false # Controls if TLS is handled by ingress; disable if TLS is terminated externally.
+    secret: "-" # Name of an existing TLS secret or '-' to generate a new certificate.
 
 storage:
-  storageClass: ""  # Specifies the storage class used for provisioning volumes. If empty, the default class is used.
-  helmResourcePolicyKeep: true  # Ensures that storage resources are retained after a Helm release is deleted.
-  sharedVolumeAccessMode: ReadWriteMany  # Defines the access mode for shared volumes; 'ReadWriteMany' allows multiple nodes to read/write simultaneously.
+  storageClass: "" # Specifies the storage class used for provisioning volumes. If empty, the default class is used.
+  helmResourcePolicyKeep: true # Ensures that storage resources are retained after a Helm release is deleted.
+  sharedVolumeAccessMode: ReadWriteMany # Defines the access mode for shared volumes; 'ReadWriteMany' allows multiple nodes to read/write simultaneously.
 
 # Configuration for PostgreSQL, either as an embedded database using the Bitnami PostgreSQL chart or an external database.
 # It is recommended to use an external PostgreSQL server for production environments to ensure scalability and manageability.
 # The embedded PostgreSQL chart is primarily intended for testing and non-production purposes.
 postgresql:
-  enabled: true  # Determines if the Bitnami PostgreSQL chart should be installed. Set to false when using an external database.
+  enabled: true # Determines if the Bitnami PostgreSQL chart should be installed. Set to false when using an external database.
   global:
     postgresql:
       auth:
-        database: exivity  # Database name for both external and embedded databases.
-        username: exivity  # Username for accessing the database.
-        password: Password12!  # Password for the database user.
-        postgresPassword: Password13!  # Root password for PostgreSQL, optional when using an external database.
+        database: exivity # Database name for both external and embedded databases.
+        username: exivity # Username for accessing the database.
+        password: Password12! # Password for the database user.
+        postgresPassword: Password13! # Root password for PostgreSQL, optional when using an external database.
 
   # Configuration for using an external PostgreSQL database.
-  host: ""  # Hostname of the external database server, if applicable.
-  port: ""  # Port number on which the external database server is accessible.
-  sslmode: ""  # SSL mode for database connection: 'enable' or 'disable'.
+  host: "" # Hostname of the external database server, if applicable.
+  port: "" # Port number on which the external database server is accessible.
+  sslmode: "" # SSL mode for database connection: 'enable' or 'disable'.
 
   # Example of customizing the embedded Bitnami PostgreSQL chart for larger deployments.
   # For more options and details, refer to the Bitnami PostgreSQL Helm chart: https://bitnami.com/stack/postgresql/helm
@@ -69,28 +70,28 @@ postgresql:
 # The embedded RabbitMQ chart is primarily intended for testing and non-production purposes.
 # For more options and details, refer to the Bitnami RabbitMQ Helm chart: https://bitnami.com/stack/rabbitmq/helm
 rabbitmq:
-  enabled: true  # Determines if the Bitnami RabbitMQ chart should be installed. Set to false when using an external MQ.
+  enabled: true # Determines if the Bitnami RabbitMQ chart should be installed. Set to false when using an external MQ.
   clustering:
-    enabled: false  # Determines if clustering is enabled for RabbitMQ.
+    enabled: false # Determines if clustering is enabled for RabbitMQ.
 
   auth:
-    username: user  # Username for RabbitMQ authentication.
-    password: pass  # Password for RabbitMQ authentication.
+    username: user # Username for RabbitMQ authentication.
+    password: pass # Password for RabbitMQ authentication.
 
   # Configuration for using an external RabbitMQ server.
-  host: ""  # Hostname of the external RabbitMQ server, if applicable.
-  port: ""  # Port number on which the external RabbitMQ server is accessible.
-  vhost: ""  # Virtual host for RabbitMQ, if applicable.
-  secure: ""  # Indicates if the connection to RabbitMQ should be secured (true/false).
+  host: "" # Hostname of the external RabbitMQ server, if applicable.
+  port: "" # Port number on which the external RabbitMQ server is accessible.
+  vhost: "" # Virtual host for RabbitMQ, if applicable.
+  secure: "" # Indicates if the connection to RabbitMQ should be secured (true/false).
 
 # General service configuration, defaults apply when specific service settings are not provided.
 service:
-  registry: docker.io  # Default registry from which to pull service images.
-  tag: ""  # Docker image tag; specify to use a specific version.
-  pullPolicy: IfNotPresent  # Image pull policy; 'IfNotPresent' only pulls if the image isn't already present.
+  registry: docker.io # Default registry from which to pull service images.
+  tag: "" # Docker image tag; specify to use a specific version.
+  pullPolicy: IfNotPresent # Image pull policy; 'IfNotPresent' only pulls if the image isn't already present.
 
   # List of image pull secrets, used if private Docker registries require authentication.
-  pullSecrets: []  # Example: ["myRegistryKey"]
+  pullSecrets: [] # Example: ["myRegistryKey"]
 
   # Example of an image pull secret in YAML configuration:
   # This configuration is typically applied using a Kubernetes Secret resource.
@@ -165,11 +166,11 @@ service:
     nodeSelector: {}
     # Configuration for waiting for the database server to be ready before starting the service.
     waitForServer:
-      resources: {}  # Resources allocated for the wait operation, usually minimal.
+      resources: {} # Resources allocated for the wait operation, usually minimal.
 
     # Configuration for running database migrations.
     migration:
-      resources: {}  # Resources allocated for migration operations, define as needed.
+      resources: {} # Resources allocated for migration operations, define as needed.
 
   # Configuration for the 'dummyData' service, used for deploying dummy data for testing purposes.
   dummyData:
@@ -321,5 +322,5 @@ service:
 
 # Configuration for log levels across different services.
 logLevel:
-  backend: "info"  # Default log level for backend services. Accepts 'debug' or 'info'.
+  backend: "info" # Default log level for backend services. Accepts 'debug' or 'info'.
 
