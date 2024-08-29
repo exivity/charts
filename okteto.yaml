@@ -1,0 +1,13 @@
+deploy:
+  commands:
+    - name: Install dependencies
+      command: helm dependency update charts/exivity
+    - name: Login registry
+      command: |
+        helm registry login ${OKTETO_REGISTRY_URL} -u ${OKTETO_USERNAME} -p ${OKTETO_TOKEN}
+    - name: Package chart
+      command: |
+        helm package ./charts/exivity --version 0.0.1
+    - name: Push chart to registry
+      command: |
+        helm push ./exivity-0.0.1.tgz oci://${OKTETO_REGISTRY_URL}/okteto

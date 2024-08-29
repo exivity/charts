@@ -1,0 +1,27 @@
+name: okteto-registry
+on:
+  workflow_dispatch: 
+  push:
+    branches:
+      - main
+
+jobs:
+  upload-chart:
+    runs-on: ubuntu-latest
+    env:
+      OKTETO_CA_CERT: ${{ secrets.OKTETO_CA_CERT }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Context
+        uses: exivity/okteto-context-action@latest
+        with:
+          url: ${{ secrets.OKTETO_CONTEXT }}
+          token: ${{ secrets.OKTETO_TOKEN }}
+
+      - name: Trigger the pipeline
+        uses: exivity/okteto-pipeline-action@latest
+        with:
+          name: v3-charts:latest
+          filename: okteto.yaml
