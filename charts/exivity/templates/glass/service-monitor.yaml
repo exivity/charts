@@ -2,27 +2,28 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "exivity.fullname" $ -}}-proximity-api-metrics
+  name: {{ include "exivity.fullname" $ -}}-glass-metrics
   labels:
-    app.kubernetes.io/component: proximity-api
+    app.kubernetes.io/component: glass
     {{- include "exivity.labels" $ | indent 4 }}
 spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/component: glass
+    {{- include "exivity.matchLabels" $ | indent 4 }}
   ports:
     - name: metrics
       port: 8000
       targetPort: 8000
       protocol: TCP
-  selector:
-    app.kubernetes.io/component: proximity-api
-    {{- include "exivity.matchLabels" $ | indent 4 }}
-{{- if .Values.prometheus.metricServer.serviceMonitor.enabled -}}
+{{ if .Values.prometheus.metricServer.serviceMonitor.enabled }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "exivity.fullname" $ -}}-proximity-api
+  name: {{ include "exivity.fullname" $ -}}-glass
   labels:
-    app.kubernetes.io/component: proximity-api
+    app.kubernetes.io/component: glass
     {{- include "exivity.labels" $ | indent 4 }}
 spec:
   endpoints:
@@ -32,5 +33,5 @@ spec:
       scheme: http
   selector:
     matchLabels:
-      app.kubernetes.io/component: proximity-api
+      app.kubernetes.io/component: glass
 {{- end }}{{- end }}
