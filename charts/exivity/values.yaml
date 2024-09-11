@@ -1,106 +1,115 @@
-# -- Override deployment name
+# -- Override deployment name (e.g., useful when deploying multiple instances of the application).
 nameOverride: ""
 
-# -- Please overwrite this, and use your actual licence or "demo" if you just want to look around, as it can only be changed through the Helm chart
+# Set to the actual licence for production environments.
+# For evaluation purposes, use "demo", but note that "demo" will not allow you to run reports.
+# For a trial license, please contact license@exivity.com.
 licence: "demo"
 
-# -- Override secrets, this is only used on first install.
-# -- Please DO NOT leave these values propagated in your values.yaml after first install, on upgrade the values are copied from the previous release.
+# Secret keys used for application security. Random values are generated on installation if not set.
+# Random values are generated on installation if not set, but it's recommended to specify values for production.
 secret:
-  appKey: ""
-  jwtSecret: ""
+  appKey: "" # Used to encrypt application data. Specify a value for production.
+  jwtSecret: "" # Used for signing JWTs. Specify a value for production.
 
 ingress:
-  # -- Enable ingress
-  enabled: true
-  # -- Host/domain name to create the ingress route for
-  host: exivity
-  # -- Set on ingress, if empty it's not set
-  ingressClassName: ""
+  enabled: true # Indicates if ingress is enabled.
+  host: exivity # The host or domain name for the ingress route.
+  ingressClassName: "" # Ingress class name; if empty, no class is set.
 
-  # Configure trusted proxies for the Proximity service API to correctly handle headers like HTTP_X_FORWARDED_PROTO.
-  # This setting should be used when the service is behind a proxy or LoadBalancer, such as Traefik, which is acting as the Kubernetes cluster's load balancer.
-  # The value should be the IP address of the load balancer.
-  #
-  # Examples:
-  #
-  # - Single IP address:
-  #   trustedProxy: '10.0.0.1'
-  #
-  # - CIDR notation for a range like the default value for a DigitalOcean Kubernetes cluster:
-  #   trustedProxy: '10.244.0.0/16'
-  #
-  # - Comma-separated list of entries:
-  #   trustedProxy: '127.0.0.1, 10.244.0.0/16'
-  #
-  # - Wildcard (*) to trust any proxy connecting directly to the Proximity service API:
-  #   trustedProxy: '*'
-  #
+  # Trusted proxies are configured for handling headers correctly behind a proxy or load balancer.
+  # This is used particularly when services like Traefik act as the load balancer in a Kubernetes cluster.
+  # Specify IP addresses, CIDR blocks, or a wildcard '*' to trust all proxies.
+  # Example values: '10.0.0.1', '10.244.0.0/16', '127.0.0.1, 10.244.0.0/16', or '*'.
   trustedProxy: ""
 
-  annotations: {}
-  #  kubernetes.io/ingress.allow-http:         "false"
-  #  nginx.ingress.kubernetes.io/ssl-redirect: "true"
-  #  nginx.ingress.kubernetes.io/use-regex:    "true"
+  annotations:
+    {}
+    # Example annotations for ingress behavior:
+    # kubernetes.io/ingress.allow-http:         "false"
+    # nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # nginx.ingress.kubernetes.io/use-regex:    "true"
 
   tls:
-    # -- Enable TLS handling, disable to terminate TLS before ingress
-    enabled: false
-    # -- Existing TLS secret name, or set to "-" to generate a cert
-    secret: "-"
+    enabled: false # Controls if TLS is handled by ingress; disable if TLS is terminated externally.
+    secret: "-" # Name of an existing TLS secret or '-' to generate a new certificate.
 
 storage:
-  storageClass: ""
-  helmResourcePolicyKeep: true
-  sharedVolumeAccessMode: ReadWriteMany
+  storageClass: "" # Specifies the storage class used for provisioning volumes. If empty, the default class is used.
+  helmResourcePolicyKeep: true # Ensures that storage resources are retained after a Helm release is deleted.
+  sharedVolumeAccessMode: ReadWriteMany # Defines the access mode for shared volumes; 'ReadWriteMany' allows multiple nodes to read/write simultaneously.
 
-# bitnami/postgresql chart config
+# Configuration for PostgreSQL, either as an embedded database using the Bitnami PostgreSQL chart or an external database.
+# It is recommended to use an external PostgreSQL server for production environments to ensure scalability and manageability.
+# The embedded PostgreSQL chart is primarily intended for testing and non-production purposes.
 postgresql:
-  # -- Install PostgreSQL
-  enabled: true
+  enabled: true # Determines if the Bitnami PostgreSQL chart should be installed. Set to false when using an external database.
   global:
     postgresql:
       auth:
-        # -- Database name
-        database: exivity
-        # -- Database username
-        username: exivity
-        # -- Database password
-        password: Password12!
-        # -- Database root password, not needed when you bring your own DB
-        postgresPassword: Password13!
+        database: exivity # Database name for both external and embedded databases.
+        username: exivity # Username for accessing the database.
+        password: Password12! # Password for the database user.
+        postgresPassword: Password13! # Root password for PostgreSQL, optional when using an external database.
 
-  # -- Bring your own DB host
-  host: ""
-  # -- Bring your own DB port
-  port: ""
-  # -- Bring your own DB sslmode: enable/disable
-  sslmode: ""
+  # Configuration for using an external PostgreSQL database.
+  host: "" # Hostname of the external database server, if applicable.
+  port: "" # Port number on which the external database server is accessible.
+  sslmode: "" # SSL mode for database connection: 'disable', 'require', 'verify-ca', or 'verify-full'.
 
+  # Example of customizing the embedded Bitnami PostgreSQL chart for larger deployments.
+  # For more options and details, refer to the Bitnami PostgreSQL Helm chart: https://bitnami.com/stack/postgresql/helm
+  # primary:
+  #   persistence:
+  #     size: 50Gi  # Specifies the size of the persistent volume.
+  #   extendedConfiguration: |
+  #     shared_buffers = 2GB  # Sets the amount of memory the database server uses for shared buffers.
+  #     work_mem = 32MB  # Sets the amount of memory used by internal sort operations and hash tables.
+  #     wal_buffers = 64MB  # Sets the amount of memory used by WAL buffers.
+
+# Configuration for RabbitMQ, either as an embedded server using the Bitnami RabbitMQ chart or an external message queue.
+# It is recommended to use an external RabbitMQ server for production environments to ensure scalability and manageability.
+# The embedded RabbitMQ chart is primarily intended for testing and non-production purposes.
+# For more options and details, refer to the Bitnami RabbitMQ Helm chart: https://bitnami.com/stack/rabbitmq/helm
 rabbitmq:
-  enabled: true
+  enabled: true # Determines if the Bitnami RabbitMQ chart should be installed. Set to false when using an external MQ.
   clustering:
-    enabled: false
+    enabled: false # Determines if clustering is enabled for RabbitMQ.
 
   auth:
-    username: user
-    password: pass
+    username: user # Username for RabbitMQ authentication.
+    password: pass # Password for RabbitMQ authentication.
 
-  # If you bring your own MQ
-  host: ""
-  port: ""
-  vhost: ""
-  # TLS connection: true/false
-  secure: ""
+  # Configuration for using an external RabbitMQ server.
+  host: "" # Hostname of the external RabbitMQ server, if applicable.
+  port: "" # Port number on which the external RabbitMQ server is accessible.
+  vhost: "" # Virtual host for RabbitMQ, if applicable.
+  secure: "" # Indicates if the connection to RabbitMQ should be secured (true/false). Set to true to enable TLS for RabbitMQ communication.
 
+# General service configuration, defaults apply when specific service settings are not provided.
 service:
-  registry: docker.io
-  tag: ""
-  pullPolicy: IfNotPresent
+  registry: docker.io # Default registry from which to pull service images.
+  tag: "" # Docker image tag; specify to use a specific version.
+  pullPolicy: IfNotPresent # Image pull policy; 'IfNotPresent' only pulls if the image isn't already present.
 
-  pullSecrets: []
+  # List of image pull secrets, used if private Docker registries require authentication.
+  pullSecrets: [] # Example: ["myRegistryKey"] - Use the Kubernetes Secret name that contains the Docker registry credentials.
 
-  # Front-end components
+  # Example of an image pull secret in YAML configuration:
+  # This configuration is typically applied using a Kubernetes Secret resource.
+  # Here is a simple example of how an image pull secret might be defined:
+  #
+  # apiVersion: v1
+  # kind: Secret
+  # metadata:
+  #   name: myRegistryKey
+  # type: kubernetes.io/dockerconfigjson
+  # data:
+  #   .dockerconfigjson: <base64-encoded-docker-config-json>
+  #
+  # Replace <base64-encoded-docker-config-json> with the base64-encoded JSON string that contains the registry authentication information.
+
+  # Configuration for the 'glass' service, Exivity's front-end component.
   glass:
     registry: ""
     repository: exivity/glass
@@ -116,6 +125,7 @@ service:
         cpu: "25m"
         memory: "50Mi"
 
+  # Configuration for the 'proximityApi' service, handling backend API operations.
   proximityApi:
     registry: ""
     repository: exivity/proximity-api
@@ -134,7 +144,7 @@ service:
         cpu: "25m"
         memory: "400Mi"
 
-  # Back-end components
+  # Configuration for the 'chronos' service, part of the back-end components.
   chronos:
     registry: ""
     repository: exivity/chronos
@@ -148,6 +158,7 @@ service:
         cpu: "25m"
         memory: "50Mi"
 
+  # Configuration for the 'dbInit' service, which initializes the database.
   dbInit:
     registry: ""
     repository: exivity/db
@@ -155,11 +166,15 @@ service:
     pullPolicy: ""
     nodeName: ""
     nodeSelector: {}
+    # Configuration for waiting for the database server to be ready before starting the service.
     waitForServer:
-      resources: {}
-    migration:
-      resources: {}
+      resources: {} # Resources allocated for the wait operation, usually minimal.
 
+    # Configuration for running database migrations.
+    migration:
+      resources: {} # Resources allocated for migration operations, define as needed.
+
+  # Configuration for the 'dummyData' service, used for deploying dummy data for testing purposes.
   dummyData:
     enabled: false
     registry: ""
@@ -170,6 +185,7 @@ service:
     nodeSelector: {}
     resources: {}
 
+  # Configuration for the 'edify' service, part of the backend processing components.
   edify:
     registry: ""
     repository: exivity/edify
@@ -178,13 +194,14 @@ service:
     replicas: 1
     nodeName: ""
     nodeSelector: {}
-    # custom edify cache path
-    # tmpPath: "/tmp"
+    # It is recommended to set tmpPath to "/tmp" to prevent temporary files from being written to the PVC, which could impact service performance.
+    # tmpPath: "/tmp"  # Custom path for temporary files and caching.
     resources:
       requests:
         cpu: "25m"
         memory: "50Mi"
 
+  # Configuration for the 'executor' service, part of the backend processing components.
   executor:
     registry: ""
     repository: exivity/executor
@@ -198,6 +215,7 @@ service:
         cpu: "25m"
         memory: "50Mi"
 
+  # Configuration for the 'griffon' service, part of the backend processing components.
   griffon:
     registry: ""
     repository: exivity/griffon
@@ -211,6 +229,7 @@ service:
         cpu: "25m"
         memory: "50Mi"
 
+  # Configuration for the 'horizon' service, part of the backend processing components.
   horizon:
     registry: ""
     repository: exivity/horizon
@@ -224,6 +243,7 @@ service:
         cpu: "25m"
         memory: "50Mi"
 
+  # Configuration for the 'pigeon' service, which serves as the notification system.
   pigeon:
     registry: ""
     repository: exivity/pigeon
@@ -237,6 +257,7 @@ service:
         cpu: "25m"
         memory: "50Mi"
 
+  # Configuration for the 'proximityCli' service, part of the backend processing components.
   proximityCli:
     registry: ""
     repository: exivity/proximity-cli
@@ -250,6 +271,7 @@ service:
         cpu: "25m"
         memory: "50Mi"
 
+  # Configuration for the 'transcript' service, part of the backend processing components.
   transcript:
     registry: ""
     repository: exivity/transcript
@@ -263,6 +285,7 @@ service:
         cpu: "25m"
         memory: "50Mi"
 
+  # Configuration for the 'use' service, part of the backend processing components.
   use:
     registry: ""
     repository: exivity/use
@@ -271,41 +294,36 @@ service:
     replicas: 1
     nodeName: ""
     nodeSelector: {}
+
+    # Resource requirements for the service pod.
     resources:
       requests:
         cpu: "25m"
         memory: "50Mi"
-    # Configuration for the init container that installs CA certificates
+
+    # Configuration for the init container that installs CA certificates.
     initContainers:
       installCACert:
         resources:
           requests:
             cpu: "25m"
             memory: "50Mi"
-    # In the following caCertificates section, you can specify the Certificate Authority (CA) certificates that your service uses.
-    # Each certificate should be listed as a key-value pair, where the key is a name you assign to the certificate for identification
-    # (like 'rootCA' or 'intermediateCA'), and the value is the actual certificate. You can include as many certificates as necessary
-    # by replacing the placeholder names like 'rootCA.pem' and 'intermediateCA.pem' with the actual file names of your certificates.
-    #
-    # Instructions for fetching CA certificates using OpenSSL:
-    # --------------------------------------------------------
-    # To fetch and add CA certificates to this configuration, follow the steps below using OpenSSL:
-    # 1. Open a terminal on your system.
-    # 2. Use the following OpenSSL command to connect to the desired HTTPS server and retrieve the certificate:
-    #      echo | openssl s_client -servername <your-server-name> -connect <your-server-name>:443 -showcerts | openssl x509 -outform PEM > your_certificate_name.pem
-    #    Replace `<your-server-name>` with the actual server name and `your_certificate_name.pem` with the desired file name for your certificate.
-    # 3. Once you have the certificate, you can add it to the caCertificates section below by replacing the existing placeholders.
-    #    Ensure the entire certificate text including the "BEGIN CERTIFICATE" and "END CERTIFICATE" lines is correctly pasted under the appropriate key.
+
+    # CA certificates configuration section. Add CA certificates that your service uses here.
+    # Each certificate should be listed as a key-value pair, where the key is a unique identifier.
     caCertificates:
-      # rootCA.pem: |
+      # Example placeholders for CA certificates. Replace with your actual certificate data.
+      # rootCA.pem:
       #   -----BEGIN CERTIFICATE-----
-      #   MIIFPDCCB....
+      #   [Your Root CA certificate here]
       #   -----END CERTIFICATE-----
-      # intermediateCA.pem: |
+      # intermediateCA.pem:
       #   -----BEGIN CERTIFICATE-----
-      #   MIIFPDCCB....
+      #   [Your Intermediate CA certificate here]
       #   -----END CERTIFICATE-----
 
+# Default log level for backend services. Accepts 'debug', 'info'.
+# Use 'debug' for development environments and 'info' or higher for production to reduce log verbosity.
 logLevel:
   backend: "info"
 
