@@ -1,0 +1,36 @@
+{{- if .Values.prometheus.metricServer.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-component-griffon
+  labels:
+    app.kubernetes.io/component: griffon
+    {{- include "exivity.labels" $ | indent 4 }}
+spec:
+  ports:
+    - name: metrics
+      port: 8000
+      targetPort: 8000
+      protocol: TCP
+  selector:
+    app.kubernetes.io/component: griffon
+    {{- include "exivity.matchLabels" $ | indent 4 }}
+{{ if .Values.prometheus.metricServer.serviceMonitor.enabled }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-griffon
+  labels:
+    app.kubernetes.io/component: griffon
+    {{- include "exivity.labels" $ | indent 4 }}
+spec:
+  endpoints:
+    - interval: 5s
+      path: /metrics
+      port: metrics
+      scheme: http
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: griffon
+{{- end }}{{- end }}

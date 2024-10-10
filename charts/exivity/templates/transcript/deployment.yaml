@@ -75,6 +75,8 @@ spec:
                   key:  app_key
             - name: EXIVITY_BACKEND_LOG_LEVEL
               value: "{{ .Values.logLevel.backend }}"
+            - name:  ENABLE_PROMETHEUS
+              value: "{{ .Values.prometheus.metricServer.enabled }}"
           {{- include "exivity.nfs-liveness" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:

@@ -38,6 +38,8 @@ spec:
           env:
             - name:   EXIVITY_BACKEND_LOG_LEVEL
               value:  "{{ .Values.logLevel.backend }}"
+            - name:  ENABLE_PROMETHEUS
+              value: "{{ .Values.prometheus.metricServer.enabled }}"
           securityContext:
             runAsUser:  1000
             runAsGroup: 1000

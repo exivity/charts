@@ -326,3 +326,10 @@ service:
 # Use 'debug' for development environments and 'info' or higher for production to reduce log verbosity.
 logLevel:
   backend: "info"
+
+# Prometheus monitoring configuration
+prometheus:
+  metricServer:
+    enabled: false
+    serviceMonitor:
+      enabled: false
