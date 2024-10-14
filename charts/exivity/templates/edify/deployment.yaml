@@ -44,11 +44,13 @@ spec:
           env:
             - name: EXIVITY_BACKEND_LOG_LEVEL
               value: "{{ .Values.logLevel.backend }}"
+            - name:  ENABLE_PROMETHEUS
+              value: "{{ .Values.prometheus.metricServer.enabled }}"
             {{- if .Values.service.edify.tmpPath }}
             - name: EXIVITY_EDIFY_TMP_PATH
               value: "{{ .Values.service.edify.tmpPath }}"
             {{- end }}
-          
+
           securityContext:
             runAsUser:  1000
             runAsGroup: 1000
@@ -65,7 +67,7 @@ spec:
               mountPath: /exivity/home/log/merlin
             - name:      report
               mountPath: /exivity/home/system/report
-          {{- include "exivity.nfs-liveness" $ | indent 10}}
+          {{- include "exivity.probes" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
         {{- range $name := .}}

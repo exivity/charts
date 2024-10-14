@@ -37,7 +37,7 @@ spec:
           volumeMounts:
             - name:      log
               mountPath: /exivity/home/log/glass
-          {{- include "exivity.nfs-liveness" $ | indent 10}}
+          {{- include "exivity.probes" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
         {{- range $name := .}}

@@ -80,9 +80,11 @@ spec:
                   key:                                     jwt_secret
             - name: EXIVITY_BACKEND_LOG_LEVEL
               value: "{{ .Values.logLevel.backend }}"
+            - name:  ENABLE_PROMETHEUS
+              value: "{{ .Values.prometheus.metricServer.enabled }}"
             - name: NGINX_LOG_PATH
               value: /var/log/nginx
-          {{- include "exivity.nfs-liveness" $ | indent 10}}
+          {{- include "exivity.probes" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
         {{- range $name := .}}

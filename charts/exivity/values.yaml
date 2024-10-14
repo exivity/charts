@@ -326,3 +326,24 @@ service:
 # Use 'debug' for development environments and 'info' or higher for production to reduce log verbosity.
 logLevel:
   backend: "info"
+
+# Configuration for readiness and liveness probes for services.
+# These settings allow you to enable or disable the probes and configure their parameters.
+probes:
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    failureThreshold: 120
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    failureThreshold: 60
+
+# Prometheus monitoring configuration
+prometheus:
+  metricServer:
+    enabled: false
+    serviceMonitor:
+      enabled: false

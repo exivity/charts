@@ -38,6 +38,8 @@ spec:
           env:
             - name:   EXIVITY_BACKEND_LOG_LEVEL
               value:  "{{ .Values.logLevel.backend }}"
+            - name:  ENABLE_PROMETHEUS
+              value: "{{ .Values.prometheus.metricServer.enabled }}"
           securityContext:
             runAsUser:  1000
             runAsGroup: 1000
@@ -48,7 +50,7 @@ spec:
               mountPath: /exivity/home/system/config
             - name:      log
               mountPath: /exivity/home/log/griffon
-          {{- include "exivity.nfs-liveness" $ | indent 10}}
+          {{- include "exivity.probes" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
         {{- range $name := .}}
