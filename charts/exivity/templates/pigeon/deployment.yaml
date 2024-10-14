@@ -75,7 +75,7 @@ spec:
               value: "{{ .Values.logLevel.backend }}"
             - name:  ENABLE_PROMETHEUS
               value: "{{ .Values.prometheus.metricServer.enabled }}"
-          {{- include "exivity.nfs-liveness" $ | indent 10}}
+          {{- include "exivity.probes" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
         {{- range $name := .}}

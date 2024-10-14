@@ -84,7 +84,7 @@ spec:
               value: "{{ .Values.prometheus.metricServer.enabled }}"
             - name: NGINX_LOG_PATH
               value: /var/log/nginx
-          {{- include "exivity.nfs-liveness" $ | indent 10}}
+          {{- include "exivity.probes" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
         {{- range $name := .}}

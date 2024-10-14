@@ -47,7 +47,7 @@ spec:
               mountPath: /exivity/home/log/horizon
             - name:      log
               mountPath: /exivity/home/log/merlin
-          {{- include "exivity.nfs-liveness" $ | indent 10}}
+          {{- include "exivity.probes" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
         {{- range $name := .}}
