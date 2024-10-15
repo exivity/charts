@@ -156,7 +156,7 @@ spec:
         {{- end }}
         {{- if .Values.service.proximityApi.fingerprinter }}
             - name: EXIVITY_FINGERPRINTER
-              value: {{ printf "%s" (.Values.service.proximityApi.fingerprinter) | quote }}
+              value: {{ printf "%s" (.Values.service.proximityApi.fingerPrinter) | quote }}
         {{- end }}
           {{- include "exivity.probes" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
