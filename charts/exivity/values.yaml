@@ -332,12 +332,12 @@ logLevel:
 probes:
   livenessProbe:
     enabled: true
-    initialDelaySeconds: 30
+    initialDelaySeconds: 3
     periodSeconds: 30
     failureThreshold: 120
   readinessProbe:
     enabled: true
-    initialDelaySeconds: 30
+    initialDelaySeconds: 3
     periodSeconds: 30
     failureThreshold: 60
 
