@@ -134,6 +134,12 @@ service:
     # set the PHP memory limit per requests
     # https://www.php.net/manual/en/ini.core.php#ini.memory-limit
     phpMemoryLimit: "3G"
+    # Fingerprint algorithm used to verify user location matches location where token was generated.
+    #   - secure: checks protocols match (e.g. http/https)
+    #   - ip: Checks the IP addresses match.
+    #   - useragent: Checks the request is coming from the same user agent.
+    # Possible values: secure_ip_useragent / secure_useragent
+    fingerPrinter: "secure_ip_useragent"
     servicePort: 80
     serviceType: ClusterIP
     replicas: 1
