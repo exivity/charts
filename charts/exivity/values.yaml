@@ -12,6 +12,16 @@ secret:
   appKey: "" # Used to encrypt application data. Specify a value for production.
   jwtSecret: "" # Used for signing JWTs. Specify a value for production.
 
+# Global settings for the Exivity application.
+global:
+  security:
+    # Fingerprint algorithm used to verify user location matches location where token was generated.
+    #   - secure: checks protocols match (e.g. http/https)
+    #   - ip: Checks the IP addresses match.
+    #   - useragent: Checks the request is coming from the same user agent.
+    # Possible values: secure_ip_useragent / secure_useragent
+    fingerprinter: "secure_ip_useragent"
+
 ingress:
   enabled: true # Indicates if ingress is enabled.
   host: exivity # The host or domain name for the ingress route.
