@@ -40,8 +40,11 @@ jobs:
           chmod 700 get_helm.sh
           ./get_helm.sh
 
-      - name: Deploy NFS and Exivity Helm charts
-        run: make deploy-charts
+      - name: Deploy NFS Helm chart
+        run: make deploy-nfs-chart
+
+      - name: Deploy Exivity Helm chart
+        run: make deploy-exivity-chart
 
       - name: Wait for NFS and Exivity to be ready
         run: sleep 60
