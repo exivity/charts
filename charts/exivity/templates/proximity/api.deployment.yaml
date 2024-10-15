@@ -154,9 +154,9 @@ spec:
             - name: PHP_MEMORY_LIMIT
               value: {{ printf "%s" (.Values.service.proximityApi.phpMemoryLimit) | quote }}
         {{- end }}
-        {{- if .Values.service.proximityApi.fingerprinter }}
+        {{- if .Values.service.proximityApi.fingerPrinter }}
             - name: EXIVITY_FINGERPRINTER
-              value: {{ printf "%s" (.Values.service.proximityApi.fingerprinter) | quote }}
+              value: {{ printf "%s" (.Values.service.proximityApi.fingerPrinter) | quote }}
         {{- end }}
           {{- include "exivity.probes" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
