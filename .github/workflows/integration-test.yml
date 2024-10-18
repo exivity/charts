@@ -18,7 +18,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
+          python-version: "3.8"
 
       - name: Install Dependencies
         run: |
@@ -40,11 +40,11 @@ jobs:
           chmod 700 get_helm.sh
           ./get_helm.sh
 
-      - name: Deploy NFS and Exivity Helm charts
-        run: make deploy-charts
+      - name: Deploy NFS Helm charts
+        run: make deploy-nfs-chart
 
-      - name: Wait for NFS and Exivity to be ready
-        run: sleep 60
+      - name: Deploy Exivity Helm charts
+        run: make deploy-exivity-chart
 
       - name: Run Tests
         run: make test
