@@ -25,7 +25,8 @@ deploy-exivity-chart:
         --set storage.storageClass=$(NFS_STORAGE_CLASS) \
         --set ingress.host=$(INGRESS_HOSTNAME) \
         --set ingress.ingressClassName="nginx" \
-        --set logLevel.backend="debug"
+        --set logLevel.backend="debug" \
+        --set service.tag="daily"
 
 # Deploy NFS Helm chart to Minikube
 # This is a dependency for the exivity Helm chart
