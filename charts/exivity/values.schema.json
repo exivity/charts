@@ -2353,9 +2353,10 @@
       "properties": {
         "backend": {
           "type": "string",
-          "default": "",
+          "default": "info",
           "title": "The backend Schema",
-          "examples": ["info"]
+          "examples": ["info", "debug"],
+          "enum": ["info", "debug"]
         }
       },
       "examples": [
