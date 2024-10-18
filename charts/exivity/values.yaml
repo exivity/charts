@@ -139,7 +139,7 @@ service:
     #   - ip: Checks the IP addresses match.
     #   - useragent: Checks the request is coming from the same user agent.
     # Possible values: secure_ip_useragent / secure_useragent
-    fingerPrinter: "secure_ip_useragent"
+    fingerPrinter: "secure_useragent"
     servicePort: 80
     serviceType: ClusterIP
     replicas: 1
