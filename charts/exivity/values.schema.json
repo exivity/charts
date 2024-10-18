@@ -658,7 +658,7 @@
             },
             "fingerPrinter": {
               "type": "string",
-              "default": "",
+              "default": "secure_useragent",
               "title": "The fingerPrinter Schema",
               "examples": ["secure_ip_useragent"],
               "enum": ["secure_ip_useragent", "secure_useragent"]
