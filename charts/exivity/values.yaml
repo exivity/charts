@@ -82,9 +82,9 @@ rabbitmq:
 
   # Configuration for using an external RabbitMQ server.
   host: "" # Hostname of the external RabbitMQ server, if applicable.
-  port: "" # Port number on which the external RabbitMQ server is accessible.
+  port: 5672 # Port number on which the external RabbitMQ server is accessible.
   vhost: "" # Virtual host for RabbitMQ, if applicable.
-  secure: "" # Indicates if the connection to RabbitMQ should be secured (true/false). Set to true to enable TLS for RabbitMQ communication.
+  secure: false # Indicates if the connection to RabbitMQ should be secured (true/false). Set to true to enable TLS for RabbitMQ communication.
 
 # General service configuration, defaults apply when specific service settings are not provided.
 service:
@@ -318,6 +318,7 @@ service:
     # CA certificates configuration section. Add CA certificates that your service uses here.
     # Each certificate should be listed as a key-value pair, where the key is a unique identifier.
     caCertificates:
+      {}
       # Example placeholders for CA certificates. Replace with your actual certificate data.
       # rootCA.pem:
       #   -----BEGIN CERTIFICATE-----
