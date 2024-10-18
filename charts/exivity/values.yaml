@@ -9,7 +9,7 @@ licence: "demo"
 # Secret keys used for application security. Random values are generated on installation if not set.
 # Random values are generated on installation if not set, but it's recommended to specify values for production.
 secret:
-  appKey: "" # Used to encrypt application data. Specify a value for production.
+  appKey: "" # Used to encrypt application data. Specify a value for production. Max length: 64 characters.
   jwtSecret: "" # Used for signing JWTs. Specify a value for production.
 
 ingress:
@@ -54,7 +54,7 @@ postgresql:
 
   # Configuration for using an external PostgreSQL database.
   host: "" # Hostname of the external database server, if applicable.
-  port: "" # Port number on which the external database server is accessible.
+  port: 5432 # Port number on which the external database server is accessible.
   sslmode: "" # SSL mode for database connection: 'disable', 'require', 'verify-ca', or 'verify-full'.
 
   # Example of customizing the embedded Bitnami PostgreSQL chart for larger deployments.
@@ -82,9 +82,9 @@ rabbitmq:
 
   # Configuration for using an external RabbitMQ server.
   host: "" # Hostname of the external RabbitMQ server, if applicable.
-  port: "" # Port number on which the external RabbitMQ server is accessible.
+  port: 5672 # Port number on which the external RabbitMQ server is accessible.
   vhost: "" # Virtual host for RabbitMQ, if applicable.
-  secure: "" # Indicates if the connection to RabbitMQ should be secured (true/false). Set to true to enable TLS for RabbitMQ communication.
+  secure: false # Indicates if the connection to RabbitMQ should be secured (true/false). Set to true to enable TLS for RabbitMQ communication.
 
 # General service configuration, defaults apply when specific service settings are not provided.
 service:
@@ -318,6 +318,7 @@ service:
     # CA certificates configuration section. Add CA certificates that your service uses here.
     # Each certificate should be listed as a key-value pair, where the key is a unique identifier.
     caCertificates:
+      {}
       # Example placeholders for CA certificates. Replace with your actual certificate data.
       # rootCA.pem:
       #   -----BEGIN CERTIFICATE-----
