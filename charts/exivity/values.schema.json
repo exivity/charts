@@ -40,7 +40,10 @@
           "type": "string",
           "default": "",
           "title": "The appKey Schema",
-          "examples": [""]
+          "examples": [
+            "ieR3rai9aijeghingo9LeaCaipah4lohxiliekaem3chahph0iemeeghai3ohfah"
+          ],
+          "maxLength": 64
         },
         "jwtSecret": {
           "type": "string",
