@@ -63,6 +63,10 @@ install-python-deps:
 test:
 	@echo "Running tests..."
 	@python3 test/test.py --hostname $(INGRESS_HOSTNAME) --ip $$(minikube ip)
+        
+# Lint Helm chart
+lint:
+	@helm lint charts/exivity
 
 # Makefile targets
 .PHONY: minikube-start minikube-delete deploy-charts deploy-exivity-chart deploy-nfs-chart install-python-deps test

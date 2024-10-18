@@ -1,0 +1,2836 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "default": {},
+  "title": "Root Schema",
+  "required": [
+    "nameOverride",
+    "licence",
+    "secret",
+    "ingress",
+    "storage",
+    "postgresql",
+    "rabbitmq",
+    "service",
+    "logLevel",
+    "probes",
+    "prometheus"
+  ],
+  "properties": {
+    "nameOverride": {
+      "type": "string",
+      "default": "",
+      "title": "The nameOverride Schema",
+      "examples": [""]
+    },
+    "licence": {
+      "type": "string",
+      "default": "",
+      "title": "The licence Schema",
+      "examples": ["demo"]
+    },
+    "secret": {
+      "type": "object",
+      "default": {},
+      "title": "The secret Schema",
+      "required": ["appKey", "jwtSecret"],
+      "properties": {
+        "appKey": {
+          "type": "string",
+          "default": "",
+          "title": "The appKey Schema",
+          "examples": [
+            "ieR3rai9aijeghingo9LeaCaipah4lohxiliekaem3chahph0iemeeghai3ohfah"
+          ],
+          "maxLength": 64
+        },
+        "jwtSecret": {
+          "type": "string",
+          "default": "",
+          "title": "The jwtSecret Schema",
+          "examples": [""]
+        }
+      },
+      "examples": [
+        {
+          "appKey": "",
+          "jwtSecret": ""
+        }
+      ]
+    },
+    "ingress": {
+      "type": "object",
+      "default": {},
+      "title": "The ingress Schema",
+      "required": [
+        "enabled",
+        "host",
+        "ingressClassName",
+        "trustedProxy",
+        "annotations",
+        "tls"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false,
+          "title": "The enabled Schema",
+          "examples": [true]
+        },
+        "host": {
+          "type": "string",
+          "default": "",
+          "title": "The host Schema",
+          "examples": ["exivity"]
+        },
+        "ingressClassName": {
+          "type": "string",
+          "default": "",
+          "title": "The ingressClassName Schema",
+          "examples": [""]
+        },
+        "trustedProxy": {
+          "type": "string",
+          "default": "",
+          "title": "The trustedProxy Schema",
+          "examples": [""]
+        },
+        "annotations": {
+          "type": "object",
+          "default": {},
+          "title": "The annotations Schema",
+          "required": [],
+          "properties": {},
+          "examples": [{}]
+        },
+        "tls": {
+          "type": "object",
+          "default": {},
+          "title": "The tls Schema",
+          "required": ["enabled", "secret"],
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false,
+              "title": "The enabled Schema",
+              "examples": [false]
+            },
+            "secret": {
+              "type": "string",
+              "default": "",
+              "title": "The secret Schema",
+              "examples": ["-"]
+            }
+          },
+          "examples": [
+            {
+              "enabled": false,
+              "secret": "-"
+            }
+          ]
+        }
+      },
+      "examples": [
+        {
+          "enabled": true,
+          "host": "exivity",
+          "ingressClassName": "",
+          "trustedProxy": "",
+          "annotations": {},
+          "tls": {
+            "enabled": false,
+            "secret": "-"
+          }
+        }
+      ]
+    },
+    "storage": {
+      "type": "object",
+      "default": {},
+      "title": "The storage Schema",
+      "required": [
+        "storageClass",
+        "helmResourcePolicyKeep",
+        "sharedVolumeAccessMode"
+      ],
+      "properties": {
+        "storageClass": {
+          "type": "string",
+          "default": "",
+          "title": "The storageClass Schema",
+          "examples": [""]
+        },
+        "helmResourcePolicyKeep": {
+          "type": "boolean",
+          "default": false,
+          "title": "The helmResourcePolicyKeep Schema",
+          "examples": [true]
+        },
+        "sharedVolumeAccessMode": {
+          "type": "string",
+          "default": "",
+          "title": "The sharedVolumeAccessMode Schema",
+          "examples": ["ReadWriteMany"]
+        }
+      },
+      "examples": [
+        {
+          "storageClass": "",
+          "helmResourcePolicyKeep": true,
+          "sharedVolumeAccessMode": "ReadWriteMany"
+        }
+      ]
+    },
+    "postgresql": {
+      "type": "object",
+      "default": {},
+      "title": "The postgresql Schema",
+      "required": ["enabled", "global", "host", "port", "sslmode"],
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false,
+          "title": "The enabled Schema",
+          "examples": [true]
+        },
+        "global": {
+          "type": "object",
+          "default": {},
+          "title": "The global Schema",
+          "required": ["postgresql"],
+          "properties": {
+            "postgresql": {
+              "type": "object",
+              "default": {},
+              "title": "The postgresql Schema",
+              "required": ["auth"],
+              "properties": {
+                "auth": {
+                  "type": "object",
+                  "default": {},
+                  "title": "The auth Schema",
+                  "required": [
+                    "database",
+                    "username",
+                    "password",
+                    "postgresPassword"
+                  ],
+                  "properties": {
+                    "database": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The database Schema",
+                      "examples": ["exivity"]
+                    },
+                    "username": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The username Schema",
+                      "examples": ["exivity"]
+                    },
+                    "password": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The password Schema",
+                      "examples": ["Password12!"]
+                    },
+                    "postgresPassword": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The postgresPassword Schema",
+                      "examples": ["Password13!"]
+                    }
+                  },
+                  "examples": [
+                    {
+                      "database": "exivity",
+                      "username": "exivity",
+                      "password": "Password12!",
+                      "postgresPassword": "Password13!"
+                    }
+                  ]
+                }
+              },
+              "examples": [
+                {
+                  "auth": {
+                    "database": "exivity",
+                    "username": "exivity",
+                    "password": "Password12!",
+                    "postgresPassword": "Password13!"
+                  }
+                }
+              ]
+            }
+          },
+          "examples": [
+            {
+              "postgresql": {
+                "auth": {
+                  "database": "exivity",
+                  "username": "exivity",
+                  "password": "Password12!",
+                  "postgresPassword": "Password13!"
+                }
+              }
+            }
+          ]
+        },
+        "host": {
+          "type": "string",
+          "default": "",
+          "title": "The host Schema",
+          "examples": [""]
+        },
+        "port": {
+          "type": "integer",
+          "default": 5432,
+          "title": "The port Schema",
+          "examples": [""]
+        },
+        "sslmode": {
+          "type": "string",
+          "default": "",
+          "title": "The sslmode Schema",
+          "examples": [""]
+        }
+      },
+      "examples": [
+        {
+          "enabled": true,
+          "global": {
+            "postgresql": {
+              "auth": {
+                "database": "exivity",
+                "username": "exivity",
+                "password": "Password12!",
+                "postgresPassword": "Password13!"
+              }
+            }
+          },
+          "host": "",
+          "port": "",
+          "sslmode": ""
+        }
+      ]
+    },
+    "rabbitmq": {
+      "type": "object",
+      "default": {},
+      "title": "The rabbitmq Schema",
+      "required": [
+        "enabled",
+        "clustering",
+        "auth",
+        "host",
+        "port",
+        "vhost",
+        "secure"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false,
+          "title": "The enabled Schema",
+          "examples": [true]
+        },
+        "clustering": {
+          "type": "object",
+          "default": {},
+          "title": "The clustering Schema",
+          "required": ["enabled"],
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false,
+              "title": "The enabled Schema",
+              "examples": [false]
+            }
+          },
+          "examples": [
+            {
+              "enabled": false
+            }
+          ]
+        },
+        "auth": {
+          "type": "object",
+          "default": {},
+          "title": "The auth Schema",
+          "required": ["username", "password"],
+          "properties": {
+            "username": {
+              "type": "string",
+              "default": "",
+              "title": "The username Schema",
+              "examples": ["user"]
+            },
+            "password": {
+              "type": "string",
+              "default": "",
+              "title": "The password Schema",
+              "examples": ["pass"]
+            }
+          },
+          "examples": [
+            {
+              "username": "user",
+              "password": "pass"
+            }
+          ]
+        },
+        "host": {
+          "type": "string",
+          "default": "",
+          "title": "The host Schema",
+          "examples": [""]
+        },
+        "port": {
+          "type": "integer",
+          "title": "The port Schema",
+          "default": 5672,
+          "examples": [""]
+        },
+        "vhost": {
+          "type": "string",
+          "default": "",
+          "title": "The vhost Schema",
+          "examples": [""]
+        },
+        "secure": {
+          "type": "boolean",
+          "default": false,
+          "title": "The secure Schema",
+          "examples": [""]
+        }
+      },
+      "examples": [
+        {
+          "enabled": true,
+          "clustering": {
+            "enabled": false
+          },
+          "auth": {
+            "username": "user",
+            "password": "pass"
+          },
+          "host": "",
+          "port": "",
+          "vhost": "",
+          "secure": ""
+        }
+      ]
+    },
+    "service": {
+      "type": "object",
+      "default": {},
+      "title": "The service Schema",
+      "required": [
+        "registry",
+        "tag",
+        "pullPolicy",
+        "pullSecrets",
+        "glass",
+        "proximityApi",
+        "chronos",
+        "dbInit",
+        "dummyData",
+        "edify",
+        "executor",
+        "griffon",
+        "horizon",
+        "pigeon",
+        "proximityCli",
+        "transcript",
+        "use"
+      ],
+      "properties": {
+        "registry": {
+          "type": "string",
+          "default": "",
+          "title": "The registry Schema",
+          "examples": ["docker.io"]
+        },
+        "tag": {
+          "type": "string",
+          "default": "",
+          "title": "The tag Schema",
+          "examples": [""]
+        },
+        "pullPolicy": {
+          "type": "string",
+          "default": "",
+          "title": "The pullPolicy Schema",
+          "examples": ["IfNotPresent"]
+        },
+        "pullSecrets": {
+          "type": "array",
+          "default": [],
+          "title": "The pullSecrets Schema",
+          "items": {},
+          "examples": [[]]
+        },
+        "glass": {
+          "type": "object",
+          "default": {},
+          "title": "The glass Schema",
+          "required": [
+            "registry",
+            "repository",
+            "tag",
+            "pullPolicy",
+            "servicePort",
+            "serviceType",
+            "replicas",
+            "nodeName",
+            "nodeSelector",
+            "resources"
+          ],
+          "properties": {
+            "registry": {
+              "type": "string",
+              "default": "",
+              "title": "The registry Schema",
+              "examples": [""]
+            },
+            "repository": {
+              "type": "string",
+              "default": "",
+              "title": "The repository Schema",
+              "examples": ["exivity/glass"]
+            },
+            "tag": {
+              "type": "string",
+              "default": "",
+              "title": "The tag Schema",
+              "examples": [""]
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "",
+              "title": "The pullPolicy Schema",
+              "examples": [""]
+            },
+            "servicePort": {
+              "type": "integer",
+              "default": 0,
+              "title": "The servicePort Schema",
+              "examples": [80]
+            },
+            "serviceType": {
+              "type": "string",
+              "default": "",
+              "title": "The serviceType Schema",
+              "examples": ["ClusterIP"]
+            },
+            "replicas": {
+              "type": "integer",
+              "default": 0,
+              "title": "The replicas Schema",
+              "examples": [1]
+            },
+            "nodeName": {
+              "type": "string",
+              "default": "",
+              "title": "The nodeName Schema",
+              "examples": [""]
+            },
+            "nodeSelector": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeSelector Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "resources": {
+              "type": "object",
+              "default": {},
+              "title": "The resources Schema",
+              "required": ["requests"],
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "default": {},
+                  "title": "The requests Schema",
+                  "required": ["cpu", "memory"],
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The cpu Schema",
+                      "examples": ["25m"]
+                    },
+                    "memory": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The memory Schema",
+                      "examples": ["50Mi"]
+                    }
+                  },
+                  "examples": [
+                    {
+                      "cpu": "25m",
+                      "memory": "50Mi"
+                    }
+                  ]
+                }
+              },
+              "examples": [
+                {
+                  "requests": {
+                    "cpu": "25m",
+                    "memory": "50Mi"
+                  }
+                }
+              ]
+            }
+          },
+          "examples": [
+            {
+              "registry": "",
+              "repository": "exivity/glass",
+              "tag": "",
+              "pullPolicy": "",
+              "servicePort": 80,
+              "serviceType": "ClusterIP",
+              "replicas": 1,
+              "nodeName": "",
+              "nodeSelector": {},
+              "resources": {
+                "requests": {
+                  "cpu": "25m",
+                  "memory": "50Mi"
+                }
+              }
+            }
+          ]
+        },
+        "proximityApi": {
+          "type": "object",
+          "default": {},
+          "title": "The proximityApi Schema",
+          "required": [
+            "registry",
+            "repository",
+            "tag",
+            "pullPolicy",
+            "phpMemoryLimit",
+            "fingerPrinter",
+            "servicePort",
+            "serviceType",
+            "replicas",
+            "nodeName",
+            "nodeSelector",
+            "resources"
+          ],
+          "properties": {
+            "registry": {
+              "type": "string",
+              "default": "",
+              "title": "The registry Schema",
+              "examples": [""]
+            },
+            "repository": {
+              "type": "string",
+              "default": "",
+              "title": "The repository Schema",
+              "examples": ["exivity/proximity-api"]
+            },
+            "tag": {
+              "type": "string",
+              "default": "",
+              "title": "The tag Schema",
+              "examples": [""]
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "",
+              "title": "The pullPolicy Schema",
+              "examples": [""]
+            },
+            "phpMemoryLimit": {
+              "type": "string",
+              "default": "",
+              "title": "The phpMemoryLimit Schema",
+              "examples": ["3G"]
+            },
+            "fingerPrinter": {
+              "type": "string",
+              "default": "secure_useragent",
+              "title": "The fingerPrinter Schema",
+              "examples": ["secure_ip_useragent"],
+              "enum": ["secure_ip_useragent", "secure_useragent"]
+            },
+            "servicePort": {
+              "type": "integer",
+              "default": 0,
+              "title": "The servicePort Schema",
+              "examples": [80]
+            },
+            "serviceType": {
+              "type": "string",
+              "default": "",
+              "title": "The serviceType Schema",
+              "examples": ["ClusterIP"]
+            },
+            "replicas": {
+              "type": "integer",
+              "default": 0,
+              "title": "The replicas Schema",
+              "examples": [1]
+            },
+            "nodeName": {
+              "type": "string",
+              "default": "",
+              "title": "The nodeName Schema",
+              "examples": [""]
+            },
+            "nodeSelector": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeSelector Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "resources": {
+              "type": "object",
+              "default": {},
+              "title": "The resources Schema",
+              "required": ["requests"],
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "default": {},
+                  "title": "The requests Schema",
+                  "required": ["cpu", "memory"],
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The cpu Schema",
+                      "examples": ["25m"]
+                    },
+                    "memory": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The memory Schema",
+                      "examples": ["400Mi"]
+                    }
+                  },
+                  "examples": [
+                    {
+                      "cpu": "25m",
+                      "memory": "400Mi"
+                    }
+                  ]
+                }
+              },
+              "examples": [
+                {
+                  "requests": {
+                    "cpu": "25m",
+                    "memory": "400Mi"
+                  }
+                }
+              ]
+            }
+          },
+          "examples": [
+            {
+              "registry": "",
+              "repository": "exivity/proximity-api",
+              "tag": "",
+              "pullPolicy": "",
+              "phpMemoryLimit": "3G",
+              "fingerPrinter": "secure_ip_useragent",
+              "servicePort": 80,
+              "serviceType": "ClusterIP",
+              "replicas": 1,
+              "nodeName": "",
+              "nodeSelector": {},
+              "resources": {
+                "requests": {
+                  "cpu": "25m",
+                  "memory": "400Mi"
+                }
+              }
+            }
+          ]
+        },
+        "chronos": {
+          "type": "object",
+          "default": {},
+          "title": "The chronos Schema",
+          "required": [
+            "registry",
+            "repository",
+            "tag",
+            "pullPolicy",
+            "replicas",
+            "nodeName",
+            "nodeSelector",
+            "resources"
+          ],
+          "properties": {
+            "registry": {
+              "type": "string",
+              "default": "",
+              "title": "The registry Schema",
+              "examples": [""]
+            },
+            "repository": {
+              "type": "string",
+              "default": "",
+              "title": "The repository Schema",
+              "examples": ["exivity/chronos"]
+            },
+            "tag": {
+              "type": "string",
+              "default": "",
+              "title": "The tag Schema",
+              "examples": [""]
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "",
+              "title": "The pullPolicy Schema",
+              "examples": [""]
+            },
+            "replicas": {
+              "type": "integer",
+              "default": 0,
+              "title": "The replicas Schema",
+              "examples": [1]
+            },
+            "nodeName": {
+              "type": "string",
+              "default": "",
+              "title": "The nodeName Schema",
+              "examples": [""]
+            },
+            "nodeSelector": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeSelector Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "resources": {
+              "type": "object",
+              "default": {},
+              "title": "The resources Schema",
+              "required": ["requests"],
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "default": {},
+                  "title": "The requests Schema",
+                  "required": ["cpu", "memory"],
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The cpu Schema",
+                      "examples": ["25m"]
+                    },
+                    "memory": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The memory Schema",
+                      "examples": ["50Mi"]
+                    }
+                  },
+                  "examples": [
+                    {
+                      "cpu": "25m",
+                      "memory": "50Mi"
+                    }
+                  ]
+                }
+              },
+              "examples": [
+                {
+                  "requests": {
+                    "cpu": "25m",
+                    "memory": "50Mi"
+                  }
+                }
+              ]
+            }
+          },
+          "examples": [
+            {
+              "registry": "",
+              "repository": "exivity/chronos",
+              "tag": "",
+              "pullPolicy": "",
+              "replicas": 1,
+              "nodeName": "",
+              "nodeSelector": {},
+              "resources": {
+                "requests": {
+                  "cpu": "25m",
+                  "memory": "50Mi"
+                }
+              }
+            }
+          ]
+        },
+        "dbInit": {
+          "type": "object",
+          "default": {},
+          "title": "The dbInit Schema",
+          "required": [
+            "registry",
+            "repository",
+            "tag",
+            "pullPolicy",
+            "nodeName",
+            "nodeSelector",
+            "waitForServer",
+            "migration"
+          ],
+          "properties": {
+            "registry": {
+              "type": "string",
+              "default": "",
+              "title": "The registry Schema",
+              "examples": [""]
+            },
+            "repository": {
+              "type": "string",
+              "default": "",
+              "title": "The repository Schema",
+              "examples": ["exivity/db"]
+            },
+            "tag": {
+              "type": "string",
+              "default": "",
+              "title": "The tag Schema",
+              "examples": [""]
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "",
+              "title": "The pullPolicy Schema",
+              "examples": [""]
+            },
+            "nodeName": {
+              "type": "string",
+              "default": "",
+              "title": "The nodeName Schema",
+              "examples": [""]
+            },
+            "nodeSelector": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeSelector Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "waitForServer": {
+              "type": "object",
+              "default": {},
+              "title": "The waitForServer Schema",
+              "required": ["resources"],
+              "properties": {
+                "resources": {
+                  "type": "object",
+                  "default": {},
+                  "title": "The resources Schema",
+                  "required": [],
+                  "properties": {},
+                  "examples": [{}]
+                }
+              },
+              "examples": [
+                {
+                  "resources": {}
+                }
+              ]
+            },
+            "migration": {
+              "type": "object",
+              "default": {},
+              "title": "The migration Schema",
+              "required": ["resources"],
+              "properties": {
+                "resources": {
+                  "type": "object",
+                  "default": {},
+                  "title": "The resources Schema",
+                  "required": [],
+                  "properties": {},
+                  "examples": [{}]
+                }
+              },
+              "examples": [
+                {
+                  "resources": {}
+                }
+              ]
+            }
+          },
+          "examples": [
+            {
+              "registry": "",
+              "repository": "exivity/db",
+              "tag": "",
+              "pullPolicy": "",
+              "nodeName": "",
+              "nodeSelector": {},
+              "waitForServer": {
+                "resources": {}
+              },
+              "migration": {
+                "resources": {}
+              }
+            }
+          ]
+        },
+        "dummyData": {
+          "type": "object",
+          "default": {},
+          "title": "The dummyData Schema",
+          "required": [
+            "enabled",
+            "registry",
+            "repository",
+            "tag",
+            "pullPolicy",
+            "nodeName",
+            "nodeSelector",
+            "resources"
+          ],
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false,
+              "title": "The enabled Schema",
+              "examples": [false]
+            },
+            "registry": {
+              "type": "string",
+              "default": "",
+              "title": "The registry Schema",
+              "examples": [""]
+            },
+            "repository": {
+              "type": "string",
+              "default": "",
+              "title": "The repository Schema",
+              "examples": ["exivity/dummy-data"]
+            },
+            "tag": {
+              "type": "string",
+              "default": "",
+              "title": "The tag Schema",
+              "examples": ["main"]
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "",
+              "title": "The pullPolicy Schema",
+              "examples": [""]
+            },
+            "nodeName": {
+              "type": "string",
+              "default": "",
+              "title": "The nodeName Schema",
+              "examples": [""]
+            },
+            "nodeSelector": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeSelector Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "resources": {
+              "type": "object",
+              "default": {},
+              "title": "The resources Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            }
+          },
+          "examples": [
+            {
+              "enabled": false,
+              "registry": "",
+              "repository": "exivity/dummy-data",
+              "tag": "main",
+              "pullPolicy": "",
+              "nodeName": "",
+              "nodeSelector": {},
+              "resources": {}
+            }
+          ]
+        },
+        "edify": {
+          "type": "object",
+          "default": {},
+          "title": "The edify Schema",
+          "required": [
+            "registry",
+            "repository",
+            "tag",
+            "pullPolicy",
+            "replicas",
+            "nodeName",
+            "nodeSelector",
+            "resources"
+          ],
+          "properties": {
+            "registry": {
+              "type": "string",
+              "default": "",
+              "title": "The registry Schema",
+              "examples": [""]
+            },
+            "repository": {
+              "type": "string",
+              "default": "",
+              "title": "The repository Schema",
+              "examples": ["exivity/edify"]
+            },
+            "tag": {
+              "type": "string",
+              "default": "",
+              "title": "The tag Schema",
+              "examples": [""]
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "",
+              "title": "The pullPolicy Schema",
+              "examples": [""]
+            },
+            "replicas": {
+              "type": "integer",
+              "default": 0,
+              "title": "The replicas Schema",
+              "examples": [1]
+            },
+            "nodeName": {
+              "type": "string",
+              "default": "",
+              "title": "The nodeName Schema",
+              "examples": [""]
+            },
+            "nodeSelector": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeSelector Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "resources": {
+              "type": "object",
+              "default": {},
+              "title": "The resources Schema",
+              "required": ["requests"],
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "default": {},
+                  "title": "The requests Schema",
+                  "required": ["cpu", "memory"],
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The cpu Schema",
+                      "examples": ["25m"]
+                    },
+                    "memory": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The memory Schema",
+                      "examples": ["50Mi"]
+                    }
+                  },
+                  "examples": [
+                    {
+                      "cpu": "25m",
+                      "memory": "50Mi"
+                    }
+                  ]
+                }
+              },
+              "examples": [
+                {
+                  "requests": {
+                    "cpu": "25m",
+                    "memory": "50Mi"
+                  }
+                }
+              ]
+            }
+          },
+          "examples": [
+            {
+              "registry": "",
+              "repository": "exivity/edify",
+              "tag": "",
+              "pullPolicy": "",
+              "replicas": 1,
+              "nodeName": "",
+              "nodeSelector": {},
+              "resources": {
+                "requests": {
+                  "cpu": "25m",
+                  "memory": "50Mi"
+                }
+              }
+            }
+          ]
+        },
+        "executor": {
+          "type": "object",
+          "default": {},
+          "title": "The executor Schema",
+          "required": [
+            "registry",
+            "repository",
+            "tag",
+            "pullPolicy",
+            "replicas",
+            "nodeName",
+            "nodeSelector",
+            "resources"
+          ],
+          "properties": {
+            "registry": {
+              "type": "string",
+              "default": "",
+              "title": "The registry Schema",
+              "examples": [""]
+            },
+            "repository": {
+              "type": "string",
+              "default": "",
+              "title": "The repository Schema",
+              "examples": ["exivity/executor"]
+            },
+            "tag": {
+              "type": "string",
+              "default": "",
+              "title": "The tag Schema",
+              "examples": [""]
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "",
+              "title": "The pullPolicy Schema",
+              "examples": [""]
+            },
+            "replicas": {
+              "type": "integer",
+              "default": 0,
+              "title": "The replicas Schema",
+              "examples": [1]
+            },
+            "nodeName": {
+              "type": "string",
+              "default": "",
+              "title": "The nodeName Schema",
+              "examples": [""]
+            },
+            "nodeSelector": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeSelector Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "resources": {
+              "type": "object",
+              "default": {},
+              "title": "The resources Schema",
+              "required": ["requests"],
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "default": {},
+                  "title": "The requests Schema",
+                  "required": ["cpu", "memory"],
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The cpu Schema",
+                      "examples": ["25m"]
+                    },
+                    "memory": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The memory Schema",
+                      "examples": ["50Mi"]
+                    }
+                  },
+                  "examples": [
+                    {
+                      "cpu": "25m",
+                      "memory": "50Mi"
+                    }
+                  ]
+                }
+              },
+              "examples": [
+                {
+                  "requests": {
+                    "cpu": "25m",
+                    "memory": "50Mi"
+                  }
+                }
+              ]
+            }
+          },
+          "examples": [
+            {
+              "registry": "",
+              "repository": "exivity/executor",
+              "tag": "",
+              "pullPolicy": "",
+              "replicas": 1,
+              "nodeName": "",
+              "nodeSelector": {},
+              "resources": {
+                "requests": {
+                  "cpu": "25m",
+                  "memory": "50Mi"
+                }
+              }
+            }
+          ]
+        },
+        "griffon": {
+          "type": "object",
+          "default": {},
+          "title": "The griffon Schema",
+          "required": [
+            "registry",
+            "repository",
+            "tag",
+            "pullPolicy",
+            "replicas",
+            "nodeName",
+            "nodeSelector",
+            "resources"
+          ],
+          "properties": {
+            "registry": {
+              "type": "string",
+              "default": "",
+              "title": "The registry Schema",
+              "examples": [""]
+            },
+            "repository": {
+              "type": "string",
+              "default": "",
+              "title": "The repository Schema",
+              "examples": ["exivity/griffon"]
+            },
+            "tag": {
+              "type": "string",
+              "default": "",
+              "title": "The tag Schema",
+              "examples": [""]
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "",
+              "title": "The pullPolicy Schema",
+              "examples": [""]
+            },
+            "replicas": {
+              "type": "integer",
+              "default": 0,
+              "title": "The replicas Schema",
+              "examples": [1]
+            },
+            "nodeName": {
+              "type": "string",
+              "default": "",
+              "title": "The nodeName Schema",
+              "examples": [""]
+            },
+            "nodeSelector": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeSelector Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "resources": {
+              "type": "object",
+              "default": {},
+              "title": "The resources Schema",
+              "required": ["requests"],
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "default": {},
+                  "title": "The requests Schema",
+                  "required": ["cpu", "memory"],
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The cpu Schema",
+                      "examples": ["25m"]
+                    },
+                    "memory": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The memory Schema",
+                      "examples": ["50Mi"]
+                    }
+                  },
+                  "examples": [
+                    {
+                      "cpu": "25m",
+                      "memory": "50Mi"
+                    }
+                  ]
+                }
+              },
+              "examples": [
+                {
+                  "requests": {
+                    "cpu": "25m",
+                    "memory": "50Mi"
+                  }
+                }
+              ]
+            }
+          },
+          "examples": [
+            {
+              "registry": "",
+              "repository": "exivity/griffon",
+              "tag": "",
+              "pullPolicy": "",
+              "replicas": 1,
+              "nodeName": "",
+              "nodeSelector": {},
+              "resources": {
+                "requests": {
+                  "cpu": "25m",
+                  "memory": "50Mi"
+                }
+              }
+            }
+          ]
+        },
+        "horizon": {
+          "type": "object",
+          "default": {},
+          "title": "The horizon Schema",
+          "required": [
+            "registry",
+            "repository",
+            "tag",
+            "pullPolicy",
+            "replicas",
+            "nodeName",
+            "nodeSelector",
+            "resources"
+          ],
+          "properties": {
+            "registry": {
+              "type": "string",
+              "default": "",
+              "title": "The registry Schema",
+              "examples": [""]
+            },
+            "repository": {
+              "type": "string",
+              "default": "",
+              "title": "The repository Schema",
+              "examples": ["exivity/horizon"]
+            },
+            "tag": {
+              "type": "string",
+              "default": "",
+              "title": "The tag Schema",
+              "examples": [""]
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "",
+              "title": "The pullPolicy Schema",
+              "examples": [""]
+            },
+            "replicas": {
+              "type": "integer",
+              "default": 0,
+              "title": "The replicas Schema",
+              "examples": [1]
+            },
+            "nodeName": {
+              "type": "string",
+              "default": "",
+              "title": "The nodeName Schema",
+              "examples": [""]
+            },
+            "nodeSelector": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeSelector Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "resources": {
+              "type": "object",
+              "default": {},
+              "title": "The resources Schema",
+              "required": ["requests"],
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "default": {},
+                  "title": "The requests Schema",
+                  "required": ["cpu", "memory"],
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The cpu Schema",
+                      "examples": ["25m"]
+                    },
+                    "memory": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The memory Schema",
+                      "examples": ["50Mi"]
+                    }
+                  },
+                  "examples": [
+                    {
+                      "cpu": "25m",
+                      "memory": "50Mi"
+                    }
+                  ]
+                }
+              },
+              "examples": [
+                {
+                  "requests": {
+                    "cpu": "25m",
+                    "memory": "50Mi"
+                  }
+                }
+              ]
+            }
+          },
+          "examples": [
+            {
+              "registry": "",
+              "repository": "exivity/horizon",
+              "tag": "",
+              "pullPolicy": "",
+              "replicas": 1,
+              "nodeName": "",
+              "nodeSelector": {},
+              "resources": {
+                "requests": {
+                  "cpu": "25m",
+                  "memory": "50Mi"
+                }
+              }
+            }
+          ]
+        },
+        "pigeon": {
+          "type": "object",
+          "default": {},
+          "title": "The pigeon Schema",
+          "required": [
+            "registry",
+            "repository",
+            "tag",
+            "pullPolicy",
+            "replicas",
+            "nodeName",
+            "nodeSelector",
+            "resources"
+          ],
+          "properties": {
+            "registry": {
+              "type": "string",
+              "default": "",
+              "title": "The registry Schema",
+              "examples": [""]
+            },
+            "repository": {
+              "type": "string",
+              "default": "",
+              "title": "The repository Schema",
+              "examples": ["exivity/pigeon"]
+            },
+            "tag": {
+              "type": "string",
+              "default": "",
+              "title": "The tag Schema",
+              "examples": [""]
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "",
+              "title": "The pullPolicy Schema",
+              "examples": [""]
+            },
+            "replicas": {
+              "type": "integer",
+              "default": 0,
+              "title": "The replicas Schema",
+              "examples": [1]
+            },
+            "nodeName": {
+              "type": "string",
+              "default": "",
+              "title": "The nodeName Schema",
+              "examples": [""]
+            },
+            "nodeSelector": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeSelector Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "resources": {
+              "type": "object",
+              "default": {},
+              "title": "The resources Schema",
+              "required": ["requests"],
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "default": {},
+                  "title": "The requests Schema",
+                  "required": ["cpu", "memory"],
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The cpu Schema",
+                      "examples": ["25m"]
+                    },
+                    "memory": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The memory Schema",
+                      "examples": ["50Mi"]
+                    }
+                  },
+                  "examples": [
+                    {
+                      "cpu": "25m",
+                      "memory": "50Mi"
+                    }
+                  ]
+                }
+              },
+              "examples": [
+                {
+                  "requests": {
+                    "cpu": "25m",
+                    "memory": "50Mi"
+                  }
+                }
+              ]
+            }
+          },
+          "examples": [
+            {
+              "registry": "",
+              "repository": "exivity/pigeon",
+              "tag": "",
+              "pullPolicy": "",
+              "replicas": 1,
+              "nodeName": "",
+              "nodeSelector": {},
+              "resources": {
+                "requests": {
+                  "cpu": "25m",
+                  "memory": "50Mi"
+                }
+              }
+            }
+          ]
+        },
+        "proximityCli": {
+          "type": "object",
+          "default": {},
+          "title": "The proximityCli Schema",
+          "required": [
+            "registry",
+            "repository",
+            "tag",
+            "pullPolicy",
+            "replicas",
+            "nodeName",
+            "nodeSelector",
+            "resources"
+          ],
+          "properties": {
+            "registry": {
+              "type": "string",
+              "default": "",
+              "title": "The registry Schema",
+              "examples": [""]
+            },
+            "repository": {
+              "type": "string",
+              "default": "",
+              "title": "The repository Schema",
+              "examples": ["exivity/proximity-cli"]
+            },
+            "tag": {
+              "type": "string",
+              "default": "",
+              "title": "The tag Schema",
+              "examples": [""]
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "",
+              "title": "The pullPolicy Schema",
+              "examples": [""]
+            },
+            "replicas": {
+              "type": "integer",
+              "default": 0,
+              "title": "The replicas Schema",
+              "examples": [1]
+            },
+            "nodeName": {
+              "type": "string",
+              "default": "",
+              "title": "The nodeName Schema",
+              "examples": [""]
+            },
+            "nodeSelector": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeSelector Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "resources": {
+              "type": "object",
+              "default": {},
+              "title": "The resources Schema",
+              "required": ["requests"],
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "default": {},
+                  "title": "The requests Schema",
+                  "required": ["cpu", "memory"],
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The cpu Schema",
+                      "examples": ["25m"]
+                    },
+                    "memory": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The memory Schema",
+                      "examples": ["50Mi"]
+                    }
+                  },
+                  "examples": [
+                    {
+                      "cpu": "25m",
+                      "memory": "50Mi"
+                    }
+                  ]
+                }
+              },
+              "examples": [
+                {
+                  "requests": {
+                    "cpu": "25m",
+                    "memory": "50Mi"
+                  }
+                }
+              ]
+            }
+          },
+          "examples": [
+            {
+              "registry": "",
+              "repository": "exivity/proximity-cli",
+              "tag": "",
+              "pullPolicy": "",
+              "replicas": 1,
+              "nodeName": "",
+              "nodeSelector": {},
+              "resources": {
+                "requests": {
+                  "cpu": "25m",
+                  "memory": "50Mi"
+                }
+              }
+            }
+          ]
+        },
+        "transcript": {
+          "type": "object",
+          "default": {},
+          "title": "The transcript Schema",
+          "required": [
+            "registry",
+            "repository",
+            "tag",
+            "pullPolicy",
+            "replicas",
+            "nodeName",
+            "nodeSelector",
+            "resources"
+          ],
+          "properties": {
+            "registry": {
+              "type": "string",
+              "default": "",
+              "title": "The registry Schema",
+              "examples": [""]
+            },
+            "repository": {
+              "type": "string",
+              "default": "",
+              "title": "The repository Schema",
+              "examples": ["exivity/transcript"]
+            },
+            "tag": {
+              "type": "string",
+              "default": "",
+              "title": "The tag Schema",
+              "examples": [""]
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "",
+              "title": "The pullPolicy Schema",
+              "examples": [""]
+            },
+            "replicas": {
+              "type": "integer",
+              "default": 0,
+              "title": "The replicas Schema",
+              "examples": [1]
+            },
+            "nodeName": {
+              "type": "string",
+              "default": "",
+              "title": "The nodeName Schema",
+              "examples": [""]
+            },
+            "nodeSelector": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeSelector Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "resources": {
+              "type": "object",
+              "default": {},
+              "title": "The resources Schema",
+              "required": ["requests"],
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "default": {},
+                  "title": "The requests Schema",
+                  "required": ["cpu", "memory"],
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The cpu Schema",
+                      "examples": ["25m"]
+                    },
+                    "memory": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The memory Schema",
+                      "examples": ["50Mi"]
+                    }
+                  },
+                  "examples": [
+                    {
+                      "cpu": "25m",
+                      "memory": "50Mi"
+                    }
+                  ]
+                }
+              },
+              "examples": [
+                {
+                  "requests": {
+                    "cpu": "25m",
+                    "memory": "50Mi"
+                  }
+                }
+              ]
+            }
+          },
+          "examples": [
+            {
+              "registry": "",
+              "repository": "exivity/transcript",
+              "tag": "",
+              "pullPolicy": "",
+              "replicas": 1,
+              "nodeName": "",
+              "nodeSelector": {},
+              "resources": {
+                "requests": {
+                  "cpu": "25m",
+                  "memory": "50Mi"
+                }
+              }
+            }
+          ]
+        },
+        "use": {
+          "type": "object",
+          "default": {},
+          "title": "The use Schema",
+          "required": [
+            "registry",
+            "repository",
+            "tag",
+            "pullPolicy",
+            "replicas",
+            "nodeName",
+            "nodeSelector",
+            "resources",
+            "initContainers"
+          ],
+          "properties": {
+            "registry": {
+              "type": "string",
+              "default": "",
+              "title": "The registry Schema",
+              "examples": [""]
+            },
+            "repository": {
+              "type": "string",
+              "default": "",
+              "title": "The repository Schema",
+              "examples": ["exivity/use"]
+            },
+            "tag": {
+              "type": "string",
+              "default": "",
+              "title": "The tag Schema",
+              "examples": [""]
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "",
+              "title": "The pullPolicy Schema",
+              "examples": [""]
+            },
+            "replicas": {
+              "type": "integer",
+              "default": 0,
+              "title": "The replicas Schema",
+              "examples": [1]
+            },
+            "nodeName": {
+              "type": "string",
+              "default": "",
+              "title": "The nodeName Schema",
+              "examples": [""]
+            },
+            "nodeSelector": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeSelector Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "resources": {
+              "type": "object",
+              "default": {},
+              "title": "The resources Schema",
+              "required": ["requests"],
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "default": {},
+                  "title": "The requests Schema",
+                  "required": ["cpu", "memory"],
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The cpu Schema",
+                      "examples": ["25m"]
+                    },
+                    "memory": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The memory Schema",
+                      "examples": ["50Mi"]
+                    }
+                  },
+                  "examples": [
+                    {
+                      "cpu": "25m",
+                      "memory": "50Mi"
+                    }
+                  ]
+                }
+              },
+              "examples": [
+                {
+                  "requests": {
+                    "cpu": "25m",
+                    "memory": "50Mi"
+                  }
+                }
+              ]
+            },
+            "initContainers": {
+              "type": "object",
+              "default": {},
+              "title": "The initContainers Schema",
+              "required": ["installCACert"],
+              "properties": {
+                "installCACert": {
+                  "type": "object",
+                  "default": {},
+                  "title": "The installCACert Schema",
+                  "required": ["resources"],
+                  "properties": {
+                    "resources": {
+                      "type": "object",
+                      "default": {},
+                      "title": "The resources Schema",
+                      "required": ["requests"],
+                      "properties": {
+                        "requests": {
+                          "type": "object",
+                          "default": {},
+                          "title": "The requests Schema",
+                          "required": ["cpu", "memory"],
+                          "properties": {
+                            "cpu": {
+                              "type": "string",
+                              "default": "",
+                              "title": "The cpu Schema",
+                              "examples": ["25m"]
+                            },
+                            "memory": {
+                              "type": "string",
+                              "default": "",
+                              "title": "The memory Schema",
+                              "examples": ["50Mi"]
+                            }
+                          },
+                          "examples": [
+                            {
+                              "cpu": "25m",
+                              "memory": "50Mi"
+                            }
+                          ]
+                        }
+                      },
+                      "examples": [
+                        {
+                          "requests": {
+                            "cpu": "25m",
+                            "memory": "50Mi"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "examples": [
+                    {
+                      "resources": {
+                        "requests": {
+                          "cpu": "25m",
+                          "memory": "50Mi"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "examples": [
+                {
+                  "installCACert": {
+                    "resources": {
+                      "requests": {
+                        "cpu": "25m",
+                        "memory": "50Mi"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "caCertificates": {
+              "type": "object",
+              "title": "The caCertificates Schema"
+            }
+          },
+          "examples": [
+            {
+              "registry": "",
+              "repository": "exivity/use",
+              "tag": "",
+              "pullPolicy": "",
+              "replicas": 1,
+              "nodeName": "",
+              "nodeSelector": {},
+              "resources": {
+                "requests": {
+                  "cpu": "25m",
+                  "memory": "50Mi"
+                }
+              },
+              "initContainers": {
+                "installCACert": {
+                  "resources": {
+                    "requests": {
+                      "cpu": "25m",
+                      "memory": "50Mi"
+                    }
+                  }
+                }
+              },
+              "caCertificates": null
+            }
+          ]
+        }
+      },
+      "examples": [
+        {
+          "registry": "docker.io",
+          "tag": "",
+          "pullPolicy": "IfNotPresent",
+          "pullSecrets": [],
+          "glass": {
+            "registry": "",
+            "repository": "exivity/glass",
+            "tag": "",
+            "pullPolicy": "",
+            "servicePort": 80,
+            "serviceType": "ClusterIP",
+            "replicas": 1,
+            "nodeName": "",
+            "nodeSelector": {},
+            "resources": {
+              "requests": {
+                "cpu": "25m",
+                "memory": "50Mi"
+              }
+            }
+          },
+          "proximityApi": {
+            "registry": "",
+            "repository": "exivity/proximity-api",
+            "tag": "",
+            "pullPolicy": "",
+            "phpMemoryLimit": "3G",
+            "fingerPrinter": "secure_ip_useragent",
+            "servicePort": 80,
+            "serviceType": "ClusterIP",
+            "replicas": 1,
+            "nodeName": "",
+            "nodeSelector": {},
+            "resources": {
+              "requests": {
+                "cpu": "25m",
+                "memory": "400Mi"
+              }
+            }
+          },
+          "chronos": {
+            "registry": "",
+            "repository": "exivity/chronos",
+            "tag": "",
+            "pullPolicy": "",
+            "replicas": 1,
+            "nodeName": "",
+            "nodeSelector": {},
+            "resources": {
+              "requests": {
+                "cpu": "25m",
+                "memory": "50Mi"
+              }
+            }
+          },
+          "dbInit": {
+            "registry": "",
+            "repository": "exivity/db",
+            "tag": "",
+            "pullPolicy": "",
+            "nodeName": "",
+            "nodeSelector": {},
+            "waitForServer": {
+              "resources": {}
+            },
+            "migration": {
+              "resources": {}
+            }
+          },
+          "dummyData": {
+            "enabled": false,
+            "registry": "",
+            "repository": "exivity/dummy-data",
+            "tag": "main",
+            "pullPolicy": "",
+            "nodeName": "",
+            "nodeSelector": {},
+            "resources": {}
+          },
+          "edify": {
+            "registry": "",
+            "repository": "exivity/edify",
+            "tag": "",
+            "pullPolicy": "",
+            "replicas": 1,
+            "nodeName": "",
+            "nodeSelector": {},
+            "resources": {
+              "requests": {
+                "cpu": "25m",
+                "memory": "50Mi"
+              }
+            }
+          },
+          "executor": {
+            "registry": "",
+            "repository": "exivity/executor",
+            "tag": "",
+            "pullPolicy": "",
+            "replicas": 1,
+            "nodeName": "",
+            "nodeSelector": {},
+            "resources": {
+              "requests": {
+                "cpu": "25m",
+                "memory": "50Mi"
+              }
+            }
+          },
+          "griffon": {
+            "registry": "",
+            "repository": "exivity/griffon",
+            "tag": "",
+            "pullPolicy": "",
+            "replicas": 1,
+            "nodeName": "",
+            "nodeSelector": {},
+            "resources": {
+              "requests": {
+                "cpu": "25m",
+                "memory": "50Mi"
+              }
+            }
+          },
+          "horizon": {
+            "registry": "",
+            "repository": "exivity/horizon",
+            "tag": "",
+            "pullPolicy": "",
+            "replicas": 1,
+            "nodeName": "",
+            "nodeSelector": {},
+            "resources": {
+              "requests": {
+                "cpu": "25m",
+                "memory": "50Mi"
+              }
+            }
+          },
+          "pigeon": {
+            "registry": "",
+            "repository": "exivity/pigeon",
+            "tag": "",
+            "pullPolicy": "",
+            "replicas": 1,
+            "nodeName": "",
+            "nodeSelector": {},
+            "resources": {
+              "requests": {
+                "cpu": "25m",
+                "memory": "50Mi"
+              }
+            }
+          },
+          "proximityCli": {
+            "registry": "",
+            "repository": "exivity/proximity-cli",
+            "tag": "",
+            "pullPolicy": "",
+            "replicas": 1,
+            "nodeName": "",
+            "nodeSelector": {},
+            "resources": {
+              "requests": {
+                "cpu": "25m",
+                "memory": "50Mi"
+              }
+            }
+          },
+          "transcript": {
+            "registry": "",
+            "repository": "exivity/transcript",
+            "tag": "",
+            "pullPolicy": "",
+            "replicas": 1,
+            "nodeName": "",
+            "nodeSelector": {},
+            "resources": {
+              "requests": {
+                "cpu": "25m",
+                "memory": "50Mi"
+              }
+            }
+          },
+          "use": {
+            "registry": "",
+            "repository": "exivity/use",
+            "tag": "",
+            "pullPolicy": "",
+            "replicas": 1,
+            "nodeName": "",
+            "nodeSelector": {},
+            "resources": {
+              "requests": {
+                "cpu": "25m",
+                "memory": "50Mi"
+              }
+            },
+            "initContainers": {
+              "installCACert": {
+                "resources": {
+                  "requests": {
+                    "cpu": "25m",
+                    "memory": "50Mi"
+                  }
+                }
+              }
+            },
+            "caCertificates": null
+          }
+        }
+      ]
+    },
+    "logLevel": {
+      "type": "object",
+      "default": {},
+      "title": "The logLevel Schema",
+      "required": ["backend"],
+      "properties": {
+        "backend": {
+          "type": "string",
+          "default": "info",
+          "title": "The backend Schema",
+          "examples": ["info", "debug"],
+          "enum": ["info", "debug"]
+        }
+      },
+      "examples": [
+        {
+          "backend": "info"
+        }
+      ]
+    },
+    "probes": {
+      "type": "object",
+      "default": {},
+      "title": "The probes Schema",
+      "required": ["livenessProbe", "readinessProbe"],
+      "properties": {
+        "livenessProbe": {
+          "type": "object",
+          "default": {},
+          "title": "The livenessProbe Schema",
+          "required": [
+            "enabled",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "failureThreshold"
+          ],
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false,
+              "title": "The enabled Schema",
+              "examples": [true]
+            },
+            "initialDelaySeconds": {
+              "type": "integer",
+              "default": 0,
+              "title": "The initialDelaySeconds Schema",
+              "examples": [3]
+            },
+            "periodSeconds": {
+              "type": "integer",
+              "default": 0,
+              "title": "The periodSeconds Schema",
+              "examples": [30]
+            },
+            "failureThreshold": {
+              "type": "integer",
+              "default": 0,
+              "title": "The failureThreshold Schema",
+              "examples": [120]
+            }
+          },
+          "examples": [
+            {
+              "enabled": true,
+              "initialDelaySeconds": 3,
+              "periodSeconds": 30,
+              "failureThreshold": 120
+            }
+          ]
+        },
+        "readinessProbe": {
+          "type": "object",
+          "default": {},
+          "title": "The readinessProbe Schema",
+          "required": [
+            "enabled",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "failureThreshold"
+          ],
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false,
+              "title": "The enabled Schema",
+              "examples": [true]
+            },
+            "initialDelaySeconds": {
+              "type": "integer",
+              "default": 0,
+              "title": "The initialDelaySeconds Schema",
+              "examples": [3]
+            },
+            "periodSeconds": {
+              "type": "integer",
+              "default": 0,
+              "title": "The periodSeconds Schema",
+              "examples": [30]
+            },
+            "failureThreshold": {
+              "type": "integer",
+              "default": 0,
+              "title": "The failureThreshold Schema",
+              "examples": [60]
+            }
+          },
+          "examples": [
+            {
+              "enabled": true,
+              "initialDelaySeconds": 3,
+              "periodSeconds": 30,
+              "failureThreshold": 60
+            }
+          ]
+        }
+      },
+      "examples": [
+        {
+          "livenessProbe": {
+            "enabled": true,
+            "initialDelaySeconds": 3,
+            "periodSeconds": 30,
+            "failureThreshold": 120
+          },
+          "readinessProbe": {
+            "enabled": true,
+            "initialDelaySeconds": 3,
+            "periodSeconds": 30,
+            "failureThreshold": 60
+          }
+        }
+      ]
+    },
+    "prometheus": {
+      "type": "object",
+      "default": {},
+      "title": "The prometheus Schema",
+      "required": ["metricServer"],
+      "properties": {
+        "metricServer": {
+          "type": "object",
+          "default": {},
+          "title": "The metricServer Schema",
+          "required": ["enabled", "serviceMonitor"],
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false,
+              "title": "The enabled Schema",
+              "examples": [false]
+            },
+            "serviceMonitor": {
+              "type": "object",
+              "default": {},
+              "title": "The serviceMonitor Schema",
+              "required": ["enabled"],
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": false,
+                  "title": "The enabled Schema",
+                  "examples": [false]
+                }
+              },
+              "examples": [
+                {
+                  "enabled": false
+                }
+              ]
+            }
+          },
+          "examples": [
+            {
+              "enabled": false,
+              "serviceMonitor": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      },
+      "examples": [
+        {
+          "metricServer": {
+            "enabled": false,
+            "serviceMonitor": {
+              "enabled": false
+            }
+          }
+        }
+      ]
+    }
+  },
+  "examples": [
+    {
+      "nameOverride": "",
+      "licence": "demo",
+      "secret": {
+        "appKey": "",
+        "jwtSecret": ""
+      },
+      "ingress": {
+        "enabled": true,
+        "host": "exivity",
+        "ingressClassName": "",
+        "trustedProxy": "",
+        "annotations": {},
+        "tls": {
+          "enabled": false,
+          "secret": "-"
+        }
+      },
+      "storage": {
+        "storageClass": "",
+        "helmResourcePolicyKeep": true,
+        "sharedVolumeAccessMode": "ReadWriteMany"
+      },
+      "postgresql": {
+        "enabled": true,
+        "global": {
+          "postgresql": {
+            "auth": {
+              "database": "exivity",
+              "username": "exivity",
+              "password": "Password12!",
+              "postgresPassword": "Password13!"
+            }
+          }
+        },
+        "host": "",
+        "port": "",
+        "sslmode": ""
+      },
+      "rabbitmq": {
+        "enabled": true,
+        "clustering": {
+          "enabled": false
+        },
+        "auth": {
+          "username": "user",
+          "password": "pass"
+        },
+        "host": "",
+        "port": "",
+        "vhost": "",
+        "secure": ""
+      },
+      "service": {
+        "registry": "docker.io",
+        "tag": "",
+        "pullPolicy": "IfNotPresent",
+        "pullSecrets": [],
+        "glass": {
+          "registry": "",
+          "repository": "exivity/glass",
+          "tag": "",
+          "pullPolicy": "",
+          "servicePort": 80,
+          "serviceType": "ClusterIP",
+          "replicas": 1,
+          "nodeName": "",
+          "nodeSelector": {},
+          "resources": {
+            "requests": {
+              "cpu": "25m",
+              "memory": "50Mi"
+            }
+          }
+        },
+        "proximityApi": {
+          "registry": "",
+          "repository": "exivity/proximity-api",
+          "tag": "",
+          "pullPolicy": "",
+          "phpMemoryLimit": "3G",
+          "fingerPrinter": "secure_ip_useragent",
+          "servicePort": 80,
+          "serviceType": "ClusterIP",
+          "replicas": 1,
+          "nodeName": "",
+          "nodeSelector": {},
+          "resources": {
+            "requests": {
+              "cpu": "25m",
+              "memory": "400Mi"
+            }
+          }
+        },
+        "chronos": {
+          "registry": "",
+          "repository": "exivity/chronos",
+          "tag": "",
+          "pullPolicy": "",
+          "replicas": 1,
+          "nodeName": "",
+          "nodeSelector": {},
+          "resources": {
+            "requests": {
+              "cpu": "25m",
+              "memory": "50Mi"
+            }
+          }
+        },
+        "dbInit": {
+          "registry": "",
+          "repository": "exivity/db",
+          "tag": "",
+          "pullPolicy": "",
+          "nodeName": "",
+          "nodeSelector": {},
+          "waitForServer": {
+            "resources": {}
+          },
+          "migration": {
+            "resources": {}
+          }
+        },
+        "dummyData": {
+          "enabled": false,
+          "registry": "",
+          "repository": "exivity/dummy-data",
+          "tag": "main",
+          "pullPolicy": "",
+          "nodeName": "",
+          "nodeSelector": {},
+          "resources": {}
+        },
+        "edify": {
+          "registry": "",
+          "repository": "exivity/edify",
+          "tag": "",
+          "pullPolicy": "",
+          "replicas": 1,
+          "nodeName": "",
+          "nodeSelector": {},
+          "resources": {
+            "requests": {
+              "cpu": "25m",
+              "memory": "50Mi"
+            }
+          }
+        },
+        "executor": {
+          "registry": "",
+          "repository": "exivity/executor",
+          "tag": "",
+          "pullPolicy": "",
+          "replicas": 1,
+          "nodeName": "",
+          "nodeSelector": {},
+          "resources": {
+            "requests": {
+              "cpu": "25m",
+              "memory": "50Mi"
+            }
+          }
+        },
+        "griffon": {
+          "registry": "",
+          "repository": "exivity/griffon",
+          "tag": "",
+          "pullPolicy": "",
+          "replicas": 1,
+          "nodeName": "",
+          "nodeSelector": {},
+          "resources": {
+            "requests": {
+              "cpu": "25m",
+              "memory": "50Mi"
+            }
+          }
+        },
+        "horizon": {
+          "registry": "",
+          "repository": "exivity/horizon",
+          "tag": "",
+          "pullPolicy": "",
+          "replicas": 1,
+          "nodeName": "",
+          "nodeSelector": {},
+          "resources": {
+            "requests": {
+              "cpu": "25m",
+              "memory": "50Mi"
+            }
+          }
+        },
+        "pigeon": {
+          "registry": "",
+          "repository": "exivity/pigeon",
+          "tag": "",
+          "pullPolicy": "",
+          "replicas": 1,
+          "nodeName": "",
+          "nodeSelector": {},
+          "resources": {
+            "requests": {
+              "cpu": "25m",
+              "memory": "50Mi"
+            }
+          }
+        },
+        "proximityCli": {
+          "registry": "",
+          "repository": "exivity/proximity-cli",
+          "tag": "",
+          "pullPolicy": "",
+          "replicas": 1,
+          "nodeName": "",
+          "nodeSelector": {},
+          "resources": {
+            "requests": {
+              "cpu": "25m",
+              "memory": "50Mi"
+            }
+          }
+        },
+        "transcript": {
+          "registry": "",
+          "repository": "exivity/transcript",
+          "tag": "",
+          "pullPolicy": "",
+          "replicas": 1,
+          "nodeName": "",
+          "nodeSelector": {},
+          "resources": {
+            "requests": {
+              "cpu": "25m",
+              "memory": "50Mi"
+            }
+          }
+        },
+        "use": {
+          "registry": "",
+          "repository": "exivity/use",
+          "tag": "",
+          "pullPolicy": "",
+          "replicas": 1,
+          "nodeName": "",
+          "nodeSelector": {},
+          "resources": {
+            "requests": {
+              "cpu": "25m",
+              "memory": "50Mi"
+            }
+          },
+          "initContainers": {
+            "installCACert": {
+              "resources": {
+                "requests": {
+                  "cpu": "25m",
+                  "memory": "50Mi"
+                }
+              }
+            }
+          },
+          "caCertificates": null
+        }
+      },
+      "logLevel": {
+        "backend": "info"
+      },
+      "probes": {
+        "livenessProbe": {
+          "enabled": true,
+          "initialDelaySeconds": 3,
+          "periodSeconds": 30,
+          "failureThreshold": 120
+        },
+        "readinessProbe": {
+          "enabled": true,
+          "initialDelaySeconds": 3,
+          "periodSeconds": 30,
+          "failureThreshold": 60
+        }
+      },
+      "prometheus": {
+        "metricServer": {
+          "enabled": false,
+          "serviceMonitor": {
+            "enabled": false
+          }
+        }
+      }
+    }
+  ]
+}
