@@ -660,7 +660,8 @@
               "type": "string",
               "default": "",
               "title": "The fingerPrinter Schema",
-              "examples": ["secure_ip_useragent"]
+              "examples": ["secure_ip_useragent"],
+              "enum": ["secure_ip_useragent", "secure_useragent"]
             },
             "servicePort": {
               "type": "integer",
