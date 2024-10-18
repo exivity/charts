@@ -284,8 +284,8 @@
           "examples": [""]
         },
         "port": {
-          "type": "string",
-          "default": "",
+          "type": "integer",
+          "default": 5432,
           "title": "The port Schema",
           "examples": [""]
         },

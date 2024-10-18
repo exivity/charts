@@ -54,7 +54,7 @@ postgresql:
 
   # Configuration for using an external PostgreSQL database.
   host: "" # Hostname of the external database server, if applicable.
-  port: "" # Port number on which the external database server is accessible.
+  port: 5432 # Port number on which the external database server is accessible.
   sslmode: "" # SSL mode for database connection: 'disable', 'require', 'verify-ca', or 'verify-full'.
 
   # Example of customizing the embedded Bitnami PostgreSQL chart for larger deployments.
