@@ -387,9 +387,9 @@
           "examples": [""]
         },
         "port": {
-          "type": "string",
-          "default": "",
+          "type": "integer",
           "title": "The port Schema",
+          "default": 5672,
           "examples": [""]
         },
         "vhost": {
@@ -399,8 +399,8 @@
           "examples": [""]
         },
         "secure": {
-          "type": "string",
-          "default": "",
+          "type": "boolean",
+          "default": false,
           "title": "The secure Schema",
           "examples": [""]
         }
@@ -2096,10 +2096,8 @@
               ]
             },
             "caCertificates": {
-              "type": "null",
-              "default": null,
-              "title": "The caCertificates Schema",
-              "examples": [null]
+              "type": "object",
+              "title": "The caCertificates Schema"
             }
           },
           "examples": [
