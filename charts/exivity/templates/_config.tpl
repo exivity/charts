@@ -45,17 +45,17 @@ data:
           "redialPeriod": 5
       },
       "chronos": {
-        "heartbeatPeriod": 5,
+        "heartbeatPeriod": 0,
         "TTL": 60
       },
       "griffon": {
-        "heartbeatPeriod": 5,
+        "heartbeatPeriod": 0,
         "TTL": 10
       {{ if $.data.appname }}
       },
       "merlin": {
         "reservedCPU": 0,
-        "heartbeatPeriod": 5,
+        "heartbeatPeriod": 0,
         "programs": {
           "{{ $.data.appname }}": {
             "component": "{{ $.data.appname }}",
