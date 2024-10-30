@@ -12,7 +12,7 @@ dependencies:
   - name: postgresql
     condition: postgresql.enabled
     repository: https://charts.bitnami.com/bitnami
-    version: 11.9.13
+    version: '3.29.3'
   - name: rabbitmq
     condition: rabbitmq.enabled
     repository: https://charts.bitnami.com/bitnami
