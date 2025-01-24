@@ -1,6 +1,6 @@
 apiVersion: v2
 
-version: "3.31.0"
+version: "3.32.0"
 
 name: exivity
 home: https://exivity.com/
