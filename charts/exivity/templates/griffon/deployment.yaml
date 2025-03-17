@@ -19,6 +19,10 @@ spec:
       annotations:
         checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
+      securityContext:
+        fsGroup: 1000
+        runAsUser:  1000
+        runAsGroup: 1000
       volumes:
         - name: config-file
           configMap:
