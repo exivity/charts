@@ -35,6 +35,9 @@ spec:
         - name: exivity-lock
           configMap:
             name: {{ include "exivity.fullname" $ -}}-lock
+        - name: artisan-cache
+          configMap:
+            name: {{ include "exivity.fullname" $ -}}-artisan-cache
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-proximity-api-log
@@ -118,6 +121,8 @@ spec:
               mountPath: /exivity/home/system/report
             - name:      exivity-lock
               mountPath: /exivity/program
+            - name:      artisan-cache
+              mountPath: /app/bootstrap/cache
           env:
             - name: EXIVITY_APP_KEY
               valueFrom:
