@@ -149,6 +149,10 @@ service:
       requests:
         cpu: "25m"
         memory: "400Mi"
+    redisHost: exivity-redis-master
+    cacheDriver: file
+    queueConnection: sync
+    nginxLogPath: /var/log/nginx
 
   # Configuration for the 'chronos' service, part of the back-end components.
   chronos:
@@ -276,6 +280,7 @@ service:
       requests:
         cpu: "25m"
         memory: "50Mi"
+    nginxLogPath: /var/log/nginx
 
   # Configuration for the 'transcript' service, part of the backend processing components.
   transcript:

@@ -21,6 +21,9 @@ spec:
         checksum/{{- include "exivity.fullname" $ -}}-licence-pub: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-licence-key: {{ include (print $.Template.BasePath "/proximity/api.secret.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-lock: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
+        checksum/{{- include "exivity.fullname" $ -}}-proximity-api-env: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
+        checksum/{{- include "exivity.fullname" $ -}}-app-key: {{ include (print $.Template.BasePath "/proximity/api.secret.yaml") . | sha256sum }}
+        checksum/{{- include "exivity.fullname" $ -}}-jwt-secret: {{ include (print $.Template.BasePath "/proximity/api.secret.yaml") . | sha256sum }}
     spec:
       volumes:
         - name: projected
@@ -118,46 +121,15 @@ spec:
               mountPath: /exivity/home/system/report
             - name:      exivity-lock
               mountPath: /exivity/program
-          env:
-            - name: EXIVITY_APP_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "exivity.fullname" $ -}}-app-key
-                  key:                                     app_key
-            - name: EXIVITY_LICENSE_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "exivity.fullname" $ -}}-licence-key
-                  key:                                     license.key
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "exivity.fullname" $ -}}-jwt-secret
-                  key:                                     jwt_secret
-            - name:  REDIS_HOST
-              value: exivity-redis-master
-            - name:  CACHE_DRIVER
-              value: file
-            - name:  QUEUE_CONNECTION
-              value: sync
-            - name: NGINX_LOG_PATH
-              value: /var/log/nginx
-            - name: EXIVITY_BACKEND_LOG_LEVEL
-              value: "{{ .Values.logLevel.backend }}"
-            - name:  ENABLE_PROMETHEUS
-              value: "{{ .Values.prometheus.metricServer.enabled }}"
-        {{- if .Values.ingress.trustedProxy }}
-            - name: TRUSTED_PROXY
-              value: {{ printf "%s" (.Values.ingress.trustedProxy) | quote }}
-        {{- end }}
-        {{- if .Values.service.proximityApi.phpMemoryLimit }}
-            - name: PHP_MEMORY_LIMIT
-              value: {{ printf "%s" (.Values.service.proximityApi.phpMemoryLimit) | quote }}
-        {{- end }}
-        {{- if .Values.service.proximityApi.fingerPrinter }}
-            - name: EXIVITY_FINGERPRINTER
-              value: {{ printf "%s" (.Values.service.proximityApi.fingerPrinter) | quote }}
-        {{- end }}
+          envFrom:
+            - secretRef:
+                name: {{ include "exivity.fullname" $ -}}-licence-key
+            - secretRef:
+                name: {{ include "exivity.fullname" $ -}}-app-key
+            - secretRef:
+                name: {{ include "exivity.fullname" $ -}}-jwt-secret
+            - configMapRef:
+                name: {{ include "exivity.fullname" $ -}}-proximity-api-env
           {{- include "exivity.probes" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:

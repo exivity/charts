@@ -42,3 +42,29 @@ data:
                         }
                     }
                 }
+
+---
+
+apiVersion: v1
+kind:       ConfigMap
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-proximity-api-env
+  labels:
+    app.kubernetes.io/component: proximity-api
+    {{- include "exivity.labels" $ | indent 4 }}
+data:
+  REDIS_HOST: {{ .Values.service.proximityApi.redisHost | quote }}
+  CACHE_DRIVER: {{ .Values.service.proximityApi.cacheDriver | quote }}
+  QUEUE_CONNECTION: {{ .Values.service.proximityApi.queueConnection | quote }}
+  NGINX_LOG_PATH: {{ .Values.service.proximityApi.nginxLogPath | quote }}
+  EXIVITY_BACKEND_LOG_LEVEL: "{{ .Values.logLevel.backend }}"
+  ENABLE_PROMETHEUS: "{{ .Values.prometheus.metricServer.enabled }}"
+  {{- if .Values.ingress.trustedProxy }}
+  TRUSTED_PROXY: "{{ .Values.ingress.trustedProxy | quote}}"
+  {{- end }}
+  {{- if .Values.service.proximityApi.phpMemoryLimit | quote }}
+  PHP_MEMORY_LIMIT: "{{ .Values.service.proximityApi.phpMemoryLimit }}"
+  {{- end }}
+  {{- if .Values.service.proximityApi.fingerPrinter | quote}}
+  EXIVITY_FINGERPRINTER: "{{ .Values.service.proximityApi.fingerPrinter }}"
+  {{- end }}  
