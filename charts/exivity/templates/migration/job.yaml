@@ -14,6 +14,11 @@ spec:
         app.kubernetes.io/component: migration
         {{- include "exivity.labels" $ | indent 8 }}
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        runAsNonRoot: true
       initContainers:
         - name: wait-for-server
           image: {{ include "exivity.image" (set $ "name" "dbInit") }}
