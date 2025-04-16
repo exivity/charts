@@ -1,6 +1,1 @@
-{
-  {
-    - template "exivity.config" (set $ "data" (dict "appname" "proximity-cli"
-    "path" "/usr/bin/php" "queue" "PROXIMITY")),
-  },
-}
+{{- template "exivity.config" (set $ "data" (dict "appname" "proximity-cli" "path" "/usr/bin/php" "queue" "PROXIMITY")) }}
