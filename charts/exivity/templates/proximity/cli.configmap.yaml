@@ -1,15 +1,6 @@
-{{- template "exivity.config" (set $ "data" (dict "appname" "proximity-cli" "path" "/usr/bin/php" "queue" "PROXIMITY")) }}
-
----
-
-apiVersion: v1
-kind:       ConfigMap
-metadata:
-  name: {{ include "exivity.fullname" $ -}}-proximity-cli-env
-  labels:
-    app.kubernetes.io/component: proximity-cli
-    {{- include "exivity.labels" $ | indent 4 }}
-data:
-  NGINX_LOG_PATH: {{ .Values.service.proximityCli.nginxLogPath | quote }}
-  EXIVITY_BACKEND_LOG_LEVEL: "{{ .Values.logLevel.backend }}"
-  ENABLE_PROMETHEUS: "{{ .Values.prometheus.metricServer.enabled }}"
+{
+  {
+    - template "exivity.config" (set $ "data" (dict "appname" "proximity-cli"
+    "path" "/usr/bin/php" "queue" "PROXIMITY")),
+  },
+}
