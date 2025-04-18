@@ -443,7 +443,8 @@
         "pigeon",
         "proximityCli",
         "transcript",
-        "use"
+        "use",
+        "vulcan"
       ],
       "properties": {
         "registry": {
@@ -2131,6 +2132,126 @@
           ]
         }
       },
+      "vulcan": {
+        "type": "object",
+        "default": {},
+        "title": "The vulcan Schema",
+        "required": [
+          "registry",
+          "repository",
+          "tag",
+          "pullPolicy",
+          "replicas",
+          "nodeName",
+          "nodeSelector",
+          "resources"
+        ],
+        "properties": {
+          "registry": {
+            "type": "string",
+            "default": "",
+            "title": "The registry Schema",
+            "examples": [""]
+          },
+          "repository": {
+            "type": "string",
+            "default": "",
+            "title": "The repository Schema",
+            "examples": ["exivity/vulcan"]
+          },
+          "tag": {
+            "type": "string",
+            "default": "",
+            "title": "The tag Schema",
+            "examples": [""]
+          },
+          "pullPolicy": {
+            "type": "string",
+            "default": "",
+            "title": "The pullPolicy Schema",
+            "examples": [""]
+          },
+          "replicas": {
+            "type": "integer",
+            "default": 0,
+            "title": "The replicas Schema",
+            "examples": [1]
+          },
+          "nodeName": {
+            "type": "string",
+            "default": "",
+            "title": "The nodeName Schema",
+            "examples": [""]
+          },
+          "nodeSelector": {
+            "type": "object",
+            "default": {},
+            "title": "The nodeSelector Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{}]
+          },
+          "resources": {
+            "type": "object",
+            "default": {},
+            "title": "The resources Schema",
+            "required": ["requests"],
+            "properties": {
+              "requests": {
+                "type": "object",
+                "default": {},
+                "title": "The requests Schema",
+                "required": ["cpu", "memory"],
+                "properties": {
+                  "cpu": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The cpu Schema",
+                    "examples": ["25m"]
+                  },
+                  "memory": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The memory Schema",
+                    "examples": ["50Mi"]
+                  }
+                },
+                "examples": [
+                  {
+                    "cpu": "25m",
+                    "memory": "50Mi"
+                  }
+                ]
+              }
+            },
+            "examples": [
+              {
+                "requests": {
+                  "cpu": "25m",
+                  "memory": "50Mi"
+                }
+              }
+            ]
+          }
+        },
+        "examples": [
+          {
+            "registry": "",
+            "repository": "exivity/vulcan",
+            "tag": "",
+            "pullPolicy": "",
+            "replicas": 1,
+            "nodeName": "",
+            "nodeSelector": {},
+            "resources": {
+              "requests": {
+                "cpu": "25m",
+                "memory": "50Mi"
+              }
+            }
+          }
+        ]
+      },
       "examples": [
         {
           "registry": "docker.io",
@@ -2342,6 +2463,21 @@
               }
             },
             "caCertificates": null
+          },
+          "vulcan": {
+            "registry": "",
+            "repository": "exivity/vulcan",
+            "tag": "",
+            "pullPolicy": "",
+            "replicas": 1,
+            "nodeName": "",
+            "nodeSelector": {},
+            "resources": {
+              "requests": {
+                "cpu": "25m",
+                "memory": "50Mi"
+              }
+            }
           }
         }
       ]
@@ -2804,6 +2940,21 @@
             }
           },
           "caCertificates": null
+        },
+        "vulcan": {
+          "registry": "",
+          "repository": "exivity/vulcan",
+          "tag": "",
+          "pullPolicy": "",
+          "replicas": 1,
+          "nodeName": "",
+          "nodeSelector": {},
+          "resources": {
+            "requests": {
+              "cpu": "25m",
+              "memory": "50Mi"
+            }
+          }
         }
       },
       "logLevel": {

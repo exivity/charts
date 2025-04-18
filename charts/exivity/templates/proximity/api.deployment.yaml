@@ -59,6 +59,9 @@ spec:
         - name: log-use
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-use-log
+        - name: log-vulcan
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-vulcan-log
         - name: config
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-etl-config
@@ -112,6 +115,8 @@ spec:
               mountPath: /exivity/home/log/transcript
             - name:      log-use
               mountPath: /exivity/home/log/use
+            - name:      log-vulcan
+              mountPath: /exivity/home/log/vulcan
             - name:      import
               mountPath: /exivity/home/import
             - name:      report
