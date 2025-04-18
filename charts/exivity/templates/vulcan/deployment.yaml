@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind:       Deployment
+metadata:
+  name: {{ include "exivity.fullname" $ -}}-vulcan
+  labels:
+    app.kubernetes.io/component: vulcan
+    {{- include "exivity.labels" $ | indent 4 }}
+spec:
+  replicas: {{ .Values.service.vulcan.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: vulcan
+      {{- include "exivity.matchLabels" $ | indent 6 }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: vulcan
+        {{- include "exivity.labels" $ | indent 8 }}
+      annotations:
+        checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      volumes:
+        - name: config-file
+          configMap:
+            name: {{ include "exivity.fullname" $ -}}-config-shared
+        - name: config
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-vulcan-config
+        - name: log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-vulcan-log
+      containers:
+        - name: vulcan
+          image: {{ include "exivity.image" (set $ "name" "vulcan") }}
+          imagePullPolicy: {{ .Values.service.vulcan.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
+          resources:
+            {{- toYaml .Values.service.vulcan.resources | nindent 12 }}
+          env:
+            - name: EXIVITY_BACKEND_LOG_LEVEL
+              value: "{{ .Values.logLevel.backend }}"
+            - name: ENABLE_PROMETHEUS
+              value: "{{ .Values.prometheus.metricServer.enabled }}"
+          securityContext:
+            runAsUser:  1000
+            runAsGroup: 1000
+          volumeMounts:
+            - name:      config
+              mountPath: /exivity/home/system/config
+            - name:      config-file
+              mountPath: /exivity/home/system
+            - name:      log
+              mountPath: /exivity/home/log/vulcan
+          {{- include "exivity.probes" $ | indent 10}}
+      {{- with .Values.service.pullSecrets }}
+      imagePullSecrets:
+        {{- range $name := .}}
+        - name: {{ $name }}
+        {{- end }}
+      {{- end }}
+      {{- if .Values.service.vulcan.nodeName }}
+      nodeName: {{ .Values.service.vulcan.nodeName }}
+      {{- end }}
+      {{- with .Values.service.vulcan.nodeSelector }}
+      nodeSelector:
+        {{ range $key, $val := . }}
+        {{ $key }}: {{ $val }}
+        {{- end }}
+      {{- end }}
