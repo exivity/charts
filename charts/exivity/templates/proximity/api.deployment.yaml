@@ -19,9 +19,9 @@ spec:
       annotations:
         checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-licence-pub: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}  
-        checksum/{{- include "exivity.fullname" $ -}}-licence-key: {{ include (print $.Template.BasePath "/proximity/api.secret.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-lock: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-proximity-api-env: {{ include (print $.Template.BasePath "/proximity/api.env-configmap.yaml") . | sha256sum }}
+        checksum/{{- include "exivity.fullname" $ -}}-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "proximityApi") | indent 8 }}
@@ -121,6 +121,10 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ include "exivity.fullname" $ -}}-licence-key
+            - secretRef:
+                name: {{ include "exivity.fullname" $ -}}-app-key
+            - secretRef:
+                name: {{ include "exivity.fullname" $ -}}-jwt-secret
             - configMapRef:
                 name: {{ include "exivity.fullname" $ -}}-proximity-api-env
           {{- include "exivity.probes" $ | indent 10}}
