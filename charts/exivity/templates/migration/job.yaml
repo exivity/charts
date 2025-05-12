@@ -18,34 +18,6 @@ spec:
         app.kubernetes.io/component: migration
         {{- include "exivity.labels" $ | indent 8 }}
     spec:
-      initContainers:
-        - name: wait-for-server
-          image: {{ include "exivity.image" (set $ "name" "dbInit") }}
-          imagePullPolicy: {{ .Values.service.dbInit.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
-          command:
-            - "/wait.sh"
-          args:
-            - "--host"
-            - "$(PG_HOST)"
-            - "--port"
-            - "$(PG_PORT)"
-            - "--dbname"
-            - "$(PG_DATABASE)"
-            - "--username"
-            - "$(PG_USER)"
-          env:
-            - name: PG_HOST
-              value: {{ $.Values.postgresql.host | default (printf "%s-postgresql" (include "exivity.fullname" $ )) | quote }}
-            - name: PG_PORT
-              value: {{ $.Values.postgresql.port | default 5432 | quote}}
-            - name: PG_DATABASE
-              value: {{ $.Values.postgresql.global.postgresql.auth.database | quote }}
-            - name: PG_USER
-              value: {{ $.Values.postgresql.global.postgresql.auth.username | quote }}
-            - name: PG_SSLMODE
-              value: {{ $.Values.postgresql.sslmode | default "disable" | quote  }}
-          resources:
-            {{- toYaml .Values.service.dbInit.waitForServer.resources | nindent 12 }}
       containers:
         - name: migration
           image: {{ include "exivity.image" (set $ "name" "dbInit") }}
