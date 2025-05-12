@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/component: migration
     {{- include "exivity.labels" $ | indent 4 }}
   annotations:
-    "helm.sh/hook": pre-upgrade,pre-install
+    "helm.sh/hook": post-upgrade,post-install
     "helm.sh/hook-delete-policy": hook-succeeded
     helm.sh/hook-weight: "0"
 spec:
