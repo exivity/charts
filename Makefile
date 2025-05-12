@@ -21,6 +21,7 @@ deploy-exivity-chart:
         --namespace exivity \
         --create-namespace \
         --wait \
+        --debug \
         --timeout $(HELM_TIMEOUT) \
         --set storage.storageClass=$(NFS_STORAGE_CLASS) \
         --set ingress.host=$(INGRESS_HOSTNAME) \
@@ -37,6 +38,7 @@ deploy-nfs-chart:
         --namespace nfs-server \
         --create-namespace \
         --wait \
+        --debug \
         --timeout $(HELM_TIMEOUT) \
         --set persistence.enabled=true \
         --set persistence.size=5Gi \
