@@ -23,10 +23,7 @@ spec:
         checksum/{{- include "exivity.fullname" $ -}}-lock: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
     spec:
       securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-        runAsNonRoot: true
+        {{- include "exivity.securityContext" (dict "root" . "component" "proximityApi") | indent 8 }}
       volumes:
         - name: projected
           projected:

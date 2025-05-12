@@ -20,10 +20,7 @@ spec:
         checksum/{{- include "exivity.fullname" $ -}}-config-pigeon: {{ include (print $.Template.BasePath "/pigeon/configmap.yaml") . | sha256sum }}
     spec:
       securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-        runAsNonRoot: true
+        {{- include "exivity.securityContext" (dict "root" . "component" "pigeon") | indent 8 }}
       volumes:
         - name: config
           configMap:

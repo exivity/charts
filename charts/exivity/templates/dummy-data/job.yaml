@@ -6,6 +6,10 @@ metadata:
   labels:
     app.kubernetes.io/component: dummy-data
     {{- include "exivity.labels" $ | indent 4 }}
+  annotations:
+    "helm.sh/hook": pre-upgrade,pre-install
+    "helm.sh/hook-delete-policy": hook-succeeded
+    helm.sh/hook-weight: "20"
 spec:
   completions:             1
   ttlSecondsAfterFinished: 300
@@ -18,10 +22,7 @@ spec:
         checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-        runAsNonRoot: true
+        {{- include "exivity.securityContext" (dict "root" . "component" "dummyData") | indent 8 }}
       containers:
         - name:            dummy-data
           image:           {{ include "exivity.image" (set $ "name" "dummyData") }}

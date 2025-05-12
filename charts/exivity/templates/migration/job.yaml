@@ -5,6 +5,10 @@ metadata:
   labels:
     app.kubernetes.io/component: migration
     {{- include "exivity.labels" $ | indent 4 }}
+  annotations:
+    "helm.sh/hook": pre-upgrade,pre-install
+    "helm.sh/hook-delete-policy": hook-succeeded
+    helm.sh/hook-weight: "0"
 spec:
   completions:             1
   ttlSecondsAfterFinished: 300
@@ -15,10 +19,7 @@ spec:
         {{- include "exivity.labels" $ | indent 8 }}
     spec:
       securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-        runAsNonRoot: true
+        {{- include "exivity.securityContext" (dict "root" . "component" "dbInit") | indent 8 }}
       initContainers:
         - name: wait-for-server
           image: {{ include "exivity.image" (set $ "name" "dbInit") }}
