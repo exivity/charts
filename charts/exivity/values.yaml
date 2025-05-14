@@ -329,6 +329,20 @@ service:
       #   [Your Intermediate CA certificate here]
       #   -----END CERTIFICATE-----
 
+  # Configuration for the 'vulcan' service, part of the back-end components.
+  vulcan:
+    registry: ""
+    repository: exivity/vulcan
+    tag: ""
+    pullPolicy: Always
+    replicas: 1
+    nodeName: ""
+    nodeSelector: {}
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "50Mi"
+
 # Default log level for backend services. Accepts 'debug', 'info'.
 # Use 'debug' for development environments and 'info' or higher for production to reduce log verbosity.
 logLevel:
