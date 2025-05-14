@@ -6,6 +6,10 @@ metadata:
   labels:
     app.kubernetes.io/component: dummy-data
     {{- include "exivity.labels" $ | indent 4 }}
+  annotations:
+    "helm.sh/hook": post-upgrade,post-upgrade
+    "helm.sh/hook-delete-policy": hook-succeeded
+    helm.sh/hook-weight: "20"
 spec:
   completions:             1
   ttlSecondsAfterFinished: 300
