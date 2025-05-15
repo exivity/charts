@@ -36,9 +36,6 @@ spec:
               value: /exivity/home
           resources:
             {{- toYaml .Values.service.dummyData.resources | nindent 12 }}
-          securityContext:
-            runAsUser:  1000
-            runAsGroup: 1000
           volumeMounts:
             - name:      config
               mountPath: /exivity/home/system/config

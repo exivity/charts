@@ -49,9 +49,6 @@ spec:
           imagePullPolicy: {{ .Values.service.transcript.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
           resources:
             {{- toYaml .Values.service.transcript.resources | nindent 12 }}
-          securityContext:
-            runAsUser:  1000
-            runAsGroup: 1000
           volumeMounts:
             - name:      config
               mountPath: /exivity/home/system/config

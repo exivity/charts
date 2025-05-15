@@ -42,9 +42,6 @@ spec:
               value:  "{{ .Values.logLevel.backend }}"
             - name:  ENABLE_PROMETHEUS
               value: "{{ .Values.prometheus.metricServer.enabled }}"
-          securityContext:
-            runAsUser:  1000
-            runAsGroup: 1000
           volumeMounts:
             - name:      config-file
               mountPath: /exivity/home/system
