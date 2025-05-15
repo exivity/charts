@@ -21,6 +21,8 @@ spec:
       annotations:
         checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
+      securityContext:
+        {{- include "exivity.securityContext" (dict "root" . "component" "dummyData") | indent 8 }}
       containers:
         - name:            dummy-data
           image:           {{ include "exivity.image" (set $ "name" "dummyData") }}
@@ -34,9 +36,6 @@ spec:
               value: /exivity/home
           resources:
             {{- toYaml .Values.service.dummyData.resources | nindent 12 }}
-          securityContext:
-            runAsUser:  1000
-            runAsGroup: 1000
           volumeMounts:
             - name:      config
               mountPath: /exivity/home/system/config

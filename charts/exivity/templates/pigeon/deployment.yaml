@@ -19,6 +19,8 @@ spec:
       annotations:
         checksum/{{- include "exivity.fullname" $ -}}-config-pigeon: {{ include (print $.Template.BasePath "/pigeon/configmap.yaml") . | sha256sum }}
     spec:
+      securityContext:
+        {{- include "exivity.securityContext" (dict "root" . "component" "pigeon") | indent 8 }}
       volumes:
         - name: config
           configMap:
@@ -41,9 +43,6 @@ spec:
           imagePullPolicy: {{ .Values.service.pigeon.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
           resources:
             {{- toYaml .Values.service.pigeon.resources | nindent 12 }}
-          securityContext:
-            runAsUser:  1000
-            runAsGroup: 1000
           volumeMounts:
             - name:      config
               mountPath: /exivity/home/system

@@ -19,6 +19,8 @@ spec:
       annotations:
         checksum/{{- include "exivity.fullname" $ -}}-config-horizon: {{ include (print $.Template.BasePath "/horizon/configmap.yaml") . | sha256sum }}
     spec:
+      securityContext:
+        {{- include "exivity.securityContext" (dict "root" . "component" "horizon") | indent 8 }}
       volumes:
         - name: config
           configMap:
@@ -37,9 +39,6 @@ spec:
               value: "{{ .Values.logLevel.backend }}"
             - name:  ENABLE_PROMETHEUS
               value: "{{ .Values.prometheus.metricServer.enabled }}"
-          securityContext:
-            runAsUser:  1000
-            runAsGroup: 1000
           volumeMounts:
             - name:      config
               mountPath: /exivity/home/system

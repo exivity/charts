@@ -19,6 +19,8 @@ spec:
       annotations:
         checksum/{{- include "exivity.fullname" $ -}}-config-proximity-cli: {{ include (print $.Template.BasePath "/proximity/cli.configmap.yaml") . | sha256sum }}
     spec:
+      securityContext:
+        {{- include "exivity.securityContext" (dict "root" . "component" "proximityCli") | indent 8 }}
       volumes:
         - name: config-file
           configMap:
@@ -47,9 +49,6 @@ spec:
           imagePullPolicy: {{ .Values.service.proximityCli.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
           resources:
             {{- toYaml .Values.service.proximityCli.resources | nindent 12 }}
-          securityContext:
-            runAsUser:  1000
-            runAsGroup: 1000
           volumeMounts:
             - name:      config
               mountPath: /exivity/home/system/config
