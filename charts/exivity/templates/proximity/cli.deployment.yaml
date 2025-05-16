@@ -18,6 +18,8 @@ spec:
         {{- include "exivity.labels" $ | indent 8 }}
       annotations:
         checksum/{{- include "exivity.fullname" $ -}}-config-proximity-cli: {{ include (print $.Template.BasePath "/proximity/cli.configmap.yaml") . | sha256sum }}
+        checksum/{{- include "exivity.fullname" $ -}}-proximity-cli-env: {{ include (print $.Template.BasePath "/proximity/cli.env.yaml") . | sha256sum }}
+        checksum/{{- include "exivity.fullname" $ -}}-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "proximityCli") | indent 8 }}
@@ -66,23 +68,13 @@ spec:
               mountPath: /exivity/home/import
             - name:      report
               mountPath: /exivity/home/system/report
-          env:
-            - name: EXIVITY_APP_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "exivity.fullname" $ -}}-app-key
-                  key:                                     app_key
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "exivity.fullname" $ -}}-jwt-secret
-                  key:                                     jwt_secret
-            - name: EXIVITY_BACKEND_LOG_LEVEL
-              value: "{{ .Values.logLevel.backend }}"
-            - name:  ENABLE_PROMETHEUS
-              value: "{{ .Values.prometheus.metricServer.enabled }}"
-            - name: NGINX_LOG_PATH
-              value: /var/log/nginx
+          envFrom:
+            - configMapRef:
+                name: {{ include "exivity.fullname" $ -}}-proximity-cli-env
+            - secretRef:
+                name: {{ include "exivity.fullname" $ -}}-app-key
+            - secretRef:
+                name: {{ include "exivity.fullname" $ -}}-jwt-secret
           {{- include "exivity.probes" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:

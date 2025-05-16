@@ -56,12 +56,10 @@ spec:
               mountPath: /exivity/home/exported
             - name:      config-volume
               mountPath: /exivity/home/system/config
+          envFrom:
+            - secretRef:
+                name: {{ include "exivity.fullname" $ -}}-app-key
           env:
-            - name: EXIVITY_APP_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "exivity.fullname" $ -}}-app-key
-                  key:  app_key
             - name:  REDIS_HOST
               value: exivity-redis-master
             - name:  REDIS_PORT
