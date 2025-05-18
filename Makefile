@@ -1,10 +1,15 @@
 # Constants
 NFS_STORAGE_CLASS := nfs-client
 NFS_CHART_VERSION := 1.8.0
+LONGHORN_STORAGE_CLASS := longhorn
+LONGHORN_CHART_VERSION := 1.8.1
 
 INGRESS_HOSTNAME := exivity.local
 
 HELM_TIMEOUT := 10m
+
+# Select storage class: nfs-client (default) or longhorn
+STORAGE_CLASS ?= $(NFS_STORAGE_CLASS)
 
 # Define Minikube start with a specific driver
 minikube-start:
@@ -23,7 +28,7 @@ deploy-exivity-chart:
         --wait \
         --debug \
         --timeout $(HELM_TIMEOUT) \
-        --set storage.storageClass=$(NFS_STORAGE_CLASS) \
+        --set storage.storageClass=$(STORAGE_CLASS) \
         --set ingress.host=$(INGRESS_HOSTNAME) \
         --set ingress.ingressClassName="nginx" \
         --set logLevel.backend="debug" \
@@ -52,6 +57,29 @@ deploy-nfs-chart:
         --set 'storageClass.mountOptions[5]=proto=tcp' \
         --set 'storageClass.mountOptions[6]=noatime' \
         --set 'storageClass.mountOptions[7]=nodiratime'
+
+# Deploy Longhorn Helm chart to Minikube
+# This is a dependency for the exivity Helm chart
+deploy-longhorn-chart:
+	@helm repo add longhorn https://charts.longhorn.io
+	@helm install longhorn longhorn/longhorn \
+        --version $(LONGHORN_CHART_VERSION) \
+        --namespace longhorn-system \
+        --create-namespace \
+        --wait \
+        --debug \
+        --timeout $(HELM_TIMEOUT)
+
+# Deploy selected storage engine: nfs-client or longhorn
+deploy-storage-engine:
+ifeq ($(ENGINE),nfs-client)
+	$(MAKE) deploy-nfs-chart
+else ifeq ($(ENGINE),longhorn)
+	$(MAKE) deploy-longhorn-chart
+else
+	@echo "Usage: make deploy-storage-engine ENGINE=[nfs-client|longhorn]"
+	@exit 1
+endif
 
 # Deploy all Helm charts
 deploy-charts: deploy-nfs-chart deploy-exivity-chart
