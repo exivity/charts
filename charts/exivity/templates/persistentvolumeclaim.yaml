@@ -13,7 +13,7 @@ spec:
     - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
-      storage: 1Gi
+      storage: {{ .Values.storage.pvcSizes.config.etl }}
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}
@@ -34,7 +34,7 @@ spec:
     - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
-      storage: 1Gi
+      storage: {{ .Values.storage.pvcSizes.data.exported }}
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}
@@ -55,7 +55,7 @@ spec:
     - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
-      storage: 1Gi
+      storage: {{ .Values.storage.pvcSizes.data.extracted }}
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}
@@ -76,7 +76,7 @@ spec:
     - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
-      storage: 1Gi
+      storage: {{ .Values.storage.pvcSizes.data.import }}
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}
@@ -97,7 +97,7 @@ spec:
     - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
-      storage: 1Gi
+      storage: {{ .Values.storage.pvcSizes.data.report }}
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}
