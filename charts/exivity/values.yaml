@@ -42,6 +42,8 @@ storage:
   # PVC storage sizes organized by type and component
   # Specify the storage size for each PVC as a string (e.g., "1Gi", "500Mi", etc.).
   # The sizes are grouped by their purpose (log, config, data) and component for better clarity.
+  # NOTE: These sizes will be ignored when using the NFS server (https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner)
+  # as a storage provider / storage class, since that provisioner does not enforce PVC size limits.
   pvcSizes:
     # Log PVCs
     log:
