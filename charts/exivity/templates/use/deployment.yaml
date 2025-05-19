@@ -90,12 +90,10 @@ spec:
             - name: cert-volume
               mountPath: /etc/ssl/certs
             {{- end }}
+          envFrom:
+            - secretRef:
+                name: {{ include "exivity.fullname" $ -}}-app-key
           env:
-            - name: EXIVITY_APP_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "exivity.fullname" $ -}}-app-key
-                  key:                                     app_key
             - name:  RUN_DELAY
               value: "10"
             - name: EXIVITY_BACKEND_LOG_LEVEL

@@ -66,12 +66,10 @@ spec:
               mountPath: /exivity/home/log/merlin
             - name:      report
               mountPath: /exivity/home/system/report
+          envFrom:
+            - secretRef:
+                name: {{ include "exivity.fullname" $ -}}-app-key
           env:
-            - name: EXIVITY_APP_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "exivity.fullname" $ -}}-app-key
-                  key:  app_key
             - name: EXIVITY_BACKEND_LOG_LEVEL
               value: "{{ .Values.logLevel.backend }}"
             - name:  ENABLE_PROMETHEUS
