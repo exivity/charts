@@ -2,6 +2,8 @@
 NFS_STORAGE_CLASS := nfs-client
 NFS_CHART_VERSION := 1.8.0
 
+PVC_DEFAULT_STORAGE_SIZE := 200Mi
+
 INGRESS_HOSTNAME := exivity.local
 
 HELM_TIMEOUT := 10m
@@ -24,6 +26,23 @@ deploy-exivity-chart:
         --debug \
         --timeout $(HELM_TIMEOUT) \
         --set storage.storageClass=$(NFS_STORAGE_CLASS) \
+        --set storage.pvcSizes.log.chronos=$(PVC_DEFAULT_STORAGE_SIZE) \
+        --set storage.pvcSizes.log.edify=$(PVC_DEFAULT_STORAGE_SIZE) \
+        --set storage.pvcSizes.log.executor=$(PVC_DEFAULT_STORAGE_SIZE) \
+        --set storage.pvcSizes.log.glass=$(PVC_DEFAULT_STORAGE_SIZE) \
+        --set storage.pvcSizes.log.griffon=$(PVC_DEFAULT_STORAGE_SIZE) \
+        --set storage.pvcSizes.log.pigeon=$(PVC_DEFAULT_STORAGE_SIZE) \
+        --set storage.pvcSizes.log.proximityApi=$(PVC_DEFAULT_STORAGE_SIZE) \
+        --set storage.pvcSizes.log.proximityCli=$(PVC_DEFAULT_STORAGE_SIZE) \
+        --set storage.pvcSizes.log.transcript=$(PVC_DEFAULT_STORAGE_SIZE) \
+        --set storage.pvcSizes.log.use=$(PVC_DEFAULT_STORAGE_SIZE) \
+        --set storage.pvcSizes.config.etl=$(PVC_DEFAULT_STORAGE_SIZE) \
+        --set storage.pvcSizes.config.griffon=$(PVC_DEFAULT_STORAGE_SIZE) \
+        --set storage.pvcSizes.config.chronos=$(PVC_DEFAULT_STORAGE_SIZE) \
+        --set storage.pvcSizes.data.exported=$(PVC_DEFAULT_STORAGE_SIZE) \
+        --set storage.pvcSizes.data.extracted=$(PVC_DEFAULT_STORAGE_SIZE) \
+        --set storage.pvcSizes.data.import=$(PVC_DEFAULT_STORAGE_SIZE) \
+        --set storage.pvcSizes.data.report=$(PVC_DEFAULT_STORAGE_SIZE) \
         --set ingress.host=$(INGRESS_HOSTNAME) \
         --set ingress.ingressClassName="nginx" \
         --set logLevel.backend="debug" \
@@ -65,7 +84,7 @@ install-python-deps:
 test:
 	@echo "Running tests..."
 	@python3 test/test.py --hostname $(INGRESS_HOSTNAME) --ip $$(minikube ip)
-        
+
 # Lint Helm chart
 lint:
 	@helm lint charts/exivity
