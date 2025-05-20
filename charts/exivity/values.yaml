@@ -42,8 +42,14 @@ storage:
   # PVC storage sizes organized by type and component
   # Specify the storage size for each PVC as a string (e.g., "1Gi", "500Mi", etc.).
   # The sizes are grouped by their purpose (log, config, data) and component for better clarity.
-  # NOTE: These sizes will be ignored when using the NFS server (https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner)
-  # as a storage provider / storage class, since that provisioner does not enforce PVC size limits.
+  #
+  # When the NFS server provisioner (https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner)
+  # is used as the storage provider, the configured PVC sizes will not be enforced.
+  # In this case, each PVC may consume up to the total available space on the NFS server, regardless of the size specified here.
+  # Therefore, the default values for PVC sizes should not be changed when NFS is used, to ensure compatibility with existing deployments and to avoid unexpected behavior.
+  #
+  # When an alternative CSI storage provider (such as Longhorn) is used, the specified PVC sizes will be enforced by the storage backend.
+  # In such cases, it is recommended that the PVC sizes for data and log volumes be increased according to the requirements of the production workload, as the default values may be insufficient.
   pvcSizes:
     # Log PVCs
     log:
