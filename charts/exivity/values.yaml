@@ -48,16 +48,16 @@ storage:
     # Log PVCs
     log:
       chronos: 1Gi
-      edify: 5Gi
+      edify: 1Gi
       executor: 1Gi
       glass: 1Gi
       griffon: 1Gi
       horizon: 1Gi
       pigeon: 1Gi
-      proximityApi: 5Gi
+      proximityApi: 1Gi
       proximityCli: 1Gi
-      transcript: 5Gi
-      use: 5Gi
+      transcript: 1Gi
+      use: 1Gi
 
     # Config PVCs
     config:
@@ -67,10 +67,10 @@ storage:
 
     # Data PVCs
     data:
-      exported: 30Gi
-      extracted: 30Gi
-      import: 30Gi
-      report: 30Gi
+      exported: 1Gi
+      extracted: 1Gi
+      import: 1Gi
+      report: 1Gi
 
 # Configuration for PostgreSQL, either as an embedded database using the Bitnami PostgreSQL chart or an external database.
 # It is recommended to use an external PostgreSQL server for production environments to ensure scalability and manageability.
