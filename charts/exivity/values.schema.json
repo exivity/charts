@@ -10,7 +10,7 @@
     "secret",
     "ingress",
     "storage",
-    "smtpConfig",
+    "smtp",
     "logfiles",
     "postgresql",
     "rabbitmq",
@@ -184,7 +184,7 @@
         }
       ]
     },
-    "smtpConfig": {
+    "smtp": {
       "type": "object",
       "properties": {
         "mail": {
@@ -192,7 +192,7 @@
           "properties": {
             "driver": { "type": "string" },
             "host": { "type": "string" },
-            "port": { "type": "integer" },
+            "port": { "type": "string" },
             "encryption": { "type": "string" },
             "smtpVerifyPeer": { "type": "boolean" },
             "fromAddress": { "type": "string" },
@@ -3064,11 +3064,11 @@
         "helmResourcePolicyKeep": true,
         "sharedVolumeAccessMode": "ReadWriteMany"
       },
-      "smtpConfig": {
+      "smtp": {
         "mail": {
           "driver": "",
           "host": "",
-          "port": 0,
+          "port": "",
           "encryption": "",
           "smtpVerifyPeer": false,
           "fromAddress": "",

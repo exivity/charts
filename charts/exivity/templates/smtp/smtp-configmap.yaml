@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "exivity.fullname" $ }}-config-smtp
+  labels:
+    {{- include "exivity.labels" $ | indent 4 }}
+data:
+  EXIVITY_MAIL_DRIVER: {{ .Values.smtp.mail.driver | quote }}
+  EXIVITY_MAIL_HOST: {{ .Values.smtp.mail.host | quote }}
+  EXIVITY_MAIL_PORT: {{ .Values.smtp.mail.port | quote }}
+  EXIVITY_MAIL_FROM_ADDRESS: {{ .Values.smtp.mail.fromAddress | quote }}
+  EXIVITY_MAIL_FROM_NAME: {{ .Values.smtp.mail.fromName | quote }}
+  EXIVITY_MAIL_ENCRYPTION: {{ .Values.smtp.mail.encryption | quote }}
+  EXIVITY_MAIL_SMTP_VERIFY_PEER: {{ .Values.smtp.mail.smtpVerifyPeer | quote }}

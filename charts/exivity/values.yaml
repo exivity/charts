@@ -78,17 +78,17 @@ storage:
       import: 1Gi
       report: 1Gi
 
-smtpConfig:
+smtp:
   mail:
     driver: "smtp"           # Mail driver to use (e.g. smtp)
-    host: "smtp.example.com" # SMTP server hostname
-    port: 587                # SMTP server port
-    encryption: "tls"       # Encryption type (tls/ssl/none)
+    host: ""                 # SMTP server hostname
+    port: "1025"              # SMTP server port
+    encryption: ""           # Encryption type (tls/ssl/none)
     smtpVerifyPeer: true     # Verify SMTP peer (true/false), only connect if the server’s certificate is valid and trusted.
-    fromAddress: "noreply@example.com" # Sender email address
-    fromName: "Exivity"     # Sender name
-    username: "user"        # SMTP username
-    password: "pass"        # SMTP password
+    fromAddress: ""          # Sender email address eg: noreply@exivity.com
+    fromName: ""             # Sender name eg: Exivity
+    username: "exivity"      # SMTP username 
+    password: "Exivity123!"  # SMTP password 
 
 logfiles:
     deleteDays: 365          # EXIVITY_LOGFILES_DELETE_DAYS: Delete logfiles after N days

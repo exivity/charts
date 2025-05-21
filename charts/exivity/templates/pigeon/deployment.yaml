@@ -18,7 +18,7 @@ spec:
         {{- include "exivity.labels" $ | indent 8 }}
       annotations:
         checksum/{{- include "exivity.fullname" $ -}}-config-pigeon: {{ include (print $.Template.BasePath "/pigeon/configmap.yaml") . | sha256sum }}
-        checksum/{{- include "exivity.fullname" $ -}}-smtp-secret: {{ include (print $.Template.BasePath "/smtp-secret.yaml") . | sha256sum }}
+        checksum/{{- include "exivity.fullname" $ -}}-smtp-secret: {{ include (print $.Template.BasePath "/smtp/smtp-secret.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "pigeon") | indent 8 }}

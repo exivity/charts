@@ -73,7 +73,7 @@ spec:
             - configMapRef:
                 name: {{ include "exivity.fullname" $ -}}-proximity-cli-env
             - configMapRef:
-                name: {{ include "exivity.fullname" $ -}}-config-logfile
+                name: {{ include "exivity.fullname" $ -}}-config-logfiles
             - secretRef:
                 name: {{ include "exivity.fullname" $ -}}-app-key
             - secretRef:
