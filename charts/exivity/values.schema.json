@@ -10,6 +10,8 @@
     "secret",
     "ingress",
     "storage",
+    "smtpConfig",
+    "logfiles",
     "postgresql",
     "rabbitmq",
     "service",
@@ -181,6 +183,35 @@
           "sharedVolumeAccessMode": "ReadWriteMany"
         }
       ]
+    },
+    "smtpConfig": {
+      "type": "object",
+      "properties": {
+        "mail": {
+          "type": "object",
+          "properties": {
+            "driver": { "type": "string" },
+            "host": { "type": "string" },
+            "port": { "type": "integer" },
+            "encryption": { "type": "string" },
+            "smtpVerifyPeer": { "type": "boolean" },
+            "fromAddress": { "type": "string" },
+            "fromName": { "type": "string" },
+            "username": { "type": "string" },
+            "password": { "type": "string" }
+          },
+          "required": ["driver", "host", "port", "encryption", "smtpVerifyPeer", "fromAddress", "fromName", "username", "password"]
+        }
+      },
+      "required": ["mail"]
+    },
+    "logfiles": {
+      "type": "object",
+      "properties": {
+        "deleteDays": { "type": "integer" },
+        "compressDays": { "type": "integer" }
+      },
+      "required": ["deleteDays", "compressDays"]
     },
     "postgresql": {
       "type": "object",
@@ -2775,6 +2806,7 @@
         }
       ]
     },
+   
     "logLevel": {
       "type": "object",
       "default": {},
@@ -2992,6 +3024,23 @@
         "storageClass": "",
         "helmResourcePolicyKeep": true,
         "sharedVolumeAccessMode": "ReadWriteMany"
+      },
+      "smtpConfig": {
+        "mail": {
+          "driver": "",
+          "host": "",
+          "port": 0,
+          "encryption": "",
+          "smtpVerifyPeer": false,
+          "fromAddress": "",
+          "fromName": "",
+          "username": "",
+          "password": ""
+        }
+      },
+      "logfiles": {
+        "deleteDays": 0,
+        "compressDays": 0
       },
       "postgresql": {
         "enabled": true,

@@ -39,6 +39,22 @@ storage:
   helmResourcePolicyKeep: true # Ensures that storage resources are retained after a Helm release is deleted.
   sharedVolumeAccessMode: ReadWriteMany # Defines the access mode for shared volumes; 'ReadWriteMany' allows multiple nodes to read/write simultaneously.
 
+smtpConfig:
+  mail:
+    driver: "smtp"           # Mail driver to use (e.g. smtp)
+    host: "smtp.example.com" # SMTP server hostname
+    port: 587                # SMTP server port
+    encryption: "tls"       # Encryption type (tls/ssl/none)
+    smtpVerifyPeer: true     # Verify SMTP peer (true/false), only connect if the server’s certificate is valid and trusted.
+    fromAddress: "noreply@example.com" # Sender email address
+    fromName: "Exivity"     # Sender name
+    username: "user"        # SMTP username
+    password: "pass"        # SMTP password
+
+logfiles:
+    deleteDays: 365          # EXIVITY_LOGFILES_DELETE_DAYS: Delete logfiles after N days
+    compressDays: 30         # EXIVITY_LOGFILES_COMPRESS_DAYS: Compress logfiles after N days
+
 # Configuration for PostgreSQL, either as an embedded database using the Bitnami PostgreSQL chart or an external database.
 # It is recommended to use an external PostgreSQL server for production environments to ensure scalability and manageability.
 # The embedded PostgreSQL chart is primarily intended for testing and non-production purposes.
@@ -401,23 +417,6 @@ service:
       #   -----BEGIN CERTIFICATE-----
       #   [Your Intermediate CA certificate here]
       #   -----END CERTIFICATE-----
-
-proximity:
-  # Mail configuration for Proximity. Set these values to enable outbound email notifications.
-  # Example for a typical SMTP server:
-  mail:
-    driver: "smtp"           # Mail driver to use (e.g. smtp)
-    host: "smtp.example.com" # SMTP server hostname
-    port: 587                # SMTP server port
-    encryption: "tls"       # Encryption type (tls/ssl/none)
-    smtpVerifyPeer: true     # Verify SMTP peer (true/false), only connect if the server’s certificate is valid and trusted.
-    fromAddress: "noreply@example.com" # Sender email address
-    fromName: "Exivity"     # Sender name
-    username: "user"        # SMTP username
-    password: "pass"        # SMTP password
-  logfiles:
-    deleteDays: 365          # EXIVITY_LOGFILES_DELETE_DAYS: Delete logfiles after N days
-    compressDays: 30         # EXIVITY_LOGFILES_COMPRESS_DAYS: Compress logfiles after N days
 
 # Default log level for backend services. Accepts 'debug', 'info'.
 # Use 'debug' for development environments and 'info' or higher for production to reduce log verbosity.
