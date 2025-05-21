@@ -121,13 +121,17 @@ spec:
               mountPath: /exivity/home/system/report
             - name:      exivity-lock
               mountPath: /exivity/program
+          env:
+            - name: EXIVITY_LICENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ -}}-licence-key
+                  key:                                     license.key
           envFrom:
             - secretRef:
                 name: {{ include "exivity.fullname" $ -}}-app-key
             - secretRef:
                 name: {{ include "exivity.fullname" $ -}}-jwt-secret
-            - secretRef:
-                name: {{ include "exivity.fullname" $ -}}-licence-key
             - secretRef:
                 name: {{ include "exivity.fullname" $ -}}-smtp-secret
             - configMapRef:

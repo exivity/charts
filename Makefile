@@ -41,7 +41,7 @@ deploy-nfs-chart:
         --debug \
         --timeout $(HELM_TIMEOUT) \
         --set persistence.enabled=true \
-        --set persistence.size=5Gi \
+        --set persistence.size=20Gi \
         --set storageClass.name=$(NFS_STORAGE_CLASS) \
         --set storageClass.allowVolumeExpansion=true \
         --set 'storageClass.mountOptions[0]=nfsvers=4.2' \
@@ -65,7 +65,7 @@ install-python-deps:
 test:
 	@echo "Running tests..."
 	@python3 test/test.py --hostname $(INGRESS_HOSTNAME) --ip $$(minikube ip)
-        
+
 # Lint Helm chart
 lint:
 	@helm lint charts/exivity

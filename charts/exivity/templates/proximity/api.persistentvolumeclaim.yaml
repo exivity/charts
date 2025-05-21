@@ -10,7 +10,7 @@ spec:
     - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
-      storage: 1Gi
+      storage: {{ .Values.storage.pvcSizes.log.proximityApi }}
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}
