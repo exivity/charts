@@ -10,7 +10,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: {{ .Values.storage.pvcSizes.config.griffon }}
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}
@@ -29,7 +29,7 @@ spec:
     - {{ .Values.storage.sharedVolumeAccessMode }}
   resources:
     requests:
-      storage: 1Gi
+      storage: {{ .Values.storage.pvcSizes.log.griffon }}
 {{- if .Values.storage.storageClass }}
   storageClassName: {{ .Values.storage.storageClass }}
 {{ end }}

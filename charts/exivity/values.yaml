@@ -39,6 +39,45 @@ storage:
   helmResourcePolicyKeep: true # Ensures that storage resources are retained after a Helm release is deleted.
   sharedVolumeAccessMode: ReadWriteMany # Defines the access mode for shared volumes; 'ReadWriteMany' allows multiple nodes to read/write simultaneously.
 
+  # PVC storage sizes organized by type and component
+  # Specify the storage size for each PVC as a string (e.g., "1Gi", "500Mi", etc.).
+  # The sizes are grouped by their purpose (log, config, data) and component for better clarity.
+  #
+  # When the NFS server provisioner (https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner)
+  # is used as the storage provider, the configured PVC sizes will not be enforced.
+  # In this case, each PVC may consume up to the total available space on the NFS server, regardless of the size specified here.
+  # Therefore, the default values for PVC sizes should not be changed when NFS is used, to ensure compatibility with existing deployments and to avoid unexpected behavior.
+  #
+  # When an alternative CSI storage provider (such as Longhorn) is used, the specified PVC sizes will be enforced by the storage backend.
+  # In such cases, it is recommended that the PVC sizes for data and log volumes be increased according to the requirements of the production workload, as the default values may be insufficient.
+  pvcSizes:
+    # Log PVCs
+    log:
+      chronos: 1Gi
+      edify: 1Gi
+      executor: 1Gi
+      glass: 1Gi
+      griffon: 1Gi
+      horizon: 1Gi
+      pigeon: 1Gi
+      proximityApi: 1Gi
+      proximityCli: 1Gi
+      transcript: 1Gi
+      use: 1Gi
+
+    # Config PVCs
+    config:
+      etl: 1Gi
+      griffon: 1Gi
+      chronos: 1Gi
+
+    # Data PVCs
+    data:
+      exported: 1Gi
+      extracted: 1Gi
+      import: 1Gi
+      report: 1Gi
+
 # Configuration for PostgreSQL, either as an embedded database using the Bitnami PostgreSQL chart or an external database.
 # It is recommended to use an external PostgreSQL server for production environments to ensure scalability and manageability.
 # The embedded PostgreSQL chart is primarily intended for testing and non-production purposes.

@@ -2967,6 +2967,45 @@
           }
         }
       ]
+    },
+    "pvcSizes": {
+      "type": "object",
+      "title": "The pvcSizes Schema",
+      "properties": {
+        "log": {
+          "type": "object",
+          "properties": {
+            "chronos": { "type": "string" },
+            "edify": { "type": "string" },
+            "executor": { "type": "string" },
+            "glass": { "type": "string" },
+            "griffon": { "type": "string" },
+            "horizon": { "type": "string" },
+            "pigeon": { "type": "string" },
+            "proximityApi": { "type": "string" },
+            "proximityCli": { "type": "string" },
+            "transcript": { "type": "string" },
+            "use": { "type": "string" }
+          }
+        },
+        "config": {
+          "type": "object",
+          "properties": {
+            "etl": { "type": "string" },
+            "griffon": { "type": "string" },
+            "chronos": { "type": "string" }
+          }
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "exported": { "type": "string" },
+            "extracted": { "type": "string" },
+            "import": { "type": "string" },
+            "report": { "type": "string" }
+          }
+        }
+      }
     }
   },
   "examples": [
