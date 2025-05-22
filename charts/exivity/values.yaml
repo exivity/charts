@@ -91,8 +91,8 @@ smtp:
     password: "Exivity123!"  # SMTP password 
 
 logfiles:
-    deleteDays: 365          # EXIVITY_LOGFILES_DELETE_DAYS: Delete logfiles after N days
-    compressDays: 30         # EXIVITY_LOGFILES_COMPRESS_DAYS: Compress logfiles after N days
+  deleteDays: 365          # Delete logfiles after N days
+  compressDays: 30         # Compress logfiles after N days
 
 # Configuration for PostgreSQL, either as an embedded database using the Bitnami PostgreSQL chart or an external database.
 # It is recommended to use an external PostgreSQL server for production environments to ensure scalability and manageability.
