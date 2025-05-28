@@ -10,7 +10,6 @@
     "secret",
     "ingress",
     "storage",
-    "logfiles",
     "postgresql",
     "rabbitmq",
     "service",
@@ -249,14 +248,6 @@
           "additionalProperties": false
         }
       }
-    },
-    "logfiles": {
-      "type": "object",
-      "properties": {
-        "deleteDays": { "type": "integer" },
-        "compressDays": { "type": "integer" }
-      },
-      "required": ["deleteDays", "compressDays"]
     },
     "postgresql": {
       "type": "object",
@@ -3121,10 +3112,6 @@
           "username": "",
           "password": ""
         }
-      },
-      "logfiles": {
-        "deleteDays": 0,
-        "compressDays": 0
       },
       "postgresql": {
         "enabled": true,
