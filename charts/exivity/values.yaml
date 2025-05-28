@@ -78,21 +78,24 @@ storage:
       import: 1Gi
       report: 1Gi
 
-smtp:
-  mail:
-    driver: "smtp"           # Mail driver to use (e.g. smtp)
-    host: "exivity"                 # SMTP server hostname
-    port: "1025"              # SMTP server port
-    encryption: "ssl"           # Encryption type (tls/ssl/none)
-    smtpVerifyPeer: true     # Verify SMTP peer (true/false), only connect if the server’s certificate is valid and trusted.
-    fromAddress: "noreply@exivity.com"          # Sender email address eg: noreply@exivity.com
-    fromName: "Exivity"             # Sender name eg: Exivity
-    username: "exivity"      # SMTP username 
-    password: "Exivity123!"  # SMTP password 
+communications:
+  {}
+  # SMTP settings
+  # smtp:
+  #   driver: smtp # mail "driver" (e.g. smtp)
+  #   host: smtp.example.com # SMTP server hostname
+  #   port: 465 # SMTP server port
+  #   encryption: tls # one of: none | ssl | tls
+  #   verifyPeer: true # verify certificate trust chain and hostname
+  #   fromAddress: noreply@exivity.com
+  #   fromName: Exivity
+  #   auth:
+  #     username: info@your-domain
+  #     password: SuperSecure
 
 logfiles:
-  deleteDays: 365          # Delete logfiles after N days
-  compressDays: 30         # Compress logfiles after N days
+  deleteDays: 365 # Delete logfiles after N days
+  compressDays: 30 # Compress logfiles after N days
 
 # Configuration for PostgreSQL, either as an embedded database using the Bitnami PostgreSQL chart or an external database.
 # It is recommended to use an external PostgreSQL server for production environments to ensure scalability and manageability.

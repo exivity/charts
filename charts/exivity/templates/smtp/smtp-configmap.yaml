@@ -5,10 +5,24 @@ metadata:
   labels:
     {{- include "exivity.labels" $ | indent 4 }}
 data:
-  EXIVITY_MAIL_DRIVER: {{ .Values.smtp.mail.driver | quote }}
-  EXIVITY_MAIL_HOST: {{ .Values.smtp.mail.host | quote }}
-  EXIVITY_MAIL_PORT: {{ .Values.smtp.mail.port | quote }}
-  EXIVITY_MAIL_FROM_ADDRESS: {{ .Values.smtp.mail.fromAddress | quote }}
-  EXIVITY_MAIL_FROM_NAME: {{ .Values.smtp.mail.fromName | quote }}
-  EXIVITY_MAIL_ENCRYPTION: {{ .Values.smtp.mail.encryption | quote }}
-  EXIVITY_MAIL_SMTP_VERIFY_PEER: {{ .Values.smtp.mail.smtpVerifyPeer | quote }}
+  {{- if .Values.communications.smtp.driver }}
+  EXIVITY_MAIL_DRIVER: {{ .Values.communications.smtp.driver | quote }}
+  {{- end }}
+  {{- if .Values.communications.smtp.host }}
+  EXIVITY_MAIL_HOST: {{ .Values.communications.smtp.host | quote }}
+  {{- end }}
+  {{- if .Values.communications.smtp.port }}
+  EXIVITY_MAIL_PORT: {{ .Values.communications.smtp.port | quote }}
+  {{- end }}
+  {{- if .Values.communications.smtp.fromAddress }}
+  EXIVITY_MAIL_FROM_ADDRESS: {{ .Values.communications.smtp.fromAddress | quote }}
+  {{- end }}
+  {{- if .Values.communications.smtp.fromName }}
+  EXIVITY_MAIL_FROM_NAME: {{ .Values.communications.smtp.fromName | quote }}
+  {{- end }}
+  {{- if .Values.communications.smtp.encryption }}
+  EXIVITY_MAIL_ENCRYPTION: {{ .Values.communications.smtp.encryption | quote }}
+  {{- end }}
+  {{- if .Values.communications.smtp.smtpVerifyPeer }}
+  EXIVITY_MAIL_SMTP_VERIFY_PEER: {{ .Values.communications.smtp.smtpVerifyPeer | quote }}
+  {{- end }}
