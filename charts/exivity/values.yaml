@@ -466,3 +466,12 @@ prometheus:
     enabled: false
     serviceMonitor:
       enabled: false
+
+# Mailpit configuration
+mailpit:
+  enabled: true
+  serviceType: ClusterIP
+  enableSpamAssassin: true
+  webui:
+    username: exivity
+    password: SimplePassw0rd!

@@ -1,0 +1,46 @@
+{{- if .Values.mailpit.enabled }}
+apiVersion: apps/v1
+kind: Deployment  
+metadata:
+  name: {{ include "exivity.fullname" . }}-mailpit
+  labels:
+    app.kubernetes.io/component: mailpit
+    {{- include "exivity.labels" . | nindent 4 }}
+  annotations:
+    checksum/{{ include "exivity.fullname" . }}-mailpit-webui-secret: {{ include (print $.Template.BasePath "/mailpit/secret.yaml") . | sha256sum }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: mailpit
+      {{- include "exivity.matchLabels" . | nindent 6 }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: mailpit
+        {{- include "exivity.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ include "exivity.fullname" . }}-mailpit
+          image: axllent/mailpit:latest
+          ports:
+            - containerPort: 8025
+              name: http
+            - containerPort: 1025
+              name: smtp
+          env:
+            - name: MP_SMTP_AUTH_ALLOW_INSECURE
+              value: "true"
+            - name: MP_UI_AUTH_FILE
+              value: /etc/mailpit/webui/credentials.txt
+            - name:  MP_ENABLE_SPAMASSASSIN
+              value: "true"
+          volumeMounts:
+            - name: webui-credentials
+              mountPath: /etc/mailpit/webui
+              readOnly: true
+      volumes:
+        - name: webui-credentials
+          secret:
+            secretName: {{ include "exivity.fullname" . }}-mailpit-webui-secret
+{{- end }}
