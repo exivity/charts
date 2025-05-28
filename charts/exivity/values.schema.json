@@ -10,7 +10,6 @@
     "secret",
     "ingress",
     "storage",
-    "smtp",
     "logfiles",
     "postgresql",
     "rabbitmq",
@@ -192,18 +191,16 @@
           "properties": {
             "driver": { "type": "string" },
             "host": { "type": "string" },
-            "port": { "type": "string" },
+            "port": { "type": "integer" },
             "encryption": { "type": "string" },
             "smtpVerifyPeer": { "type": "boolean" },
             "fromAddress": { "type": "string" },
             "fromName": { "type": "string" },
             "username": { "type": "string" },
             "password": { "type": "string" }
-          },
-          "required": ["driver", "host", "port", "encryption", "smtpVerifyPeer", "fromAddress", "fromName", "username", "password"]
+          }
         }
-      },
-      "required": ["mail"]
+      }
     },
     "logfiles": {
       "type": "object",
@@ -2806,7 +2803,7 @@
         }
       ]
     },
-   
+
     "logLevel": {
       "type": "object",
       "default": {},

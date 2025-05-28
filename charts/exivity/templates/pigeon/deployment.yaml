@@ -18,6 +18,7 @@ spec:
         {{- include "exivity.labels" $ | indent 8 }}
       annotations:
         checksum/{{- include "exivity.fullname" $ -}}-config-pigeon: {{ include (print $.Template.BasePath "/pigeon/configmap.yaml") . | sha256sum }}
+        checksum/{{- include "exivity.fullname" $ -}}-config-smtp: {{ include (print $.Template.BasePath "/smtp/smtp-configmap.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-smtp-secret: {{ include (print $.Template.BasePath "/smtp/smtp-secret.yaml") . | sha256sum }}
     spec:
       securityContext:
@@ -62,6 +63,8 @@ spec:
                 name: {{ include "exivity.fullname" $ -}}-app-key
             - secretRef:
                 name: {{ include "exivity.fullname" $ -}}-smtp-secret
+            - configMapRef:
+                name: {{ include "exivity.fullname" $ -}}-config-smtp
           env:
             - name:  REDIS_HOST
               value: exivity-redis-master

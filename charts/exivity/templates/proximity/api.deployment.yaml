@@ -132,10 +132,10 @@ spec:
                 name: {{ include "exivity.fullname" $ -}}-app-key
             - secretRef:
                 name: {{ include "exivity.fullname" $ -}}-jwt-secret
-            - secretRef:
-                name: {{ include "exivity.fullname" $ -}}-smtp-secret
             - configMapRef:
                 name: {{ include "exivity.fullname" $ -}}-proximity-api-env
+            - secretRef:
+                name: {{ include "exivity.fullname" $ -}}-smtp-secret
             - configMapRef:
                 name: {{ include "exivity.fullname" $ -}}-config-smtp
           {{- include "exivity.probes" $ | indent 10}}
