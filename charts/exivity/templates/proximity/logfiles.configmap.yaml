@@ -5,5 +5,5 @@ metadata:
   labels:
     {{- include "exivity.labels" $ | indent 4 }}
 data:
-  LOGFILES_DELETE_DAYS: "{{ .Values.logfiles.deleteDays }}"
-  LOGFILES_COMPRESS_DAYS: "{{ .Values.logfiles.compressDays }}"
+  EXIVITY_LOGFILES_DELETE_DAYS: "{{ .Values.logfiles.deleteDays }}"
+  EXIVITY_LOGFILES_COMPRESS_DAYS: "{{ .Values.logfiles.compressDays }}"

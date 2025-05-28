@@ -62,6 +62,8 @@ spec:
                 name: {{ include "exivity.fullname" $ -}}-app-key
             - secretRef:
                 name: {{ include "exivity.fullname" $ -}}-smtp-secret
+            - configMapRef:
+                name: {{ include "exivity.fullname" $ -}}-config-smtp
           env:
             - name:  REDIS_HOST
               value: exivity-redis-master

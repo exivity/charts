@@ -38,6 +38,8 @@ spec:
                   name: {{ include "exivity.fullname" $ -}}-licence-pub
               - secret:
                   name: {{ include "exivity.fullname" $ -}}-licence-key
+              - configMap:
+                  name: {{ include "exivity.fullname" $ -}}-config-smtp
         - name: exivity-lock
           configMap:
             name: {{ include "exivity.fullname" $ -}}-lock
