@@ -5,7 +5,7 @@ metadata:
   name: {{ include "exivity.fullname" . }}-mailpit
   labels:
     app.kubernetes.io/component: mailpit
-    {{ include "exivity.labels" . | nindent 4 }}
+    {{- include "exivity.labels" . | nindent 4 }}
 spec:
   ports:
     - name: http
@@ -16,5 +16,5 @@ spec:
       targetPort: 1025
   selector:
     app.kubernetes.io/component: mailpit
-    {{ include "exivity.matchLabels" . | nindent 6 }}
+    {{- include "exivity.matchLabels" . | nindent 4 }}
 {{- end }}
