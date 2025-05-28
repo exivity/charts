@@ -78,17 +78,20 @@ storage:
       import: 1Gi
       report: 1Gi
 
-smtp:
-  mail:
-    driver: "smtp" # Mail driver to use (e.g. smtp)
-    # host: ""                  # SMTP server hostname
-    # port: "1025"              # SMTP server port
-    # encryption: ""           # Encryption type (tls/ssl/none)
-    # smtpVerifyPeer: true     # Verify SMTP peer (true/false), only connect if the server's certificate is valid and trusted.
-    # fromAddress: ""          # Sender email address eg: noreply@exivity.com
-    # fromName: ""                    # Sender name eg: Exivity
-    # username: "info@your-domain"      # SMTP username
-    # password: "SuperSecure"  # SMTP password
+communications:
+  {}
+  # SMTP settings
+  # smtp:
+  #   driver: smtp # mail "driver" (e.g. smtp)
+  #   host: smtp.example.com # SMTP server hostname
+  #   port: 465 # SMTP server port
+  #   encryption: tls # one of: none | ssl | tls
+  #   verifyPeer: true # verify certificate trust chain and hostname
+  #   fromAddress: noreply@exivity.com
+  #   fromName: Exivity
+  #   auth:
+  #     username: info@your-domain
+  #     password: SuperSecure
 
 logfiles:
   deleteDays: 365 # Delete logfiles after N days
