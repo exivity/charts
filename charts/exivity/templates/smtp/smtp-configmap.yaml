@@ -1,3 +1,4 @@
+{{- if .Values.communications.smtp }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -5,24 +6,27 @@ metadata:
   labels:
     {{- include "exivity.labels" $ | indent 4 }}
 data:
-  {{- if .Values.communications.smtp.driver }}
-  EXIVITY_MAIL_DRIVER: {{ .Values.communications.smtp.driver | quote }}
+  {{- with .Values.communications.smtp }}
+  {{- if .driver }}
+  EXIVITY_MAIL_DRIVER: {{ .driver | quote }}
   {{- end }}
-  {{- if .Values.communications.smtp.host }}
-  EXIVITY_MAIL_HOST: {{ .Values.communications.smtp.host | quote }}
+  {{- if .host }}
+  EXIVITY_MAIL_HOST: {{ .host | quote }}
   {{- end }}
-  {{- if .Values.communications.smtp.port }}
-  EXIVITY_MAIL_PORT: {{ .Values.communications.smtp.port | quote }}
+  {{- if .port }}
+  EXIVITY_MAIL_PORT: {{ .port | quote }}
   {{- end }}
-  {{- if .Values.communications.smtp.fromAddress }}
-  EXIVITY_MAIL_FROM_ADDRESS: {{ .Values.communications.smtp.fromAddress | quote }}
+  {{- if .fromAddress }}
+  EXIVITY_MAIL_FROM_ADDRESS: {{ .fromAddress | quote }}
   {{- end }}
-  {{- if .Values.communications.smtp.fromName }}
-  EXIVITY_MAIL_FROM_NAME: {{ .Values.communications.smtp.fromName | quote }}
+  {{- if .fromName }}
+  EXIVITY_MAIL_FROM_NAME: {{ .fromName | quote }}
   {{- end }}
-  {{- if .Values.communications.smtp.encryption }}
-  EXIVITY_MAIL_ENCRYPTION: {{ .Values.communications.smtp.encryption | quote }}
+  {{- if .encryption }}
+  EXIVITY_MAIL_ENCRYPTION: {{ .encryption | quote }}
   {{- end }}
-  {{- if .Values.communications.smtp.smtpVerifyPeer }}
-  EXIVITY_MAIL_SMTP_VERIFY_PEER: {{ .Values.communications.smtp.smtpVerifyPeer | quote }}
+  {{- if .smtpVerifyPeer }}
+  EXIVITY_MAIL_SMTP_VERIFY_PEER: {{ .smtpVerifyPeer | quote }}
   {{- end }}
+  {{- end }}
+{{- end }}
