@@ -38,8 +38,6 @@ spec:
                   name: {{ include "exivity.fullname" $ -}}-licence-pub
               - secret:
                   name: {{ include "exivity.fullname" $ -}}-licence-key
-              - configMap:
-                  name: {{ include "exivity.fullname" $ -}}-config-smtp
         - name: exivity-lock
           configMap:
             name: {{ include "exivity.fullname" $ -}}-lock
@@ -136,10 +134,12 @@ spec:
                 name: {{ include "exivity.fullname" $ -}}-jwt-secret
             - configMapRef:
                 name: {{ include "exivity.fullname" $ -}}-proximity-api-env
+            {{- if and .Values.communications .Values.communications.smtp }}
             - secretRef:
                 name: {{ include "exivity.fullname" $ -}}-smtp-secret
             - configMapRef:
-                name: {{ include "exivity.fullname" $ -}}-config-smtp
+                name: {{ include "exivity.fullname" . }}-config-smtp
+            {{- end }}
           {{- include "exivity.probes" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
