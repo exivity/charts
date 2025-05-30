@@ -20,6 +20,7 @@ spec:
         checksum/{{- include "exivity.fullname" $ -}}-config-proximity-cli: {{ include (print $.Template.BasePath "/proximity/cli.configmap.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-proximity-cli-env: {{ include (print $.Template.BasePath "/proximity/cli.env.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/{{- include "exivity.fullname" $ -}}-config-logfiles: {{ include (print $.Template.BasePath "/logfiles-configmap.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "proximityCli") | indent 8 }}
@@ -75,6 +76,8 @@ spec:
                 name: {{ include "exivity.fullname" $ -}}-app-key
             - secretRef:
                 name: {{ include "exivity.fullname" $ -}}-jwt-secret
+            - configMapRef:
+                name: {{ include "exivity.fullname" $ -}}-config-logfiles
           {{- include "exivity.probes" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
