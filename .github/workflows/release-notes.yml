@@ -11,7 +11,7 @@ jobs:
   check-release-notes:
     runs-on: ubuntu-latest
     steps:
-      - uses: exivity/actions/release-notes@chore/modify-release-notes-authentication
+      - uses: exivity/actions/release-notes@main
         with:
           gh-token: ${{ secrets.GH_BOT_TOKEN }}
           jira-username: ${{ secrets.JIRA_BOT_EMAIL }}
