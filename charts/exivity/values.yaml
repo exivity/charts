@@ -468,5 +468,5 @@ prometheus:
       enabled: false
 
 logfiles:
-  deleteDays: 3         # Delete logfiles after N days
-  compressDays: 1         # Compress logfiles after N days
+  deleteDays: 365         # Delete logfiles after N days
+  compressDays: 30         # Compress logfiles after N days
