@@ -1,0 +1,135 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "exivity.fullname" $ }}-init-permissions
+  labels:
+    {{- include "exivity.labels" $ | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-upgrade,post-install
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+        fsGroup: 0
+      containers:
+        - name: init-permissions
+          image: busybox:stable
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              chown -R 1000:1000 /mnt/etl-config
+              chown -R 1000:1000 /mnt/exported
+              chown -R 1000:1000 /mnt/extracted
+              chown -R 1000:1000 /mnt/import
+              chown -R 1000:1000 /mnt/report
+              chown -R 1000:1000 /mnt/chronos-config
+              chown -R 1000:1000 /mnt/chronos-log
+              chown -R 1000:1000 /mnt/griffon-config
+              chown -R 1000:1000 /mnt/griffon-log
+              chown -R 1000:1000 /mnt/edify-log
+              chown -R 1000:1000 /mnt/executor-log
+              chown -R 1000:1000 /mnt/glass-log
+              chown -R 1000:1000 /mnt/horizon-log
+              chown -R 1000:1000 /mnt/pigeon-log
+              chown -R 1000:1000 /mnt/proximity-api-log
+              chown -R 1000:1000 /mnt/proximity-cli-log
+              chown -R 1000:1000 /mnt/transcript-log
+              chown -R 1000:1000 /mnt/use-log
+          volumeMounts:
+            - name: etl-config
+              mountPath: /mnt/etl-config
+            - name: exported
+              mountPath: /mnt/exported
+            - name: extracted
+              mountPath: /mnt/extracted
+            - name: import
+              mountPath: /mnt/import
+            - name: report
+              mountPath: /mnt/report
+            - name: chronos-config
+              mountPath: /mnt/chronos-config
+            - name: chronos-log
+              mountPath: /mnt/chronos-log
+            - name: griffon-config
+              mountPath: /mnt/griffon-config
+            - name: griffon-log
+              mountPath: /mnt/griffon-log
+            - name: edify-log
+              mountPath: /mnt/edify-log
+            - name: executor-log
+              mountPath: /mnt/executor-log
+            - name: glass-log
+              mountPath: /mnt/glass-log
+            - name: horizon-log
+              mountPath: /mnt/horizon-log
+            - name: pigeon-log
+              mountPath: /mnt/pigeon-log
+            - name: proximity-api-log
+              mountPath: /mnt/proximity-api-log
+            - name: proximity-cli-log
+              mountPath: /mnt/proximity-cli-log
+            - name: transcript-log
+              mountPath: /mnt/transcript-log
+            - name: use-log
+              mountPath: /mnt/use-log
+      volumes:
+        - name: etl-config
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ }}-etl-config
+        - name: exported
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ }}-exported
+        - name: extracted
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ }}-extracted
+        - name: import
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ }}-import
+        - name: report
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ }}-report
+        - name: chronos-config
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ }}-chronos-config
+        - name: chronos-log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ }}-chronos-log
+        - name: griffon-config
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ }}-griffon-config
+        - name: griffon-log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ }}-griffon-log
+        - name: edify-log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ }}-edify-log
+        - name: executor-log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ }}-executor-log
+        - name: glass-log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ }}-glass-log
+        - name: horizon-log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ }}-horizon-log
+        - name: pigeon-log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ }}-pigeon-log
+        - name: proximity-api-log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ }}-proximity-api-log
+        - name: proximity-cli-log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ }}-proximity-cli-log
+        - name: transcript-log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ }}-transcript-log
+        - name: use-log
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ }}-use-log
