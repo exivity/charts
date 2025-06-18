@@ -19,5 +19,5 @@ and emit the whole block indented 8 spaces.
 {{- $svc      := index $root.Values.service $name | default dict -}}
 {{- $override := $svc.securityContext        | default dict -}}
 {{- $merged   := merge $globalSC $override   -}}
-{{- printf "%s:%s" $merged.runAsUser $merged.runAsGroup -}}
+{{- printf "%d:%d" ($merged.runAsUser | int) ($merged.runAsGroup | int) -}}
 {{- end -}}
