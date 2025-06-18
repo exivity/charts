@@ -5,8 +5,8 @@ metadata:
   labels:
     {{- include "exivity.labels" $ | nindent 4 }}
   annotations:
-    "helm.sh/hook": pre-upgrade,post-install
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    helm.sh/hook-weight: "-1"
 spec:
   template:
     spec:
@@ -23,24 +23,24 @@ spec:
             - -c
             - |
               set -e
-              chown -R 1000:1000 /mnt/etl-config
-              chown -R 1000:1000 /mnt/exported
-              chown -R 1000:1000 /mnt/extracted
-              chown -R 1000:1000 /mnt/import
-              chown -R 1000:1000 /mnt/report
-              chown -R 1000:1000 /mnt/chronos-config
-              chown -R 1000:1000 /mnt/chronos-log
-              chown -R 1000:1000 /mnt/griffon-config
-              chown -R 1000:1000 /mnt/griffon-log
-              chown -R 1000:1000 /mnt/edify-log
-              chown -R 1000:1000 /mnt/executor-log
-              chown -R 1000:1000 /mnt/glass-log
-              chown -R 1000:1000 /mnt/horizon-log
-              chown -R 1000:1000 /mnt/pigeon-log
-              chown -R 1000:1000 /mnt/proximity-api-log
-              chown -R 1000:1000 /mnt/proximity-cli-log
-              chown -R 1000:1000 /mnt/transcript-log
-              chown -R 1000:1000 /mnt/use-log
+              chown -R {{ include "exivity.userGroup" (dict "root" . "component" "use") }} /mnt/etl-config
+              chown -R {{ include "exivity.userGroup" (dict "root" . "component" "use") }} /mnt/exported
+              chown -R {{ include "exivity.userGroup" (dict "root" . "component" "use") }} /mnt/extracted
+              chown -R {{ include "exivity.userGroup" (dict "root" . "component" "use") }} /mnt/import
+              chown -R {{ include "exivity.userGroup" (dict "root" . "component" "use") }} /mnt/report
+              chown -R {{ include "exivity.userGroup" (dict "root" . "component" "chronos") }} /mnt/chronos-config
+              chown -R {{ include "exivity.userGroup" (dict "root" . "component" "chronos") }} /mnt/chronos-log
+              chown -R {{ include "exivity.userGroup" (dict "root" . "component" "griffon") }} /mnt/griffon-config
+              chown -R {{ include "exivity.userGroup" (dict "root" . "component" "griffon") }} /mnt/griffon-log
+              chown -R {{ include "exivity.userGroup" (dict "root" . "component" "edify") }} /mnt/edify-log
+              chown -R {{ include "exivity.userGroup" (dict "root" . "component" "executor") }} /mnt/executor-log
+              chown -R {{ include "exivity.userGroup" (dict "root" . "component" "glass") }} /mnt/glass-log
+              chown -R {{ include "exivity.userGroup" (dict "root" . "component" "horizon") }} /mnt/horizon-log
+              chown -R {{ include "exivity.userGroup" (dict "root" . "component" "pigeon") }} /mnt/pigeon-log
+              chown -R {{ include "exivity.userGroup" (dict "root" . "component" "proximityApi") }} /mnt/proximity-api-log
+              chown -R {{ include "exivity.userGroup" (dict "root" . "component" "proximityCli") }} /mnt/proximity-cli-log
+              chown -R {{ include "exivity.userGroup" (dict "root" . "component" "transcript") }} /mnt/transcript-log
+              chown -R {{ include "exivity.userGroup" (dict "root" . "component" "use") }} /mnt/use-log
           volumeMounts:
             - name: etl-config
               mountPath: /mnt/etl-config
