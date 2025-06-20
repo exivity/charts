@@ -47,7 +47,9 @@ jobs:
           
           # Create legacy format keyrings that Helm expects
           gpg --batch --export > ~/.gnupg/pubring.gpg
-          gpg --batch --export-secret-keys > ~/.gnupg/secring.gpg
+          
+          # Export secret keys with passphrase (using gpg-preset-passphrase or temp file)
+          echo "${{ secrets.HELM_GPG_PASSPHRASE }}" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 --export-secret-keys > ~/.gnupg/secring.gpg
           
           # Verify key import (trust-model always is set in gpg.conf, so no ownertrust needed)
           echo "Imported GPG keys:"
