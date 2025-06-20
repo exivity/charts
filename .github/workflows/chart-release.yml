@@ -10,6 +10,9 @@ on:
 jobs:
   helm-release:
     runs-on: ubuntu-latest
+    env:
+      GPG_KEY_ID: ${{ secrets.HELM_GPG_KEY_ID }}
+      GPG_PASSPHRASE: ${{ secrets.HELM_GPG_PASSPHRASE }}
 
     steps:
       - name: Checkout
@@ -21,153 +24,53 @@ jobs:
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          helm repo add bitnami https://charts.bitnami.com/bitnami
 
-      - name: Import GPG private key and setup keyring
+      - name: Configure GPG
         run: |
-          # Import GPG key directly from secret (no intermediate files)
-          echo "Importing GPG key directly from secret..."
-          
-          # Setup GPG environment for non-interactive use
-          export GPG_TTY=$(tty)
           mkdir -p ~/.gnupg
           chmod 700 ~/.gnupg
-          
-          # Configure GPG for CI/batch mode
           echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
-          echo "trust-model always" >> ~/.gnupg/gpg.conf
-          echo "batch" >> ~/.gnupg/gpg.conf
-          echo "no-tty" >> ~/.gnupg/gpg.conf
-          
-          echo "allow-loopback-pinentry" > ~/.gnupg/gpg-agent.conf
-          chmod 600 ~/.gnupg/gpg-agent.conf ~/.gnupg/gpg.conf
-          
-          # Decode and import in one step (suppress base64 warnings)
-          echo "${{ secrets.HELM_GPG_PRIVATE_KEY }}" | base64 -d 2>/dev/null | gpg --batch --import
-          
-          # Create legacy format keyrings that Helm expects
-          gpg --batch --export > ~/.gnupg/pubring.gpg
-          
-          # Export secret keys with passphrase (using gpg-preset-passphrase or temp file)
-          echo "${{ secrets.HELM_GPG_PASSPHRASE }}" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 --export-secret-keys > ~/.gnupg/secring.gpg
-          
-          # Verify key import (trust-model always is set in gpg.conf, so no ownertrust needed)
-          echo "Imported GPG keys:"
-          gpg --list-secret-keys --keyid-format LONG
-          
-          # Check key algorithm type for Helm compatibility
-          echo "Key algorithm details:"
-          gpg --list-secret-keys --with-subkey-fingerprint --keyid-format LONG
-          
-          # Verify we can use the key for signing
-          GPG_KEY_ID="${{ secrets.HELM_GPG_KEY_ID }}"
-          echo "${{ secrets.HELM_GPG_KEY_ID }}"
-          echo "Key ID to use for signing: $GPG_KEY_ID"
+          echo "${{ secrets.HELM_GPG_PRIVATE_KEY }}" | base64 -d | gpg --batch --import
+          echo "$GPG_PASSPHRASE" | gpg --batch --passphrase-fd 0 --export-secret-keys > ~/.gnupg/secring.gpg
 
-      - name: Create GPG passphrase file
+      - name: Package and Sign Charts
         run: |
-          # Create passphrase file directly from secret
-          echo "${{ secrets.HELM_GPG_PASSPHRASE }}" > gpg-passphrase.txt
-          chmod 600 gpg-passphrase.txt
-
-      - name: Package and sign charts using Helm directly
-        run: |
-          # Get the GPG key ID directly from secret for signing
-          GPG_KEY_ID="${{ secrets.HELM_GPG_KEY_ID }}"
-          echo "Using GPG key ID: $GPG_KEY_ID"
-          
-          # Find all charts to package and sign
           for chart_dir in charts/*/; do
-            if [ -f "$chart_dir/Chart.yaml" ]; then
-              echo "Packaging chart: $chart_dir"
-              
-              # Package chart without signing first (since Ed25519 not supported by helm)
-              helm package "$chart_dir"
-              
-              # Get the generated chart file name
-              CHART_NAME=$(basename "$chart_dir")
-              CHART_VERSION=$(helm show chart "$chart_dir" | grep '^version:' | awk '{print $2}')
-              CHART_FILE="${CHART_NAME}-${CHART_VERSION}.tgz"
-              
-              echo "Signing chart package: $CHART_FILE"
-              
-              # Sign the chart package manually with GPG (supports Ed25519)
-              echo "${{ secrets.HELM_GPG_PASSPHRASE }}" | gpg --batch --yes --pinentry-mode loopback \
-                --passphrase-fd 0 --local-user "$GPG_KEY_ID" \
-                --detach-sign --armor "$CHART_FILE"
-              
-              # Create .prov file (Helm provenance format)
-              mv "${CHART_FILE}.asc" "${CHART_FILE}.prov"
-              
-              echo "✅ Successfully signed: $CHART_FILE -> ${CHART_FILE}.prov"
-            fi
+            [ -f "$chart_dir/Chart.yaml" ] || continue
+            helm package "$chart_dir"
+            CHART_FILE=$(ls -t *.tgz | head -n 1)
+            echo "$GPG_PASSPHRASE" | gpg --batch --yes --pinentry-mode loopback \
+              --passphrase-fd 0 --local-user "$GPG_KEY_ID" \
+              --detach-sign --armor "$CHART_FILE"
+            mv "${CHART_FILE}.asc" "${CHART_FILE}.prov"
           done
-          
-          # List generated files
-          echo "Generated files:"
-          ls -la *.tgz *.prov 2>/dev/null || echo "No chart files found"
 
-      - name: Validate signed charts (PR only)
+      - name: Validate Signed Charts (PR only)
         if: github.event_name == 'pull_request'
         run: |
-          echo "🔍 Validating signed charts for PR..."
-          
-          # Check that both .tgz and .prov files exist
-          TGZ_COUNT=$(ls *.tgz 2>/dev/null | wc -l)
-          PROV_COUNT=$(ls *.prov 2>/dev/null | wc -l)
-          
-          echo "Found $TGZ_COUNT chart packages and $PROV_COUNT signature files"
-          
-          if [ "$TGZ_COUNT" -eq "$PROV_COUNT" ] && [ "$TGZ_COUNT" -gt 0 ]; then
-            echo "✅ Chart signing validation successful!"
-            echo "📦 Chart packages: $(ls *.tgz)"
-            echo "🔐 Signature files: $(ls *.prov)"
-          else
+          [ $(ls *.tgz 2>/dev/null | wc -l) -eq $(ls *.prov 2>/dev/null | wc -l) ] || {
             echo "❌ Chart signing validation failed!"
-            echo "Expected equal number of .tgz and .prov files"
             exit 1
-          fi
+          }
+          echo "✅ All charts signed correctly"
 
-      - name: Create GitHub Release with signed charts
+      - name: Create Release (Manual trigger only)
         if: github.event_name == 'workflow_dispatch'
         run: |
-          # Get chart version
           CHART_VERSION=$(helm show chart charts/exivity/ | grep '^version:' | awk '{print $2}')
           RELEASE_TAG="exivity-$CHART_VERSION"
           
-          echo "Creating release: $RELEASE_TAG"
+          gpg --export --armor "$GPG_KEY_ID" > signing-key.asc
           
-          # Create release using GitHub CLI
           gh release create "$RELEASE_TAG" \
             --title "Exivity Helm Chart $CHART_VERSION" \
-            --notes "Signed Helm chart release for Exivity $CHART_VERSION" \
-            *.tgz *.prov
+            --notes "Signed Helm chart release" \
+            *.tgz *.prov signing-key.asc
         env:
           GH_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
 
-      - name: Export and upload public key
-        if: github.event_name == 'workflow_dispatch'
-        run: |
-          # Export public key using the key ID directly
-          GPG_KEY_ID="${{ secrets.HELM_GPG_KEY_ID }}"
-          echo "Exporting public key for key ID: $GPG_KEY_ID"
-          
-          # Export public key
-          gpg --batch --export --armor "$GPG_KEY_ID" > exivity-charts-signing-key.asc
-          
-          # Add to the same release
-          CHART_VERSION=$(helm show chart charts/exivity/ | grep '^version:' | awk '{print $2}')
-          RELEASE_TAG="exivity-$CHART_VERSION"
-          
-          gh release upload "$RELEASE_TAG" exivity-charts-signing-key.asc
-        env:
-          GH_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
-
-      - name: Clean up sensitive files
+      - name: Cleanup
         if: always()
         run: |
-          rm -f gpg-passphrase.txt
-          rm -f ~/.gnupg/secring.gpg
-          # Clear GPG keyring
-          gpg --batch --yes --delete-secret-keys "${{ secrets.HELM_GPG_KEY_ID }}" 2>/dev/null || true
-          gpg --batch --yes --delete-keys "${{ secrets.HELM_GPG_KEY_ID }}" 2>/dev/null || true
+          gpg --batch --yes --delete-secret-keys "$GPG_KEY_ID" 2>/dev/null || true
+          gpg --batch --yes --delete-keys "$GPG_KEY_ID" 2>/dev/null || true
