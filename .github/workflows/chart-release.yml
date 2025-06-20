@@ -31,15 +31,19 @@ jobs:
           # Setup GPG environment for non-interactive use
           export GPG_TTY=$(tty)
           mkdir -p ~/.gnupg
+          chmod 700 ~/.gnupg
           echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
           echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+          chmod 600 ~/.gnupg/gpg-agent.conf ~/.gnupg/gpg.conf
           
           # Decode and import in one step (suppress base64 warnings)
           echo "${{ secrets.HELM_GPG_PRIVATE_KEY }}" | base64 -d 2>/dev/null | gpg --batch --import
           
-          # Trust the imported key
+          # Trust the imported key using the full fingerprint
           GPG_KEY_ID="${{ secrets.HELM_GPG_KEY_ID }}"
-          echo "$GPG_KEY_ID:6:" | gpg --batch --import-ownertrust
+          FULL_FINGERPRINT=$(gpg --list-secret-keys --keyid-format LONG --with-colons | grep fpr | head -1 | cut -d: -f10)
+          echo "Full fingerprint: $FULL_FINGERPRINT"
+          echo "$FULL_FINGERPRINT:6:" | gpg --batch --import-ownertrust
           
           # Export to format Helm expects
           gpg --batch --export-secret-keys > ~/.gnupg/secring.gpg
