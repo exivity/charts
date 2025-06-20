@@ -6,6 +6,7 @@ on:
 jobs:
   helm-release:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -18,7 +19,81 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           helm repo add bitnami https://charts.bitnami.com/bitnami
 
-      - name: Run chart-releaser
-        uses: exivity/chart-releaser-action@v1.1.0
+      - name: Import GPG private key and setup keyring
+        run: |
+          echo "$HELM_GPG_PRIVATE_KEY" | base64 -d > private.key.gpg
+          gpg --batch --import private.key.gpg
+          
+          # Export secret keys to old format that Helm expects
+          gpg --export-secret-keys > ~/.gnupg/secring.gpg
+          
+          # List keys to verify import
+          gpg --list-secret-keys --keyid-format LONG
         env:
-          CR_TOKEN: "${{ secrets.GH_BOT_TOKEN }}"
+          HELM_GPG_PRIVATE_KEY: ${{ secrets.HELM_GPG_PRIVATE_KEY }}
+
+      - name: Create GPG passphrase file
+        run: echo "$HELM_GPG_PASSPHRASE" > gpg-passphrase.txt
+        env:
+          HELM_GPG_PASSPHRASE: ${{ secrets.HELM_GPG_PASSPHRASE }}
+
+      - name: Package and sign charts using Helm directly
+        run: |
+          # Get the GPG key name/email for signing
+          GPG_KEY_NAME=$(gpg --list-secret-keys --keyid-format LONG | grep uid | sed 's/.*] //')
+          echo "Using GPG key: $GPG_KEY_NAME"
+          
+          # Find all charts to package
+          for chart_dir in charts/*/; do
+            if [ -f "$chart_dir/Chart.yaml" ]; then
+              echo "Packaging and signing chart: $chart_dir"
+              # Package with signing using the KodeKloud method
+              helm package --sign "$chart_dir" \
+                --key "$GPG_KEY_NAME" \
+                --keyring ~/.gnupg/secring.gpg \
+                --passphrase-file gpg-passphrase.txt
+            fi
+          done
+          
+          # List generated files
+          echo "Generated files:"
+          ls -la *.tgz *.prov 2>/dev/null || echo "No chart files found"
+
+      - name: Create GitHub Release with signed charts
+        run: |
+          # Get chart version
+          CHART_VERSION=$(helm show chart charts/exivity/ | grep '^version:' | awk '{print $2}')
+          RELEASE_TAG="exivity-$CHART_VERSION"
+          
+          echo "Creating release: $RELEASE_TAG"
+          
+          # Create release using GitHub CLI
+          gh release create "$RELEASE_TAG" \
+            --title "Exivity Helm Chart $CHART_VERSION" \
+            --notes "Signed Helm chart release for Exivity $CHART_VERSION" \
+            *.tgz *.prov
+        env:
+          GH_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
+
+      - name: Export and upload public key
+        run: |
+          # Export public key using KodeKloud method
+          GPG_KEY_NAME=$(gpg --list-secret-keys --keyid-format LONG | grep uid | sed 's/.*] //')
+          echo "Exporting public key for: $GPG_KEY_NAME"
+          
+          # Export public key
+          gpg --export --armor "$GPG_KEY_NAME" > exivity-charts-signing-key.asc
+          
+          # Add to the same release
+          CHART_VERSION=$(helm show chart charts/exivity/ | grep '^version:' | awk '{print $2}')
+          RELEASE_TAG="exivity-$CHART_VERSION"
+          
+          gh release upload "$RELEASE_TAG" exivity-charts-signing-key.asc
+        env:
+          GH_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
+
+      - name: Clean up sensitive files
+        if: always()
+        run: |
+          rm -f private.key.gpg gpg-passphrase.txt
+          rm -f ~/.gnupg/secring.gpg
