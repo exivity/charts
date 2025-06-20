@@ -25,77 +25,30 @@ jobs:
 
       - name: Import GPG private key and setup keyring
         run: |
-          # Debug: Check if the secret exists and its format
-          echo "Checking GPG private key secret..."
-          if [ -z "$HELM_GPG_PRIVATE_KEY" ]; then
-            echo "❌ HELM_GPG_PRIVATE_KEY secret is empty"
-            exit 1
-          fi
+          # Import GPG key directly from secret (no intermediate files)
+          echo "Importing GPG key directly from secret..."
           
-          echo "Secret length: ${#HELM_GPG_PRIVATE_KEY}"
-          echo "First 50 characters: ${HELM_GPG_PRIVATE_KEY:0:50}..."
+          # Decode and import in one step
+          echo "${{ secrets.HELM_GPG_PRIVATE_KEY }}" | base64 -d | gpg --batch --import
           
-          # Try to decode base64 with error handling
-          echo "Attempting to decode base64..."
-          # Remove any potential whitespace/newlines and decode
-          if echo "$HELM_GPG_PRIVATE_KEY" | tr -d '\n\r\t ' | base64 -d > private.key.gpg 2>/dev/null; then
-            echo "✅ Base64 decode successful (after cleaning whitespace)"
-          elif echo "$HELM_GPG_PRIVATE_KEY" | base64 -d > private.key.gpg 2>/dev/null; then
-            echo "✅ Base64 decode successful (direct)"
-          else
-            echo "❌ Base64 decode failed, trying alternative methods..."
-            
-            # Maybe it's not base64 encoded - try direct write
-            echo "$HELM_GPG_PRIVATE_KEY" > private.key.gpg
-            
-            # Check if it looks like a GPG key
-            if head -1 private.key.gpg | grep -q "BEGIN PGP"; then
-              echo "✅ Looks like a direct GPG key (not base64 encoded)"
-            else
-              echo "❌ Neither base64 nor direct GPG key format detected"
-              echo "Key starts with: $(head -c 100 private.key.gpg)"
-              exit 1
-            fi
-          fi
-          
-          # Verify the decoded file looks like a GPG key
-          echo "Verifying GPG key format..."
-          if head -1 private.key.gpg | grep -q "BEGIN PGP"; then
-            echo "✅ GPG key format verified"
-          else
-            echo "❌ Decoded file doesn't look like a GPG key"
-            echo "File starts with: $(head -c 100 private.key.gpg)"
-            exit 1
-          fi
-          
-          # Import the GPG key
-          echo "Importing GPG key..."
-          if gpg --batch --import private.key.gpg; then
-            echo "✅ GPG key imported successfully"
-          else
-            echo "❌ GPG key import failed"
-            exit 1
-          fi
-          
-          # Export secret keys to old format that Helm expects
+          # Export to format Helm expects
           gpg --export-secret-keys > ~/.gnupg/secring.gpg
           
           # List keys to verify import
           echo "Imported GPG keys:"
           gpg --list-secret-keys --keyid-format LONG
-        env:
-          HELM_GPG_PRIVATE_KEY: ${{ secrets.HELM_GPG_PRIVATE_KEY }}
 
       - name: Create GPG passphrase file
-        run: echo "$HELM_GPG_PASSPHRASE" > gpg-passphrase.txt
-        env:
-          HELM_GPG_PASSPHRASE: ${{ secrets.HELM_GPG_PASSPHRASE }}
+        run: |
+          # Create passphrase file directly from secret
+          echo "${{ secrets.HELM_GPG_PASSPHRASE }}" > gpg-passphrase.txt
+          chmod 600 gpg-passphrase.txt
 
       - name: Package and sign charts using Helm directly
         run: |
-          # Get the GPG key name/email for signing
-          GPG_KEY_NAME=$(gpg --list-secret-keys --keyid-format LONG | grep uid | sed 's/.*] //')
-          echo "Using GPG key: $GPG_KEY_NAME"
+          # Get the GPG key ID directly from secret for signing
+          GPG_KEY_ID="${{ secrets.HELM_GPG_KEY_ID }}"
+          echo "Using GPG key ID: $GPG_KEY_ID"
           
           # Find all charts to package
           for chart_dir in charts/*/; do
@@ -103,7 +56,7 @@ jobs:
               echo "Packaging and signing chart: $chart_dir"
               # Package with signing using the KodeKloud method
               helm package --sign "$chart_dir" \
-                --key "$GPG_KEY_NAME" \
+                --key "$GPG_KEY_ID" \
                 --keyring ~/.gnupg/secring.gpg \
                 --passphrase-file gpg-passphrase.txt
             fi
@@ -172,5 +125,8 @@ jobs:
       - name: Clean up sensitive files
         if: always()
         run: |
-          rm -f private.key.gpg gpg-passphrase.txt
+          rm -f gpg-passphrase.txt
           rm -f ~/.gnupg/secring.gpg
+          # Clear GPG keyring
+          gpg --batch --yes --delete-secret-keys "${{ secrets.HELM_GPG_KEY_ID }}" 2>/dev/null || true
+          gpg --batch --yes --delete-keys "${{ secrets.HELM_GPG_KEY_ID }}" 2>/dev/null || true
