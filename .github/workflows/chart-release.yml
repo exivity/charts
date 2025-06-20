@@ -2,6 +2,10 @@ name: Release Charts
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'charts/**'
+      - '.github/workflows/chart-release.yml'
 
 jobs:
   helm-release:
@@ -21,13 +25,63 @@ jobs:
 
       - name: Import GPG private key and setup keyring
         run: |
-          echo "$HELM_GPG_PRIVATE_KEY" | base64 -d > private.key.gpg
-          gpg --batch --import private.key.gpg
+          # Debug: Check if the secret exists and its format
+          echo "Checking GPG private key secret..."
+          if [ -z "$HELM_GPG_PRIVATE_KEY" ]; then
+            echo "❌ HELM_GPG_PRIVATE_KEY secret is empty"
+            exit 1
+          fi
+          
+          echo "Secret length: ${#HELM_GPG_PRIVATE_KEY}"
+          echo "First 50 characters: ${HELM_GPG_PRIVATE_KEY:0:50}..."
+          
+          # Try to decode base64 with error handling
+          echo "Attempting to decode base64..."
+          # Remove any potential whitespace/newlines and decode
+          if echo "$HELM_GPG_PRIVATE_KEY" | tr -d '\n\r\t ' | base64 -d > private.key.gpg 2>/dev/null; then
+            echo "✅ Base64 decode successful (after cleaning whitespace)"
+          elif echo "$HELM_GPG_PRIVATE_KEY" | base64 -d > private.key.gpg 2>/dev/null; then
+            echo "✅ Base64 decode successful (direct)"
+          else
+            echo "❌ Base64 decode failed, trying alternative methods..."
+            
+            # Maybe it's not base64 encoded - try direct write
+            echo "$HELM_GPG_PRIVATE_KEY" > private.key.gpg
+            
+            # Check if it looks like a GPG key
+            if head -1 private.key.gpg | grep -q "BEGIN PGP"; then
+              echo "✅ Looks like a direct GPG key (not base64 encoded)"
+            else
+              echo "❌ Neither base64 nor direct GPG key format detected"
+              echo "Key starts with: $(head -c 100 private.key.gpg)"
+              exit 1
+            fi
+          fi
+          
+          # Verify the decoded file looks like a GPG key
+          echo "Verifying GPG key format..."
+          if head -1 private.key.gpg | grep -q "BEGIN PGP"; then
+            echo "✅ GPG key format verified"
+          else
+            echo "❌ Decoded file doesn't look like a GPG key"
+            echo "File starts with: $(head -c 100 private.key.gpg)"
+            exit 1
+          fi
+          
+          # Import the GPG key
+          echo "Importing GPG key..."
+          if gpg --batch --import private.key.gpg; then
+            echo "✅ GPG key imported successfully"
+          else
+            echo "❌ GPG key import failed"
+            exit 1
+          fi
           
           # Export secret keys to old format that Helm expects
           gpg --export-secret-keys > ~/.gnupg/secring.gpg
           
           # List keys to verify import
+          echo "Imported GPG keys:"
           gpg --list-secret-keys --keyid-format LONG
         env:
           HELM_GPG_PRIVATE_KEY: ${{ secrets.HELM_GPG_PRIVATE_KEY }}
@@ -59,7 +113,29 @@ jobs:
           echo "Generated files:"
           ls -la *.tgz *.prov 2>/dev/null || echo "No chart files found"
 
+      - name: Validate signed charts (PR only)
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "🔍 Validating signed charts for PR..."
+          
+          # Check that both .tgz and .prov files exist
+          TGZ_COUNT=$(ls *.tgz 2>/dev/null | wc -l)
+          PROV_COUNT=$(ls *.prov 2>/dev/null | wc -l)
+          
+          echo "Found $TGZ_COUNT chart packages and $PROV_COUNT signature files"
+          
+          if [ "$TGZ_COUNT" -eq "$PROV_COUNT" ] && [ "$TGZ_COUNT" -gt 0 ]; then
+            echo "✅ Chart signing validation successful!"
+            echo "📦 Chart packages: $(ls *.tgz)"
+            echo "🔐 Signature files: $(ls *.prov)"
+          else
+            echo "❌ Chart signing validation failed!"
+            echo "Expected equal number of .tgz and .prov files"
+            exit 1
+          fi
+
       - name: Create GitHub Release with signed charts
+        if: github.event_name == 'workflow_dispatch'
         run: |
           # Get chart version
           CHART_VERSION=$(helm show chart charts/exivity/ | grep '^version:' | awk '{print $2}')
@@ -76,6 +152,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
 
       - name: Export and upload public key
+        if: github.event_name == 'workflow_dispatch'
         run: |
           # Export public key using KodeKloud method
           GPG_KEY_NAME=$(gpg --list-secret-keys --keyid-format LONG | grep uid | sed 's/.*] //')
