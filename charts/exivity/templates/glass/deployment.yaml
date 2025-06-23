@@ -23,10 +23,7 @@ spec:
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-glass-log
-        - name: permission-script
-          configMap:
-            name: permission-script
-            defaultMode: 0755
+        {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
 
       {{- include "exivity.initPermissions" (dict "root" . "component" "glass" "volumes" (list "log")) | nindent 6 }}
 

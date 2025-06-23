@@ -25,3 +25,12 @@ initContainers:
         readOnly: true
 {{- end }}
 {{- end }}
+
+{{- define "exivity.permissionScriptVolume" -}}
+{{- if .Values.storage.permissions.enabled }}
+- name: permission-script
+  configMap:
+    name: permission-script
+    defaultMode: 0755
+{{- end }}
+{{- end }}
