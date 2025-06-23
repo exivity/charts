@@ -23,6 +23,27 @@ spec:
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-glass-log
+        - name: permission-script
+          configMap:
+            name: permission-script
+            defaultMode: 0755
+
+      {{- if .Values.storage.overwritePermissions }}
+      initContainers:
+        - name: set-volume-permissions
+          image: busybox:stable
+          securityContext:
+            runAsUser: 0
+            runAsNonRoot: false
+          command: ["/bin/sh", "/scripts/set_ownership.sh"]
+          args: ["1000", "1000"]
+          volumeMounts:
+            - name: log
+              mountPath: /mnt/log
+            - name: permission-script
+              mountPath: /scripts
+              readOnly: true
+      {{- end }}
       containers:
         - name:            glass
           image: {{ include "exivity.image" (set $ "name" "glass") }}

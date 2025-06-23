@@ -39,6 +39,16 @@ storage:
   helmResourcePolicyKeep: true # Ensures that storage resources are retained after a Helm release is deleted.
   sharedVolumeAccessMode: ReadWriteMany # Defines the access mode for shared volumes; 'ReadWriteMany' allows multiple nodes to read/write simultaneously.
 
+  # Permissions management for mounted volumes.
+  # If enabled, an init container will run to set the ownership of all folders under /mnt.
+  # This is useful when shared storage (e.g., NFS) does not preserve the correct user/group ownership.
+  #
+  # - enabled: Set to true to activate the permissions init container.
+  # - policy: Controls when ownership is set. Use 'Always' to set ownership on every pod start, or 'OnRootMismatch' to only update when the current owner does not match the expected user/group.
+  permissions:
+    enabled: false            # Whether to run the permissions init container for mounted volumes.
+    policy: OnRootMismatch    # 'Always' (set ownership every time) or 'OnRootMismatch' (only if owner does not match)
+
   # PVC storage sizes organized by type and component
   # Specify the storage size for each PVC as a string (e.g., "1Gi", "500Mi", etc.).
   # The sizes are grouped by their purpose (log, config, data) and component for better clarity.
@@ -194,7 +204,7 @@ service:
     fingerPrinter: "secure_useragent"
     servicePort: 80
     serviceType: ClusterIP
-    replicas: 1
+    replicas: 0
     nodeName: ""
     nodeSelector: {}
     # securityContext:
@@ -213,7 +223,7 @@ service:
     repository: exivity/chronos
     tag: ""
     pullPolicy: ""
-    replicas: 1
+    replicas: 0
     nodeName: ""
     nodeSelector: {}
     # securityContext:
@@ -269,7 +279,7 @@ service:
     repository: exivity/edify
     tag: ""
     pullPolicy: ""
-    replicas: 1
+    replicas: 0
     nodeName: ""
     nodeSelector: {}
     # securityContext:
@@ -290,7 +300,7 @@ service:
     repository: exivity/executor
     tag: ""
     pullPolicy: ""
-    replicas: 1
+    replicas: 0
     nodeName: ""
     nodeSelector: {}
     # securityContext:
@@ -309,7 +319,7 @@ service:
     repository: exivity/griffon
     tag: ""
     pullPolicy: ""
-    replicas: 1
+    replicas: 0
     nodeName: ""
     nodeSelector: {}
     # securityContext:
@@ -328,7 +338,7 @@ service:
     repository: exivity/horizon
     tag: ""
     pullPolicy: ""
-    replicas: 1
+    replicas: 0
     nodeName: ""
     nodeSelector: {}
     # securityContext:
@@ -347,7 +357,7 @@ service:
     repository: exivity/pigeon
     tag: ""
     pullPolicy: ""
-    replicas: 1
+    replicas: 0
     nodeName: ""
     nodeSelector: {}
     # securityContext:
@@ -366,7 +376,7 @@ service:
     repository: exivity/proximity-cli
     tag: ""
     pullPolicy: ""
-    replicas: 1
+    replicas: 0
     nodeName: ""
     nodeSelector: {}
     # securityContext:
@@ -385,7 +395,7 @@ service:
     repository: exivity/transcript
     tag: ""
     pullPolicy: ""
-    replicas: 1
+    replicas: 0
     nodeName: ""
     nodeSelector: {}
     # securityContext:
@@ -404,7 +414,7 @@ service:
     repository: exivity/use
     tag: ""
     pullPolicy: ""
-    replicas: 1
+    replicas: 0
     nodeName: ""
     nodeSelector: {}
     # securityContext:
