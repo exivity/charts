@@ -37,6 +37,8 @@ spec:
         - name: config-volume
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-etl-config
+        {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
+      {{- include "exivity.initPermissions" (dict "root" . "component" "pigeon" "volumes" (list "log" "exported" "import" "config-volume")) | nindent 6 }}
       containers:
         - name:            pigeon
           image: {{ include "exivity.image" (set $ "name" "pigeon") }}

@@ -204,7 +204,7 @@ service:
     fingerPrinter: "secure_useragent"
     servicePort: 80
     serviceType: ClusterIP
-    replicas: 0
+    replicas: 1
     nodeName: ""
     nodeSelector: {}
     # securityContext:
@@ -279,7 +279,7 @@ service:
     repository: exivity/edify
     tag: ""
     pullPolicy: ""
-    replicas: 0
+    replicas: 1
     nodeName: ""
     nodeSelector: {}
     # securityContext:
@@ -300,7 +300,7 @@ service:
     repository: exivity/executor
     tag: ""
     pullPolicy: ""
-    replicas: 0
+    replicas: 1
     nodeName: ""
     nodeSelector: {}
     # securityContext:
@@ -319,7 +319,7 @@ service:
     repository: exivity/griffon
     tag: ""
     pullPolicy: ""
-    replicas: 0
+    replicas: 1
     nodeName: ""
     nodeSelector: {}
     # securityContext:
@@ -357,7 +357,7 @@ service:
     repository: exivity/pigeon
     tag: ""
     pullPolicy: ""
-    replicas: 0
+    replicas: 1
     nodeName: ""
     nodeSelector: {}
     # securityContext:
@@ -376,7 +376,7 @@ service:
     repository: exivity/proximity-cli
     tag: ""
     pullPolicy: ""
-    replicas: 0
+    replicas: 1
     nodeName: ""
     nodeSelector: {}
     # securityContext:
@@ -395,7 +395,7 @@ service:
     repository: exivity/transcript
     tag: ""
     pullPolicy: ""
-    replicas: 0
+    replicas: 1
     nodeName: ""
     nodeSelector: {}
     # securityContext:

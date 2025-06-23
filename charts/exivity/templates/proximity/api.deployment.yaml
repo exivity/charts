@@ -78,6 +78,8 @@ spec:
         - name: extracted
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-extracted
+        {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
+      {{- include "exivity.initPermissions" (dict "root" . "component" "proximityApi" "volumes" (list "log" "log-chronos" "log-edify" "log-griffon" "log-horizon" "log-pigeon" "log-transcript" "log-use" "config" "import" "report" "exported" "extracted")) | nindent 6 }}
       containers:
         - name: proximity-api
           image: {{ include "exivity.image" (set $ "name" "proximityApi") }}

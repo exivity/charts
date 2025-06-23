@@ -43,6 +43,8 @@ spec:
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-executor-log
+        {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
+      {{- include "exivity.initPermissions" (dict "root" . "component" "executor" "volumes" (list "config" "import" "report" "exported" "extracted" "log")) | nindent 6 }}
       containers:
         - name:            executor
           image: {{ include "exivity.image" (set $ "name" "executor") }}

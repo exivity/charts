@@ -37,6 +37,8 @@ spec:
         - name: report
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-report
+        {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
+      {{- include "exivity.initPermissions" (dict "root" . "component" "edify" "volumes" (list "config" "extracted" "log" "report")) | nindent 6 }}
       containers:
         - name:            edify
           image: {{ include "exivity.image" (set $ "name" "edify") }}

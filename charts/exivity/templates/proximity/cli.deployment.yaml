@@ -45,6 +45,8 @@ spec:
         - name: exported
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-exported
+        {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
+      {{- include "exivity.initPermissions" (dict "root" . "component" "proximityCli" "volumes" (list "log" "config" "import" "report" "extracted" "exported")) | nindent 6 }}
       containers:
         - name:            proximity-cli
           image: {{ include "exivity.image" (set $ "name" "proximityCli") }}
