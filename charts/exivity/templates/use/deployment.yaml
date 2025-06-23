@@ -40,13 +40,17 @@ spec:
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-use-log
+        {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
       {{- if gt (len (default "" .Values.service.use.caCertificates)) 0 }}
         - name: cert-volume
           emptyDir: {}
         - name: ca-certificates
           secret:
             secretName: {{ include "exivity.fullname" $ -}}-use-certificates
+      {{- end }}
       initContainers:
+      {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "use" "volumes" (list "etl-config" "exported" "extracted" "import" "log")) | nindent 8 }}
+      {{- if gt (len (default "" .Values.service.use.caCertificates)) 0 }}
         - name: install-ca-cert
           image: {{ include "exivity.image" (set $ "name" "use") }}
           command: ["sh", "-c", "update-ca-certificates && cp -r /etc/ssl/certs/* /certs/"]

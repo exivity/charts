@@ -414,7 +414,7 @@ service:
     repository: exivity/use
     tag: ""
     pullPolicy: ""
-    replicas: 0
+    replicas: 1
     nodeName: ""
     nodeSelector: {}
     # securityContext:
