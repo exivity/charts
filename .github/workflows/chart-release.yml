@@ -44,6 +44,19 @@ jobs:
               --detach-sign --armor --output "${CHART_FILE}.prov" "$CHART_FILE"
           done
 
+      - name: Show packaged chart and .prov file content
+        run: |
+          for chart_file in *.tgz; do
+            prov_file="${chart_file}.prov"
+            echo "== 📦 Packaged Chart: $chart_file =="
+            tar -tzf "$chart_file"
+
+            echo "== 🔐 Signature File: $prov_file (base64 encoded) =="
+            base64 "$prov_file"
+            
+            echo ""
+          done
+
       - name: Validate Signed Charts (PR only)
         if: github.event_name == 'pull_request'
         run: |
