@@ -44,22 +44,21 @@ jobs:
               --detach-sign --armor --output "${CHART_FILE}.prov" "$CHART_FILE"
           done
 
-      - name: Show packaged chart and .prov file content
-        run: |
-          for chart_file in *.tgz; do
-            prov_file="${chart_file}.prov"
-            echo "== 📦 Packaged Chart: $chart_file =="
-            tar -tzf "$chart_file"
-
-            echo "== 🔐 Signature File: $prov_file (base64 encoded) =="
-            base64 "$prov_file"
-            
-            echo ""
-          done
-
       - name: Validate Signed Charts (PR only)
         if: github.event_name == 'pull_request'
         run: |
+          # Setup GPG for verification (helm verify needs keyring)
+          mkdir -p ~/.gnupg
+          chmod 700 ~/.gnupg
+          echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
+          
+          # Import the public key for verification
+          echo "${{ secrets.HELM_GPG_PRIVATE_KEY }}" | base64 -d | gpg --batch --import
+          
+          # Create the public keyring that helm verify expects
+          gpg --batch --export > ~/.gnupg/pubring.gpg
+          
+          # Verify each chart
           for chart in *.tgz; do
             echo "🔍 Verifying $chart..."
             helm verify "$chart"
