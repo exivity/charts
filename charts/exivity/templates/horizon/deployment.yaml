@@ -28,6 +28,8 @@ spec:
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-horizon-log
+        {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
+      {{- include "exivity.initPermissions" (dict "root" . "component" "horizon" "volumes" (list "log")) | nindent 6 }}
       containers:
         - name:            horizon
           image: {{ include "exivity.image" (set $ "name" "horizon") }}

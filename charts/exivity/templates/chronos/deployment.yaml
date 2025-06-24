@@ -31,6 +31,8 @@ spec:
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-chronos-log
+        {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
+      {{- include "exivity.initPermissions" (dict "root" . "component" "chronos" "volumes" (list "config" "log")) | nindent 6 }}
       containers:
         - name:            chronos
           image: {{ include "exivity.image" (set $ "name" "chronos") }}
