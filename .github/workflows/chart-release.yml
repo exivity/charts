@@ -41,8 +41,7 @@ jobs:
             CHART_FILE=$(ls -t *.tgz | head -n 1)
             echo "$GPG_PASSPHRASE" | gpg --batch --yes --pinentry-mode loopback \
               --passphrase-fd 0 --local-user "$GPG_KEY_ID" \
-              --detach-sign --armor "$CHART_FILE"
-            mv "${CHART_FILE}.asc" "${CHART_FILE}.prov"
+              --detach-sign --armor --output "${CHART_FILE}.prov" "$CHART_FILE"
           done
 
       - name: Validate Signed Charts (PR only)
