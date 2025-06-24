@@ -60,11 +60,11 @@ jobs:
       - name: Validate Signed Charts (PR only)
         if: github.event_name == 'pull_request'
         run: |
-          [ $(ls *.tgz 2>/dev/null | wc -l) -eq $(ls *.prov 2>/dev/null | wc -l) ] || {
-            echo "❌ Chart signing validation failed!"
-            exit 1
-          }
-          echo "✅ All charts signed correctly"
+          for chart in *.tgz; do
+            echo "🔍 Verifying $chart..."
+            helm verify "$chart"
+          done
+          echo "✅ All charts are properly signed and verified"
 
       - name: Create Release (Manual trigger only)
         if: github.event_name == 'workflow_dispatch'
