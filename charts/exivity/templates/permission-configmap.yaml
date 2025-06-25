@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: permission-script
+  labels:
+    app.kubernetes.io/component: permission-script
+    {{- include "exivity.labels" $ | indent 4 }}
+data:
+  set_ownership.sh: |
+    #!/bin/sh
+    set -e
+
+    if [ "$#" -ne 3 ]; then
+      echo "Usage: $0 <uid> <gid> <policy: Always|OnRootMismatch>"
+      exit 1
+    fi
+
+    TARGET_UID="$1"
+    TARGET_GID="$2"
+    POLICY="$3"
+
+    for dir in /mnt/*; do
+      if [ -d "$dir" ]; then
+        current_uid_gid="$(stat -c %u:%g "$dir")"
+        expected_uid_gid="${TARGET_UID}:${TARGET_GID}"
+        if [ "$POLICY" = "Always" ]; then
+          echo "Setting ownership for $dir to $expected_uid_gid (policy: Always)..."
+          chown "$TARGET_UID:$TARGET_GID" "$dir"
+        elif [ "$POLICY" = "OnRootMismatch" ]; then
+          if [ "$current_uid_gid" != "$expected_uid_gid" ]; then
+            echo "Ownership mismatch for $dir: current is $current_uid_gid, expected $expected_uid_gid. Updating ownership..."
+            chown "$TARGET_UID:$TARGET_GID" "$dir"
+          fi
+        else
+          echo "Unknown policy: $POLICY"
+          exit 2
+        fi
+      fi
+    done
+    echo "Volume ownership check and update process completed."
