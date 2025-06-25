@@ -1,10 +1,24 @@
-# Constants
+# Makefile — Exivity Helm Charts: Deployment + Release Testing
+
+# 🏗️  Constants
 NFS_STORAGE_CLASS := nfs-client
 NFS_CHART_VERSION := 1.8.0
-
 INGRESS_HOSTNAME := exivity.local
-
 HELM_TIMEOUT := 10m
+
+# 🗝️  Dummy secrets for release workflow testing
+GPG_KEY_ID            ?= EXIVITY123TEST
+GPG_PASSPHRASE        ?= test1234
+HELM_RSA_PRIVATE_KEY  ?= LS0tLS1CRUdJTiBQR1AgUFJJVkFURSBLRVkgQkxPQ0stLS0tLQpFeGl2aXR5IFRlc3QgS2V5IDx0ZXN0QGV4aXZpdHkuY29tPgotLS0tLUVORCBQR1AgUFJJVkFURSBLRVkgQkxPQ0stLS0tLQ==
+
+# 🔍  Variables for chart packaging
+CHART_DIRS := $(shell find charts -maxdepth 1 -mindepth 1 -type d 2>/dev/null || echo "")
+TGZ_FILES  := $(patsubst charts/%,%.tgz,$(CHART_DIRS))
+
+
+# =====================================================================
+# 🚀  MINIKUBE DEPLOYMENT TARGETS 
+# =====================================================================
 
 # Define Minikube start with a specific driver
 minikube-start:
@@ -70,5 +84,60 @@ test:
 lint:
 	@helm lint charts/exivity
 
-# Makefile targets
-.PHONY: minikube-start minikube-delete deploy-charts deploy-exivity-chart deploy-nfs-chart install-python-deps test
+
+
+# ---------------------------------------------------------------------
+
+
+
+# =====================================================================
+# 🧪  RELEASE WORKFLOW TEST 
+# =====================================================================
+
+# 🎁  Package every chart in charts/* → <name>-<version>.tgz
+package-charts: $(TGZ_FILES)
+
+%.tgz:
+	@echo "📦 Helm-packaging $@"
+	@CHART_NAME=$(basename $@); \
+	if [ -d "charts/$$CHART_NAME" ]; then \
+		helm package "charts/$$CHART_NAME" > /dev/null 2>&1; \
+	else \
+		echo "⚠️  Chart directory charts/$$CHART_NAME not found"; \
+	fi
+
+# 🔏  Forge dummy .prov files so downstream scripts still work
+package-sign:
+	@echo "🔖 Creating fake .prov signature files (no GPG keys used)"
+	@if ls *.tgz >/dev/null 2>&1; then \
+		for tgz in *.tgz; do \
+			echo "-----BEGIN PGP SIGNATURE-----" > "$$tgz.prov"; \
+			echo "Version: GnuPG v2" >> "$$tgz.prov"; \
+			echo "" >> "$$tgz.prov"; \
+			echo "Fake signature for testing purposes only" >> "$$tgz.prov"; \
+			echo "Chart: $$tgz" >> "$$tgz.prov"; \
+			echo "Key ID: $(GPG_KEY_ID)" >> "$$tgz.prov"; \
+			echo "Passphrase: $(GPG_PASSPHRASE)" >> "$$tgz.prov"; \
+			echo "-----END PGP SIGNATURE-----" >> "$$tgz.prov"; \
+			echo "   ✅ Created $$tgz.prov"; \
+		done; \
+	else \
+		echo "   ⚠️  No .tgz files found to sign"; \
+	fi
+
+# ✅  Stubbed validation step — we deliberately *skip* helm verify
+package-validate:
+	@echo "✅ Validation stub → skipping 'helm verify' because using fake signatures"
+	@echo "📋 Generated files:"
+	@ls -la *.tgz *.prov 2>/dev/null || echo "   (no files found)"
+
+# 🧹  Clean up build artifacts
+clean-release:
+	@echo "🧹 Removing generated .tgz/.prov files"
+	@rm -f *.tgz *.prov fake-signing-key.asc || true
+
+# 📖  Makefile targets
+
+.PHONY: minikube-start minikube-delete deploy-charts deploy-exivity-chart deploy-nfs-chart \
+	install-python-deps test lint clean-release package-charts package-sign \
+	validate-release
