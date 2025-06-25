@@ -31,14 +31,30 @@ jobs:
           chmod 700 ~/.gnupg
           echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
           
-          # Write the base64 key to a file first
-          echo "${{ secrets.HELM_RSA_PRIVATE_KEY }}" > private.key.b64
+          # Check if the secret is already armored text or base64 encoded
+          SECRET_CONTENT="${{ secrets.HELM_RSA_PRIVATE_KEY }}"
           
-          # Decode with error handling
-          if ! base64 -d private.key.b64 > private.key; then
-            echo "❌ Base64 decoding failed. Ensure your HELM_RSA_PRIVATE_KEY is properly base64 encoded."
-            echo "First few chars of secret: ${HELM_RSA_PRIVATE_KEY:0:20}..."
-            exit 1
+          if [[ "$SECRET_CONTENT" == *"-----BEGIN PGP PRIVATE KEY BLOCK-----"* ]]; then
+            echo "📝 Secret appears to be raw armored GPG key"
+            echo "$SECRET_CONTENT" > private.key
+          else
+            echo "📝 Secret appears to be base64 encoded, decoding..."
+            # Clean the base64 key (remove whitespace/newlines) and decode
+            echo "$SECRET_CONTENT" | tr -d ' \n\r\t' > private.key.b64
+            
+            # Decode with error handling
+            if ! base64 -d private.key.b64 > private.key 2>/dev/null; then
+              echo "❌ Base64 decoding failed. Checking secret format..."
+              echo "Secret length: $(echo '${{ secrets.HELM_RSA_PRIVATE_KEY }}' | wc -c)"
+              echo "First 50 chars: $(echo '${{ secrets.HELM_RSA_PRIVATE_KEY }}' | head -c 50)..."
+              echo "Last 50 chars: $(echo '${{ secrets.HELM_RSA_PRIVATE_KEY }}' | tail -c 50)"
+              echo ""
+              echo "💡 Options to fix:"
+              echo "1. Use raw armored key: gpg --export-secret-keys --armor KEY_ID"
+              echo "2. Use base64 encoded: gpg --export-secret-keys --armor KEY_ID | base64 -w 0"
+              exit 1
+            fi
+            rm -f private.key.b64
           fi
           
           # Import with error handling
@@ -56,6 +72,9 @@ jobs:
           
           # Export to secring.gpg
           echo "$GPG_PASSPHRASE" | gpg --batch --passphrase-fd 0 --export-secret-keys > ~/.gnupg/secring.gpg
+          
+          # Cleanup sensitive files
+          rm -f private.key
 
       - name: Package and Sign Charts
         run: |
@@ -75,9 +94,16 @@ jobs:
           chmod 700 ~/.gnupg
           echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
           
-          # Use the same RSA key for verification
-          echo "${{ secrets.HELM_RSA_PRIVATE_KEY }}" > verify.key.b64
-          base64 -d verify.key.b64 | gpg --batch --import
+          # Use the same RSA key for verification (handle both armored and base64)
+          SECRET_CONTENT="${{ secrets.HELM_RSA_PRIVATE_KEY }}"
+          
+          if [[ "$SECRET_CONTENT" == *"-----BEGIN PGP PRIVATE KEY BLOCK-----"* ]]; then
+            echo "$SECRET_CONTENT" | gpg --batch --import
+          else
+            echo "$SECRET_CONTENT" | tr -d ' \n\r\t' > verify.key.b64
+            base64 -d verify.key.b64 2>/dev/null | gpg --batch --import
+            rm -f verify.key.b64
+          fi
           
           gpg --batch --export > ~/.gnupg/pubring.gpg
           
