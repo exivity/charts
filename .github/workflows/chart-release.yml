@@ -70,14 +70,55 @@ jobs:
             exit 1
           }
           
-          # Export to secring.gpg
-          echo "$GPG_PASSPHRASE" | gpg --batch --passphrase-fd 0 --export-secret-keys > ~/.gnupg/secring.gpg
+          # Export to legacy GPG format that Helm expects (GPG v2 compatibility)
+          echo "Exporting keys to legacy GPG format for Helm compatibility..."
+          
+          # Export public keys to legacy format
+          if ! gpg --batch --export > ~/.gnupg/pubring.gpg; then
+            echo "❌ Failed to export public keys"
+            exit 1
+          fi
+          
+          # Export secret keys to legacy format (with passphrase)
+          if ! echo "$GPG_PASSPHRASE" | gpg --batch --passphrase-fd 0 --export-secret-keys > ~/.gnupg/secring.gpg; then
+            echo "❌ Failed to export secret keys"
+            exit 1
+          fi
+          
+          # Verify the keyring files were created and have content
+          if [ ! -s ~/.gnupg/secring.gpg ] || [ ! -s ~/.gnupg/pubring.gpg ]; then
+            echo "❌ Keyring files are empty or not created"
+            exit 1
+          fi
+          
+          echo "✅ Legacy keyring files created successfully:"
+          echo "  pubring.gpg: $(wc -c < ~/.gnupg/pubring.gpg) bytes"
+          echo "  secring.gpg: $(wc -c < ~/.gnupg/secring.gpg) bytes"
           
           # Cleanup sensitive files
           rm -f private.key
 
       - name: Package and Sign Charts
         run: |
+          # Verify GPG setup before signing
+          echo "🔍 Verifying GPG setup for Helm..."
+          echo "Available secret keys:"
+          gpg --list-secret-keys --keyid-format LONG
+          
+          echo "Keyring files:"
+          ls -la ~/.gnupg/secring.gpg ~/.gnupg/pubring.gpg
+          
+          # Get the key name/email for Helm (not the key ID)
+          KEY_NAME=$(gpg --list-secret-keys --with-colons "$GPG_KEY_ID" | grep "^uid" | head -1 | cut -d: -f10)
+          if [ -z "$KEY_NAME" ]; then
+            echo "❌ Could not find key name for key ID: $GPG_KEY_ID"
+            exit 1
+          fi
+          echo "Using key name for Helm: $KEY_NAME"
+          
+          echo "Testing GPG signing capability..."
+          echo "test" | echo "$GPG_PASSPHRASE" | gpg --batch --yes --passphrase-fd 0 --local-user "$GPG_KEY_ID" --sign --armor
+          
           # Create passphrase file for Helm
           echo "$GPG_PASSPHRASE" > /tmp/passphrase.txt
           chmod 600 /tmp/passphrase.txt
@@ -86,11 +127,21 @@ jobs:
             [ -f "$chart_dir/Chart.yaml" ] || continue
             echo "📦 Packaging and signing chart: $chart_dir"
             
-            # Use helm package --sign (should work with RSA keys)
-            helm package --sign "$chart_dir" \
-              --key "$GPG_KEY_ID" \
+            # Use helm package --sign with key name (not key ID)
+            if ! helm package --sign "$chart_dir" \
+              --key "$KEY_NAME" \
               --keyring ~/.gnupg/secring.gpg \
-              --passphrase-file /tmp/passphrase.txt
+              --passphrase-file /tmp/passphrase.txt; then
+              echo "❌ Helm signing failed. Trying alternative approach..."
+              
+              # Fallback: package first, then sign manually  
+              helm package "$chart_dir"
+              CHART_FILE=$(ls -t *.tgz | head -n 1)
+              echo "Signing $CHART_FILE manually..."
+              echo "$GPG_PASSPHRASE" | gpg --batch --yes --pinentry-mode loopback \
+                --passphrase-fd 0 --local-user "$GPG_KEY_ID" \
+                --detach-sign --armor --output "${CHART_FILE}.prov" "$CHART_FILE"
+            fi
           done
           
           # Clean up passphrase file
