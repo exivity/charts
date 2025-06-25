@@ -48,15 +48,26 @@ jobs:
           echo "$GPG_PASSPHRASE" > /tmp/passphrase.txt
           chmod 600 /tmp/passphrase.txt
           
+          # Create .cr-release-packages directory for chart-releaser-action
+          mkdir -p .cr-release-packages
+          
           for chart_dir in charts/*/; do
             [ -f "$chart_dir/Chart.yaml" ] || continue
+            echo "📦 Packaging and signing chart: $chart_dir"
+            
+            # Package and sign chart in the .cr-release-packages directory
             helm package --sign "$chart_dir" \
               --key "$KEY_NAME" \
               --keyring ~/.gnupg/secring.gpg \
-              --passphrase-file /tmp/passphrase.txt
+              --passphrase-file /tmp/passphrase.txt \
+              --destination .cr-release-packages
           done
           
           rm -f /tmp/passphrase.txt
+          
+          # List created packages for verification
+          echo "📋 Created signed packages:"
+          ls -la .cr-release-packages/
 
       - name: Validate Signed Charts (PR only)
         if: github.event_name == 'pull_request'
@@ -75,24 +86,19 @@ jobs:
           
           gpg --batch --export > ~/.gnupg/pubring.gpg
           
-          for chart in *.tgz; do
+          # Validate charts from the .cr-release-packages directory
+          for chart in .cr-release-packages/*.tgz; do
+            [ -f "$chart" ] || continue
+            echo "🔍 Verifying $chart..."
             helm verify "$chart"
           done
+          echo "✅ All charts are properly signed and verified"
 
-      - name: Create Release (Manual trigger only)
+      - name: Run chart-releaser
         if: github.event_name == 'workflow_dispatch'
-        run: |
-          CHART_VERSION=$(helm show chart charts/exivity/ | grep '^version:' | awk '{print $2}')
-          RELEASE_TAG="exivity-$CHART_VERSION"
-          
-          gpg --export --armor "$GPG_KEY_ID" > signing-key.asc
-          
-          gh release create "$RELEASE_TAG" \
-            --title "Exivity Helm Chart $CHART_VERSION" \
-            --notes "Signed Helm chart release" \
-            *.tgz *.prov signing-key.asc
+        uses: exivity/chart-releaser-action@v1.1.0
         env:
-          GH_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
+          CR_TOKEN: "${{ secrets.GH_BOT_TOKEN }}"
 
       - name: Cleanup
         if: always()
