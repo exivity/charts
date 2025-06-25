@@ -78,14 +78,27 @@ jobs:
 
       - name: Package and Sign Charts
         run: |
+          # Create passphrase file for Helm
+          echo "$GPG_PASSPHRASE" > /tmp/passphrase.txt
+          chmod 600 /tmp/passphrase.txt
+          
           for chart_dir in charts/*/; do
             [ -f "$chart_dir/Chart.yaml" ] || continue
-            helm package "$chart_dir"
-            CHART_FILE=$(ls -t *.tgz | head -n 1)
-            echo "$GPG_PASSPHRASE" | gpg --batch --yes --pinentry-mode loopback \
-              --passphrase-fd 0 --local-user "$GPG_KEY_ID" \
-              --detach-sign --armor --output "${CHART_FILE}.prov" "$CHART_FILE"
+            echo "📦 Packaging and signing chart: $chart_dir"
+            
+            # Use helm package --sign (should work with RSA keys)
+            helm package --sign "$chart_dir" \
+              --key "$GPG_KEY_ID" \
+              --keyring ~/.gnupg/secring.gpg \
+              --passphrase-file /tmp/passphrase.txt
           done
+          
+          # Clean up passphrase file
+          rm -f /tmp/passphrase.txt
+          
+          # List generated files
+          echo "Generated files:"
+          ls -la *.tgz *.prov 2>/dev/null || echo "No chart files found"
 
       - name: Validate Signed Charts (PR only)
         if: github.event_name == 'pull_request'
