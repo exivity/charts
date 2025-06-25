@@ -31,93 +31,28 @@ jobs:
           chmod 700 ~/.gnupg
           echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
           
-          # Check if the secret is already armored text or base64 encoded
+          # Handle both raw armored keys and base64 encoded keys
           SECRET_CONTENT="${{ secrets.HELM_RSA_PRIVATE_KEY }}"
           
           if [[ "$SECRET_CONTENT" == *"-----BEGIN PGP PRIVATE KEY BLOCK-----"* ]]; then
-            echo "📝 Secret appears to be raw armored GPG key"
             echo "$SECRET_CONTENT" > private.key
           else
-            echo "📝 Secret appears to be base64 encoded, decoding..."
-            # Clean the base64 key (remove whitespace/newlines) and decode
             echo "$SECRET_CONTENT" | tr -d ' \n\r\t' > private.key.b64
-            
-            # Decode with error handling
-            if ! base64 -d private.key.b64 > private.key 2>/dev/null; then
-              echo "❌ Base64 decoding failed. Checking secret format..."
-              echo "Secret length: $(echo '${{ secrets.HELM_RSA_PRIVATE_KEY }}' | wc -c)"
-              echo "First 50 chars: $(echo '${{ secrets.HELM_RSA_PRIVATE_KEY }}' | head -c 50)..."
-              echo "Last 50 chars: $(echo '${{ secrets.HELM_RSA_PRIVATE_KEY }}' | tail -c 50)"
-              echo ""
-              echo "💡 Options to fix:"
-              echo "1. Use raw armored key: gpg --export-secret-keys --armor KEY_ID"
-              echo "2. Use base64 encoded: gpg --export-secret-keys --armor KEY_ID | base64 -w 0"
-              exit 1
-            fi
+            base64 -d private.key.b64 > private.key 2>/dev/null
             rm -f private.key.b64
           fi
           
-          # Import with error handling
-          if ! gpg --batch --import private.key; then
-            echo "❌ GPG import failed. Verify the key format is correct."
-            echo "Key starts with: $(head -c 50 private.key)"
-            exit 1
-          fi
+          # Import and export to legacy GPG format for Helm compatibility
+          gpg --batch --import private.key
+          gpg --batch --export > ~/.gnupg/pubring.gpg
+          echo "$GPG_PASSPHRASE" | gpg --batch --passphrase-fd 0 --export-secret-keys > ~/.gnupg/secring.gpg
           
-          # Verify key exists
-          gpg --list-secret-keys --keyid-format LONG || {
-            echo "❌ No keys found after import"
-            exit 1
-          }
-          
-          # Export to legacy GPG format that Helm expects (GPG v2 compatibility)
-          echo "Exporting keys to legacy GPG format for Helm compatibility..."
-          
-          # Export public keys to legacy format
-          if ! gpg --batch --export > ~/.gnupg/pubring.gpg; then
-            echo "❌ Failed to export public keys"
-            exit 1
-          fi
-          
-          # Export secret keys to legacy format (with passphrase)
-          if ! echo "$GPG_PASSPHRASE" | gpg --batch --passphrase-fd 0 --export-secret-keys > ~/.gnupg/secring.gpg; then
-            echo "❌ Failed to export secret keys"
-            exit 1
-          fi
-          
-          # Verify the keyring files were created and have content
-          if [ ! -s ~/.gnupg/secring.gpg ] || [ ! -s ~/.gnupg/pubring.gpg ]; then
-            echo "❌ Keyring files are empty or not created"
-            exit 1
-          fi
-          
-          echo "✅ Legacy keyring files created successfully:"
-          echo "  pubring.gpg: $(wc -c < ~/.gnupg/pubring.gpg) bytes"
-          echo "  secring.gpg: $(wc -c < ~/.gnupg/secring.gpg) bytes"
-          
-          # Cleanup sensitive files
           rm -f private.key
 
       - name: Package and Sign Charts
         run: |
-          # Verify GPG setup before signing
-          echo "🔍 Verifying GPG setup for Helm..."
-          echo "Available secret keys:"
-          gpg --list-secret-keys --keyid-format LONG
-          
-          echo "Keyring files:"
-          ls -la ~/.gnupg/secring.gpg ~/.gnupg/pubring.gpg
-          
-          # Get the key name/email for Helm (not the key ID)
+          # Get the key name for Helm
           KEY_NAME=$(gpg --list-secret-keys --with-colons "$GPG_KEY_ID" | grep "^uid" | head -1 | cut -d: -f10)
-          if [ -z "$KEY_NAME" ]; then
-            echo "❌ Could not find key name for key ID: $GPG_KEY_ID"
-            exit 1
-          fi
-          echo "Using key name for Helm: $KEY_NAME"
-          
-          echo "Testing GPG signing capability..."
-          echo "test" | echo "$GPG_PASSPHRASE" | gpg --batch --yes --passphrase-fd 0 --local-user "$GPG_KEY_ID" --sign --armor
           
           # Create passphrase file for Helm
           echo "$GPG_PASSPHRASE" > /tmp/passphrase.txt
@@ -125,31 +60,13 @@ jobs:
           
           for chart_dir in charts/*/; do
             [ -f "$chart_dir/Chart.yaml" ] || continue
-            echo "📦 Packaging and signing chart: $chart_dir"
-            
-            # Use helm package --sign with key name (not key ID)
-            if ! helm package --sign "$chart_dir" \
+            helm package --sign "$chart_dir" \
               --key "$KEY_NAME" \
               --keyring ~/.gnupg/secring.gpg \
-              --passphrase-file /tmp/passphrase.txt; then
-              echo "❌ Helm signing failed. Trying alternative approach..."
-              
-              # Fallback: package first, then sign manually  
-              helm package "$chart_dir"
-              CHART_FILE=$(ls -t *.tgz | head -n 1)
-              echo "Signing $CHART_FILE manually..."
-              echo "$GPG_PASSPHRASE" | gpg --batch --yes --pinentry-mode loopback \
-                --passphrase-fd 0 --local-user "$GPG_KEY_ID" \
-                --detach-sign --armor --output "${CHART_FILE}.prov" "$CHART_FILE"
-            fi
+              --passphrase-file /tmp/passphrase.txt
           done
           
-          # Clean up passphrase file
           rm -f /tmp/passphrase.txt
-          
-          # List generated files
-          echo "Generated files:"
-          ls -la *.tgz *.prov 2>/dev/null || echo "No chart files found"
 
       - name: Validate Signed Charts (PR only)
         if: github.event_name == 'pull_request'
@@ -158,24 +75,20 @@ jobs:
           chmod 700 ~/.gnupg
           echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
           
-          # Use the same RSA key for verification (handle both armored and base64)
+          # Import key for verification
           SECRET_CONTENT="${{ secrets.HELM_RSA_PRIVATE_KEY }}"
           
           if [[ "$SECRET_CONTENT" == *"-----BEGIN PGP PRIVATE KEY BLOCK-----"* ]]; then
             echo "$SECRET_CONTENT" | gpg --batch --import
           else
-            echo "$SECRET_CONTENT" | tr -d ' \n\r\t' > verify.key.b64
-            base64 -d verify.key.b64 2>/dev/null | gpg --batch --import
-            rm -f verify.key.b64
+            echo "$SECRET_CONTENT" | tr -d ' \n\r\t' | base64 -d | gpg --batch --import
           fi
           
           gpg --batch --export > ~/.gnupg/pubring.gpg
           
           for chart in *.tgz; do
-            echo "🔍 Verifying $chart..."
-            helm verify "$chart" || { echo "❌ Verification failed for $chart"; exit 1; }
+            helm verify "$chart"
           done
-          echo "✅ All charts are properly signed and verified"
 
       - name: Create Release (Manual trigger only)
         if: github.event_name == 'workflow_dispatch'
