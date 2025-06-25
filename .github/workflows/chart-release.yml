@@ -30,7 +30,31 @@ jobs:
           mkdir -p ~/.gnupg
           chmod 700 ~/.gnupg
           echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
-          echo "${{ secrets.HELM_RSA_PRIVATE_KEY }}" | base64 -d | gpg --batch --import
+          
+          # Write the base64 key to a file first
+          echo "${{ secrets.HELM_RSA_PRIVATE_KEY }}" > private.key.b64
+          
+          # Decode with error handling
+          if ! base64 -d private.key.b64 > private.key; then
+            echo "❌ Base64 decoding failed. Ensure your HELM_RSA_PRIVATE_KEY is properly base64 encoded."
+            echo "First few chars of secret: ${HELM_RSA_PRIVATE_KEY:0:20}..."
+            exit 1
+          fi
+          
+          # Import with error handling
+          if ! gpg --batch --import private.key; then
+            echo "❌ GPG import failed. Verify the key format is correct."
+            echo "Key starts with: $(head -c 50 private.key)"
+            exit 1
+          fi
+          
+          # Verify key exists
+          gpg --list-secret-keys --keyid-format LONG || {
+            echo "❌ No keys found after import"
+            exit 1
+          }
+          
+          # Export to secring.gpg
           echo "$GPG_PASSPHRASE" | gpg --batch --passphrase-fd 0 --export-secret-keys > ~/.gnupg/secring.gpg
 
       - name: Package and Sign Charts
@@ -47,21 +71,19 @@ jobs:
       - name: Validate Signed Charts (PR only)
         if: github.event_name == 'pull_request'
         run: |
-          # Setup GPG for verification (helm verify needs keyring)
           mkdir -p ~/.gnupg
           chmod 700 ~/.gnupg
           echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
           
-          # Import the public key for verification
-          echo "${{ secrets.HELM_GPG_PRIVATE_KEY }}" | base64 -d | gpg --batch --import
+          # Use the same RSA key for verification
+          echo "${{ secrets.HELM_RSA_PRIVATE_KEY }}" > verify.key.b64
+          base64 -d verify.key.b64 | gpg --batch --import
           
-          # Create the public keyring that helm verify expects
           gpg --batch --export > ~/.gnupg/pubring.gpg
           
-          # Verify each chart
           for chart in *.tgz; do
             echo "🔍 Verifying $chart..."
-            helm verify "$chart"
+            helm verify "$chart" || { echo "❌ Verification failed for $chart"; exit 1; }
           done
           echo "✅ All charts are properly signed and verified"
 
