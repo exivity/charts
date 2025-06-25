@@ -38,9 +38,10 @@ spec:
               mountPath: /exivity/home/system
             - name:      config
               mountPath: /exivity/home/system/config
-          command: ["/bin/sh", "-c"]
+          command: [php]
           args:
-            - "php artisan exivity:migrate-db"            
+            - /app/artisan
+            - exivity:migrate-db
           envFrom:
             - secretRef:
                 name: {{ include "exivity.fullname" . }}-app-key
