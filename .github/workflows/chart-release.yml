@@ -31,30 +31,20 @@ jobs:
           chmod 700 ~/.gnupg
           echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
           
-          # Handle both raw armored keys and base64 encoded keys
           SECRET_CONTENT="${{ secrets.HELM_RSA_PRIVATE_KEY }}"
           
           if [[ "$SECRET_CONTENT" == *"-----BEGIN PGP PRIVATE KEY BLOCK-----"* ]]; then
-            echo "$SECRET_CONTENT" > private.key
+            echo "$SECRET_CONTENT" | gpg --batch --import
           else
-            echo "$SECRET_CONTENT" | tr -d ' \n\r\t' > private.key.b64
-            base64 -d private.key.b64 > private.key 2>/dev/null
-            rm -f private.key.b64
+            echo "$SECRET_CONTENT" | tr -d ' \n\r\t' | base64 -d | gpg --batch --import
           fi
           
-          # Import and export to legacy GPG format for Helm compatibility
-          gpg --batch --import private.key
           gpg --batch --export > ~/.gnupg/pubring.gpg
           echo "$GPG_PASSPHRASE" | gpg --batch --passphrase-fd 0 --export-secret-keys > ~/.gnupg/secring.gpg
-          
-          rm -f private.key
 
       - name: Package and Sign Charts
         run: |
-          # Get the key name for Helm
           KEY_NAME=$(gpg --list-secret-keys --with-colons "$GPG_KEY_ID" | grep "^uid" | head -1 | cut -d: -f10)
-          
-          # Create passphrase file for Helm
           echo "$GPG_PASSPHRASE" > /tmp/passphrase.txt
           chmod 600 /tmp/passphrase.txt
           
@@ -75,7 +65,6 @@ jobs:
           chmod 700 ~/.gnupg
           echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
           
-          # Import key for verification
           SECRET_CONTENT="${{ secrets.HELM_RSA_PRIVATE_KEY }}"
           
           if [[ "$SECRET_CONTENT" == *"-----BEGIN PGP PRIVATE KEY BLOCK-----"* ]]; then
