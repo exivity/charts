@@ -11,8 +11,8 @@ jobs:
   helm-release:
     runs-on: ubuntu-latest
     env:
-      GPG_KEY_ID: ${{ secrets.HELM_GPG_KEY_ID }}
-      GPG_PASSPHRASE: ${{ secrets.HELM_GPG_PASSPHRASE }}
+      GPG_KEY_ID: ${{ secrets.HELM_RSA_KEY_ID }} 
+      GPG_PASSPHRASE: ${{ secrets.HELM_RSA_PASSPHRASE }}
 
     steps:
       - name: Checkout
@@ -30,8 +30,8 @@ jobs:
           mkdir -p ~/.gnupg
           chmod 700 ~/.gnupg
           echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
-          echo "${{ secrets.HELM_GPG_PRIVATE_KEY }}" | base64 -d | gpg --batch --import
-          echo "$GPG_PASSPHRASE" | gpg --batch --passphrase-fd 0 --export-secret-keys > ~/.gnupg/secring.gpg
+          echo "${{ secrets.HELM_RSA_PRIVATE_KEY }}" | base64 -d | gpg --batch --import
+          echo "${{ secrets.HELM_RSA_PASSPHRASE }}" | gpg --batch --passphrase-fd 0 --export-secret-keys > ~/.gnupg/secring.gpg
 
       - name: Package and Sign Charts
         run: |
@@ -39,7 +39,7 @@ jobs:
             [ -f "$chart_dir/Chart.yaml" ] || continue
             helm package "$chart_dir"
             CHART_FILE=$(ls -t *.tgz | head -n 1)
-            echo "$GPG_PASSPHRASE" | gpg --batch --yes --pinentry-mode loopback \
+            echo "${{ secrets.HELM_RSA_PASSPHRASE }}" | gpg --batch --yes --pinentry-mode loopback \  # Fixed: Use HELM_RSA_PASSPHRASE
               --passphrase-fd 0 --local-user "$GPG_KEY_ID" \
               --detach-sign --armor --output "${CHART_FILE}.prov" "$CHART_FILE"
           done
@@ -52,21 +52,33 @@ jobs:
           chmod 700 ~/.gnupg
           echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
           
-          # Import the public key for verification
-          echo "${{ secrets.HELM_GPG_PRIVATE_KEY }}" | base64 -d | gpg --batch --import
+          # Import the RSA public key for verification
+          echo "${{ secrets.HELM_RSA_PRIVATE_KEY }}" | base64 -d | gpg --batch --import
           
           # Create the public keyring that helm verify expects
           gpg --batch --export > ~/.gnupg/pubring.gpg
           
-          # Verify each chart
+          # Verify each chart (should now work with RSA key)
           for chart in *.tgz; do
             echo "🔍 Verifying $chart..."
-            helm verify "$chart"
+            helm verify "$chart" || { echo "❌ Verification failed"; exit 1; }
           done
           echo "✅ All charts are properly signed and verified"
 
+      - name: Show packaged chart and .prov file content
+        run: |
+          for chart_file in *.tgz; do
+            prov_file="${chart_file}.prov"
+            echo "== 📦 Packaged Chart: $chart_file =="
+            tar -tzf "$chart_file"
+
+            echo "== 🔐 Signature File: $prov_file (base64 encoded) =="
+            base64 "$prov_file"
+            
+            echo ""
+          done
+
       - name: Create Release (Manual trigger only)
-        if: github.event_name == 'workflow_dispatch'
         run: |
           CHART_VERSION=$(helm show chart charts/exivity/ | grep '^version:' | awk '{print $2}')
           RELEASE_TAG="exivity-$CHART_VERSION"
