@@ -476,3 +476,8 @@ prometheus:
     enabled: false
     serviceMonitor:
       enabled: false
+
+# Proximity Migration Job Configuration
+proximityMigrate:
+  nodeName: ""   # Specific node name to run the migration job on (optional)
+  nodeSelector: {} # Node selector for the migration job (independent of proximity API)
