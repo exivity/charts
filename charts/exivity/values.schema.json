@@ -172,13 +172,41 @@
           "default": "",
           "title": "The sharedVolumeAccessMode Schema",
           "examples": ["ReadWriteMany"]
+        },
+        "permissions": {
+          "type": "object",
+          "title": "The permissions Schema",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false,
+              "title": "Enable permissions init container",
+              "description": "Whether to run the permissions init container for mounted volumes."
+            },
+            "policy": {
+              "type": "string",
+              "default": "OnRootMismatch",
+              "title": "Ownership update policy",
+              "description": "Controls when ownership is set. Use 'Always' to set ownership on every pod start, or 'OnRootMismatch' to only update when the current owner does not match the expected user/group.",
+              "enum": ["Always", "OnRootMismatch"]
+            }
+          },
+          "required": ["enabled", "policy"],
+          "examples": [
+            { "enabled": false, "policy": "OnRootMismatch" },
+            { "enabled": true, "policy": "Always" }
+          ]
         }
       },
       "examples": [
         {
           "storageClass": "",
           "helmResourcePolicyKeep": true,
-          "sharedVolumeAccessMode": "ReadWriteMany"
+          "sharedVolumeAccessMode": "ReadWriteMany",
+          "permissions": {
+            "enabled": false,
+            "policy": "OnRootMismatch"
+          }
         }
       ]
     },
@@ -3030,7 +3058,11 @@
       "storage": {
         "storageClass": "",
         "helmResourcePolicyKeep": true,
-        "sharedVolumeAccessMode": "ReadWriteMany"
+        "sharedVolumeAccessMode": "ReadWriteMany",
+        "permissions": {
+          "enabled": false,
+          "policy": "OnRootMismatch"
+        }
       },
       "postgresql": {
         "enabled": true,
