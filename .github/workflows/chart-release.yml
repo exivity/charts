@@ -64,8 +64,7 @@ jobs:
           echo "✅ Created signed packages:"
           ls -la .cr-release-packages/
 
-      - name: Validate Signed Charts (PR only)
-        if: github.event_name == 'pull_request'
+      - name: Validate Signed Charts 
         run: |
           mkdir -p ~/.gnupg
           chmod 700 ~/.gnupg
