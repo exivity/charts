@@ -2,6 +2,13 @@ name: Release Charts
 
 on:
   workflow_dispatch:
+  push:
+    branches: ["main"]
+    tags:
+      - "exivity-*"
+    paths:
+      - 'charts/**'       # Any file under charts/
+      - '.github/workflows/chart-release.yml'
 
 jobs:
   helm-release:
@@ -74,9 +81,11 @@ jobs:
 
           echo "✅ Charts are properly signed and verified."
 
-      - name: Run chart-releaser (release only on manual dispatch)
-        if: github.event_name == 'workflow_dispatch'
-        uses: exivity/chart-releaser-action@v1.1.0
+      - name: Run chart-releaser (release only on tag push)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: exivity/chart-releaser-action@v1.7.0
+        with:
+          skip_packaging: true
         env:
           CR_TOKEN: "${{ secrets.GH_BOT_TOKEN }}"
 
