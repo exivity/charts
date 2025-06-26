@@ -33,11 +33,7 @@ jobs:
           
           SECRET_CONTENT="${{ secrets.HELM_RSA_PRIVATE_KEY }}"
           
-          if [[ "$SECRET_CONTENT" == *"-----BEGIN PGP PRIVATE KEY BLOCK-----"* ]]; then
-            echo "$SECRET_CONTENT" | gpg --batch --import
-          else
-            echo "$SECRET_CONTENT" | tr -d ' \n\r\t' | base64 -d | gpg --batch --import
-          fi
+          echo "${{ secrets.HELM_RSA_PRIVATE_KEY }}" | gpg --batch --import
           
           gpg --batch --export > ~/.gnupg/pubring.gpg
           echo "$GPG_PASSPHRASE" | gpg --batch --passphrase-fd 0 --export-secret-keys > ~/.gnupg/secring.gpg
@@ -51,22 +47,17 @@ jobs:
           # Create .cr-release-packages directory for chart-releaser-action
           mkdir -p .cr-release-packages
           
-          for chart_dir in charts/*/; do
-            [ -f "$chart_dir/Chart.yaml" ] || continue
-            echo "📦 Packaging and signing chart: $chart_dir"
-            
-            # Package and sign chart in the .cr-release-packages directory
-            helm package --sign "$chart_dir" \
-              --key "$KEY_NAME" \
-              --keyring ~/.gnupg/secring.gpg \
-              --passphrase-file /tmp/passphrase.txt \
-              --destination .cr-release-packages
-          done
+          chart_dir=charts/exivity
+          helm package --sign "$chart_dir" \
+            --key "$KEY_NAME" \
+            --keyring ~/.gnupg/secring.gpg \
+            --passphrase-file /tmp/passphrase.txt \
+            --destination .cr-release-packages
           
           rm -f /tmp/passphrase.txt
           
           # List created packages for verification
-          echo "📋 Created signed packages:"
+          echo "✅ Created signed packages:"
           ls -la .cr-release-packages/
 
       - name: Validate Signed Charts (PR only)
@@ -78,21 +69,13 @@ jobs:
           
           SECRET_CONTENT="${{ secrets.HELM_RSA_PRIVATE_KEY }}"
           
-          if [[ "$SECRET_CONTENT" == *"-----BEGIN PGP PRIVATE KEY BLOCK-----"* ]]; then
-            echo "$SECRET_CONTENT" | gpg --batch --import
-          else
-            echo "$SECRET_CONTENT" | tr -d ' \n\r\t' | base64 -d | gpg --batch --import
-          fi
-          
+          echo "${{ secrets.HELM_RSA_PRIVATE_KEY }}" | gpg --batch --import
           gpg --batch --export > ~/.gnupg/pubring.gpg
           
           # Validate charts from the .cr-release-packages directory
-          for chart in .cr-release-packages/*.tgz; do
-            [ -f "$chart" ] || continue
-            echo "🔍 Verifying $chart..."
-            helm verify "$chart"
-          done
-          echo "✅ All charts are properly signed and verified"
+          find .cr-release-packages -maxdepth 1 -type f -name '*.tgz' -print -exec helm verify {} \;
+
+          echo "✅ Charts are properly signed and verified."
 
       - name: Run chart-releaser
         if: github.event_name == 'workflow_dispatch'
