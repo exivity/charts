@@ -78,7 +78,6 @@ jobs:
           echo "✅ Charts are properly signed and verified."
 
       - name: Run chart-releaser
-        if: github.event_name == 'workflow_dispatch'
         uses: exivity/chart-releaser-action@v1.1.0
         env:
           CR_TOKEN: "${{ secrets.GH_BOT_TOKEN }}"
