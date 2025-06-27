@@ -144,7 +144,7 @@ spec:
       {{- if .Values.service.proximityApi.nodeName }}
       nodeName: {{ .Values.service.proximityApi.nodeName }}
       {{- end }}
-      {{- include "exivity.tolerations" (dict "global" .Values.global "component" .Values.service.proximityApi) | nindent 6 }}
-      {{- include "exivity.nodeSelector" (dict "global" .Values.global "component" .Values.service.proximityApi) | nindent 6 }}
+      {{- include "exivity.tolerations" (dict "component" .Values.service.proximityApi) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "component" .Values.service.proximityApi) | nindent 6 }}
       affinity:
-        {{- include "exivity.nodeAffinity" (dict "global" .Values.global "component" .Values.service.proximityApi) | nindent 8 }}
+        {{- include "exivity.nodeAffinity" (dict "component" .Values.service.proximityApi) | nindent 8 }}

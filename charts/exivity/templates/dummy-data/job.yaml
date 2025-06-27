@@ -83,8 +83,8 @@ spec:
       {{- if .Values.service.dummyData.nodeName }}
       nodeName: {{ .Values.service.dummyData.nodeName }}
       {{- end }}
-      {{- include "exivity.tolerations" (dict "global" .Values.global "component" .Values.service.dummyData) | nindent 6 }}
-      {{- include "exivity.nodeSelector" (dict "global" .Values.global "component" .Values.service.dummyData) | nindent 6 }}
+      {{- include "exivity.tolerations" (dict "component" .Values.service.dummyData) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "component" .Values.service.dummyData) | nindent 6 }}
       affinity:
-        {{- include "exivity.nodeAffinity" (dict "global" .Values.global "component" .Values.service.dummyData) | nindent 8 }}
+        {{- include "exivity.nodeAffinity" (dict "component" .Values.service.dummyData) | nindent 8 }}
       {{- end }}

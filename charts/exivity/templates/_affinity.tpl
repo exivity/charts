@@ -3,12 +3,14 @@
 Return the node selector for a component.
 */}}
 {{- define "exivity.nodeSelector" -}}
-{{- $compNodeSelector := dict -}}
-{{- if .component -}}
-{{- $compNodeSelector = .component.nodeSelector -}}
+{{- $nodeSelector := dict -}}
+{{- if and $.Values (hasKey $.Values "global") -}}
+  {{- $nodeSelector = $.Values.global.nodeSelector | default dict -}}
 {{- end -}}
-{{- $nodeSelector := $compNodeSelector | default .global.nodeSelector -}}
-{{- if $nodeSelector }}
+{{- if and .component (hasKey .component "nodeSelector") -}}
+  {{- $nodeSelector = .component.nodeSelector -}}
+{{- end -}}
+{{- if $nodeSelector -}}
 nodeSelector:
 {{ toYaml $nodeSelector | nindent 2 }}
 {{- end }}
@@ -18,12 +20,14 @@ nodeSelector:
 Return the node affinity for a component.
 */}}
 {{- define "exivity.nodeAffinity" -}}
-{{- $compNodeAffinity := dict -}}
-{{- if .component -}}
-{{- $compNodeAffinity = .component.nodeAffinity -}}
+{{- $nodeAffinity := dict -}}
+{{- if and $.Values (hasKey $.Values "global") -}}
+  {{- $nodeAffinity = $.Values.global.nodeAffinity | default dict -}}
 {{- end -}}
-{{- $nodeAffinity := $compNodeAffinity | default .global.nodeAffinity -}}
-{{- if $nodeAffinity }}
+{{- if and .component (hasKey .component "nodeAffinity") -}}
+  {{- $nodeAffinity = .component.nodeAffinity -}}
+{{- end -}}
+{{- if $nodeAffinity -}}
 nodeAffinity:
 {{ toYaml $nodeAffinity | nindent 2 }}
 {{- end }}
@@ -33,12 +37,14 @@ nodeAffinity:
 Return the tolerations for a component.
 */}}
 {{- define "exivity.tolerations" -}}
-{{- $compTolerations := dict -}}
-{{- if .component -}}
-{{- $compTolerations = .component.tolerations -}}
+{{- $tolerations := list -}}
+{{- if and $.Values (hasKey $.Values "global") -}}
+  {{- $tolerations = $.Values.global.tolerations | default list -}}
 {{- end -}}
-{{- $tolerations := $compTolerations | default .global.tolerations -}}
-{{- if $tolerations }}
+{{- if and .component (hasKey .component "tolerations") -}}
+  {{- $tolerations = .component.tolerations -}}
+{{- end -}}
+{{- if $tolerations -}}
 tolerations:
 {{ toYaml $tolerations | nindent 2 }}
 {{- end }}

@@ -114,7 +114,7 @@ spec:
       {{- if .Values.service.use.nodeName }}
       nodeName: {{ .Values.service.use.nodeName }}
       {{- end }}
-      {{- include "exivity.tolerations" (dict "global" .Values.global "component" .Values.service.use) | nindent 6 }}
-      {{- include "exivity.nodeSelector" (dict "global" .Values.global "component" .Values.service.use) | nindent 6 }}
+      {{- include "exivity.tolerations" (dict "component" .Values.service.use) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "component" .Values.service.use) | nindent 6 }}
       affinity:
-        {{- include "exivity.nodeAffinity" (dict "global" .Values.global "component" .Values.service.use) | nindent 8 }}
+        {{- include "exivity.nodeAffinity" (dict "component" .Values.service.use) | nindent 8 }}
