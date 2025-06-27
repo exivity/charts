@@ -22,7 +22,7 @@ spec:
         checksum/{{- include "exivity.fullname" $ -}}-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
     spec:
       securityContext:
-        {{- include "exivity.securityContext" (dict "root" . "component" "migrate") | indent 8 }}
+        {{- include "exivity.securityContext" (dict "root" . "component" "proximityMigrate") | indent 8 }}
       volumes:
         - name: config-shared
           configMap:
