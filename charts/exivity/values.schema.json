@@ -210,6 +210,73 @@
         }
       ]
     },
+    "communications": {
+      "type": "object",
+      "properties": {
+        "smtp": {
+          "type": "object",
+          "properties": {
+            "driver": {
+              "type": "string",
+              "description": "Mail driver to use, e.g. smtp"
+            },
+            "host": {
+              "type": "string",
+              "format": "hostname",
+              "description": "SMTP server hostname"
+            },
+            "port": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65535,
+              "description": "SMTP server port"
+            },
+            "encryption": {
+              "type": "string",
+              "enum": ["none", "ssl", "tls"],
+              "description": "One of: none | ssl | tls"
+            },
+            "verifyPeer": {
+              "type": "boolean",
+              "description": "Verify certificate trust chain and hostname"
+            },
+            "fromAddress": {
+              "type": "string",
+              "format": "email",
+              "description": "Sender email address"
+            },
+            "fromName": {
+              "type": "string",
+              "description": "Sender name"
+            },
+            "auth": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "description": "SMTP username"
+                },
+                "password": {
+                  "type": "string",
+                  "description": "SMTP password"
+                }
+              },
+              "required": ["username"],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "host",
+            "port",
+            "encryption",
+            "fromAddress",
+            "fromName",
+            "auth"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
     "postgresql": {
       "type": "object",
       "default": {},
@@ -2803,6 +2870,7 @@
         }
       ]
     },
+
     "logLevel": {
       "type": "object",
       "default": {},
@@ -3062,6 +3130,19 @@
         "permissions": {
           "enabled": false,
           "policy": "OnRootMismatch"
+        }
+      },
+      "smtp": {
+        "mail": {
+          "driver": "",
+          "host": "",
+          "port": "",
+          "encryption": "",
+          "smtpVerifyPeer": false,
+          "fromAddress": "",
+          "fromName": "",
+          "username": "",
+          "password": ""
         }
       },
       "postgresql": {

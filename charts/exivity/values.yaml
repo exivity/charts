@@ -88,6 +88,22 @@ storage:
       import: 1Gi
       report: 1Gi
 
+communications:
+  {}
+  # SMTP settings
+  # smtp:
+  #   driver: smtp # mail "driver" (e.g. smtp)
+  #   host: smtp.example.com # SMTP server hostname
+  #   port: 465 # SMTP server port
+  #   encryption: tls # one of: none | ssl | tls
+  #   verifyPeer: true # verify certificate trust chain and hostname
+  #   fromAddress: noreply@exivity.com
+  #   fromName: Exivity
+  #   auth:
+  #     username: info@your-domain
+  #     password: SuperSecure
+
+
 # Configuration for PostgreSQL, either as an embedded database using the Bitnami PostgreSQL chart or an external database.
 # It is recommended to use an external PostgreSQL server for production environments to ensure scalability and manageability.
 # The embedded PostgreSQL chart is primarily intended for testing and non-production purposes.

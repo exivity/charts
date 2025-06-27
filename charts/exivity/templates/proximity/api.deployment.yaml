@@ -23,6 +23,8 @@ spec:
         checksum/{{- include "exivity.fullname" $ -}}-lock: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-proximity-api-env: {{ include (print $.Template.BasePath "/proximity/api.env.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/{{- include "exivity.fullname" $ -}}-config-smtp: {{ include (print $.Template.BasePath "/smtp/smtp-configmap.yaml") . | sha256sum }}
+        checksum/{{- include "exivity.fullname" $ -}}-smtp-secret: {{ include (print $.Template.BasePath "/smtp/smtp-secret.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "proximityApi") | indent 8 }}
@@ -134,6 +136,12 @@ spec:
                 name: {{ include "exivity.fullname" $ -}}-jwt-secret
             - configMapRef:
                 name: {{ include "exivity.fullname" $ -}}-proximity-api-env
+            {{- if and .Values.communications .Values.communications.smtp }}
+            - secretRef:
+                name: {{ include "exivity.fullname" $ -}}-smtp-secret
+            - configMapRef:
+                name: {{ include "exivity.fullname" . }}-config-smtp
+            {{- end }}
           {{- include "exivity.probes" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:

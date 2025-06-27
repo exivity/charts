@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "exivity.fullname" $ }}-config-smtp
+  labels:
+    {{- include "exivity.labels" $ | indent 4 }}
+data:
+  {{- if and .Values.communications .Values.communications.smtp }}
+    {{- if .Values.communications.smtp.driver }}
+  EXIVITY_MAIL_DRIVER: {{ .Values.communications.smtp.driver | quote }}
+    {{- end }}
+    {{- if .Values.communications.smtp.host }}
+  EXIVITY_MAIL_HOST: {{ .Values.communications.smtp.host | quote }}
+    {{- end }}
+    {{- if .Values.communications.smtp.port }}
+  EXIVITY_MAIL_PORT: {{ .Values.communications.smtp.port | quote }}
+    {{- end }}
+    {{- if .Values.communications.smtp.fromAddress }}
+  EXIVITY_MAIL_FROM_ADDRESS: {{ .Values.communications.smtp.fromAddress | quote }}
+    {{- end }}
+    {{- if .Values.communications.smtp.fromName }}
+  EXIVITY_MAIL_FROM_NAME: {{ .Values.communications.smtp.fromName | quote }}
+    {{- end }}
+    {{- if .Values.communications.smtp.encryption }}
+  EXIVITY_MAIL_ENCRYPTION: {{ .Values.communications.smtp.encryption | quote }}
+    {{- end }}
+    {{- if .Values.communications.smtp.smtpVerifyPeer }}
+  EXIVITY_MAIL_SMTP_VERIFY_PEER: {{ .Values.communications.smtp.smtpVerifyPeer | quote }}
+    {{- end }}
+  {{- end }}
