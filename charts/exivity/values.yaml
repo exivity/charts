@@ -481,3 +481,8 @@ prometheus:
 proximityMigrate:
   nodeName: ""   # Specific node name to run the migration job on (optional)
   nodeSelector: {} # Node selector for the migration job (independent of proximity API)
+  # securityContext:
+    #   runAsUser: 1000
+    #   runAsGroup: 1000
+    #   fsGroup: 1000
+    #   runAsNonRoot: true
