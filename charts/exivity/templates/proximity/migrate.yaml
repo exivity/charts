@@ -57,9 +57,7 @@ spec:
       {{- if .Values.proximityMigrate.nodeName }}
       nodeName: {{ .Values.proximityMigrate.nodeName }}
       {{- end }}
-      {{- with .Values.proximityMigrate.nodeSelector }}
-      nodeSelector:
-        {{ range $key, $val := . }}
-        {{ $key }}: {{ $val }}
-        {{- end }}
-      {{- end }}
+      {{- include "exivity.tolerations" (dict "global" .Values.global "component" .Values.service.proximityMigrate) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "global" .Values.global "component" .Values.service.proximityMigrate) | nindent 6 }}
+      affinity:
+        {{- include "exivity.nodeAffinity" (dict "global" .Values.global "component" .Values.service.proximityMigrate) | nindent 8 }}

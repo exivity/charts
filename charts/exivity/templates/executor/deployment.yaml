@@ -81,9 +81,7 @@ spec:
       {{- if .Values.service.executor.nodeName }}
       nodeName: {{ .Values.service.executor.nodeName }}
       {{- end }}
-      {{- with .Values.service.executor.nodeSelector }}
-      nodeSelector:
-        {{ range $key, $val := . }}
-        {{ $key }}: {{ $val }}
-        {{- end }}
-      {{- end }}
+      {{- include "exivity.tolerations" (dict "global" .Values.global "component" .Values.service.executor) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "global" .Values.global "component" .Values.service.executor) | nindent 6 }}
+      affinity:
+        {{- include "exivity.nodeAffinity" (dict "global" .Values.global "component" .Values.service.executor) | nindent 8 }}

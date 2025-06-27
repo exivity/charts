@@ -61,9 +61,7 @@ spec:
       {{- if .Values.service.griffon.nodeName }}
       nodeName: {{ .Values.service.griffon.nodeName }}
       {{- end }}
-      {{- with .Values.service.griffon.nodeSelector }}
-      nodeSelector:
-        {{ range $key, $val := . }}
-        {{ $key }}: {{ $val }}
-        {{- end }}
-      {{- end }}
+      {{- include "exivity.tolerations" (dict "global" .Values.global "component" .Values.service.griffon) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "global" .Values.global "component" .Values.service.griffon) | nindent 6 }}
+      affinity:
+        {{- include "exivity.nodeAffinity" (dict "global" .Values.global "component" .Values.service.griffon) | nindent 8 }}

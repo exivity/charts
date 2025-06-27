@@ -58,9 +58,7 @@ spec:
       {{- if .Values.service.horizon.nodeName }}
       nodeName: {{ .Values.service.horizon.nodeName }}
       {{- end }}
-      {{- with .Values.service.horizon.nodeSelector }}
-      nodeSelector:
-        {{ range $key, $val := . }}
-        {{ $key }}: {{ $val }}
-        {{- end }}
-      {{- end }}
+      {{- include "exivity.tolerations" (dict "global" .Values.global "component" .Values.service.horizon) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "global" .Values.global "component" .Values.service.horizon) | nindent 6 }}
+      affinity:
+        {{- include "exivity.nodeAffinity" (dict "global" .Values.global "component" .Values.service.horizon) | nindent 8 }}
