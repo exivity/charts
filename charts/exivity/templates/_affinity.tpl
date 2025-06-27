@@ -3,7 +3,11 @@
 Return the node selector for a component.
 */}}
 {{- define "exivity.nodeSelector" -}}
-{{- $nodeSelector := .component.nodeSelector | default .global.nodeSelector -}}
+{{- $compNodeSelector := dict -}}
+{{- if .component -}}
+{{- $compNodeSelector = .component.nodeSelector -}}
+{{- end -}}
+{{- $nodeSelector := $compNodeSelector | default .global.nodeSelector -}}
 {{- if $nodeSelector }}
 nodeSelector:
 {{ toYaml $nodeSelector | nindent 2 }}
@@ -14,7 +18,11 @@ nodeSelector:
 Return the node affinity for a component.
 */}}
 {{- define "exivity.nodeAffinity" -}}
-{{- $nodeAffinity := .component.nodeAffinity | default .global.nodeAffinity -}}
+{{- $compNodeAffinity := dict -}}
+{{- if .component -}}
+{{- $compNodeAffinity = .component.nodeAffinity -}}
+{{- end -}}
+{{- $nodeAffinity := $compNodeAffinity | default .global.nodeAffinity -}}
 {{- if $nodeAffinity }}
 nodeAffinity:
 {{ toYaml $nodeAffinity | nindent 2 }}
@@ -25,7 +33,11 @@ nodeAffinity:
 Return the tolerations for a component.
 */}}
 {{- define "exivity.tolerations" -}}
-{{- $tolerations := .component.tolerations | default .global.tolerations -}}
+{{- $compTolerations := dict -}}
+{{- if .component -}}
+{{- $compTolerations = .component.tolerations -}}
+{{- end -}}
+{{- $tolerations := $compTolerations | default .global.tolerations -}}
 {{- if $tolerations }}
 tolerations:
 {{ toYaml $tolerations | nindent 2 }}
