@@ -172,41 +172,13 @@
           "default": "",
           "title": "The sharedVolumeAccessMode Schema",
           "examples": ["ReadWriteMany"]
-        },
-        "permissions": {
-          "type": "object",
-          "title": "The permissions Schema",
-          "properties": {
-            "enabled": {
-              "type": "boolean",
-              "default": false,
-              "title": "Enable permissions init container",
-              "description": "Whether to run the permissions init container for mounted volumes."
-            },
-            "policy": {
-              "type": "string",
-              "default": "OnRootMismatch",
-              "title": "Ownership update policy",
-              "description": "Controls when ownership is set. Use 'Always' to set ownership on every pod start, or 'OnRootMismatch' to only update when the current owner does not match the expected user/group.",
-              "enum": ["Always", "OnRootMismatch"]
-            }
-          },
-          "required": ["enabled", "policy"],
-          "examples": [
-            { "enabled": false, "policy": "OnRootMismatch" },
-            { "enabled": true, "policy": "Always" }
-          ]
         }
       },
       "examples": [
         {
           "storageClass": "",
           "helmResourcePolicyKeep": true,
-          "sharedVolumeAccessMode": "ReadWriteMany",
-          "permissions": {
-            "enabled": false,
-            "policy": "OnRootMismatch"
-          }
+          "sharedVolumeAccessMode": "ReadWriteMany"
         }
       ]
     },
@@ -2996,44 +2968,36 @@
         }
       ]
     },
-    "pvcSizes": {
+    "ldap": {
       "type": "object",
-      "title": "The pvcSizes Schema",
+      "default": {},
+      "title": "LDAP Configuration",
+      "description": "Configuration for LDAP over TLS support",
+      "required": [],
       "properties": {
-        "log": {
-          "type": "object",
-          "properties": {
-            "chronos": { "type": "string" },
-            "edify": { "type": "string" },
-            "executor": { "type": "string" },
-            "glass": { "type": "string" },
-            "griffon": { "type": "string" },
-            "horizon": { "type": "string" },
-            "pigeon": { "type": "string" },
-            "proximityApi": { "type": "string" },
-            "proximityCli": { "type": "string" },
-            "transcript": { "type": "string" },
-            "use": { "type": "string" }
-          }
+        "tlsCacert": {
+          "type": "string",
+          "default": "",
+          "title": "LDAP TLS CA Certificate",
+          "description": "PEM-encoded CA certificate for LDAP over TLS connections. Must be provided together with tlsCacertPath."
         },
-        "config": {
-          "type": "object",
-          "properties": {
-            "etl": { "type": "string" },
-            "griffon": { "type": "string" },
-            "chronos": { "type": "string" }
-          }
-        },
-        "data": {
-          "type": "object",
-          "properties": {
-            "exported": { "type": "string" },
-            "extracted": { "type": "string" },
-            "import": { "type": "string" },
-            "report": { "type": "string" }
-          }
+        "tlsCacertPath": {
+          "type": "string",
+          "default": "/etc/ssl/certs/ldap.pem",
+          "title": "LDAP TLS CA Certificate Path",
+          "description": "Path where the LDAP TLS CA certificate will be mounted inside the container. Must be provided together with tlsCacert."
         }
-      }
+      },
+      "examples": [
+        {
+          "tlsCacert": "",
+          "tlsCacertPath": "/etc/ssl/certs/ldap.pem"
+        },
+        {
+          "tlsCacert": "-----BEGIN CERTIFICATE-----\nMIIDXTCCAkWgAwIBAgIJAKoK/OvD...\n-----END CERTIFICATE-----",
+          "tlsCacertPath": "/etc/ssl/certs/ldap.pem"
+        }
+      ]
     }
   },
   "examples": [
@@ -3058,11 +3022,7 @@
       "storage": {
         "storageClass": "",
         "helmResourcePolicyKeep": true,
-        "sharedVolumeAccessMode": "ReadWriteMany",
-        "permissions": {
-          "enabled": false,
-          "policy": "OnRootMismatch"
-        }
+        "sharedVolumeAccessMode": "ReadWriteMany"
       },
       "postgresql": {
         "enabled": true,
@@ -3408,6 +3368,10 @@
             "enabled": false
           }
         }
+      },
+      "ldap": {
+        "tlsCacert": "",
+        "tlsCacertPath": "/etc/ssl/certs/ldap.pem"
       }
     }
   ]
