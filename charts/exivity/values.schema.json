@@ -473,6 +473,55 @@
               "runAsNonRoot": true
             }
           ]
+        },
+        "nodeSelector": {
+          "type": "object",
+          "title": "The nodeSelector Schema",
+          "description": "Default node selector for all components. Can be overridden by individual components.",
+          "examples": [
+            {
+              "kubernetes.io/hostname": "node-1"
+            }
+          ]
+        },
+        "nodeAffinity": {
+          "type": "object",
+          "title": "The nodeAffinity Schema",
+          "description": "Default node affinity for all components. Can be overridden by individual components.",
+          "examples": [
+            {
+              "requiredDuringSchedulingIgnoredDuringExecution": {
+                "nodeSelectorTerms": [
+                  {
+                    "matchExpressions": [
+                      {
+                        "key": "kubernetes.io/os",
+                        "operator": "In",
+                        "values": ["linux"]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "tolerations": {
+          "type": "array",
+          "title": "The tolerations Schema",
+          "description": "Default tolerations for all components. Can be overridden by individual components.",
+          "items": {
+            "type": "object"
+          },
+          "examples": [
+            [
+              {
+                "key": "key1",
+                "operator": "Exists",
+                "effect": "NoSchedule"
+              }
+            ]
+          ]
         }
       }
     },
@@ -598,6 +647,21 @@
               "properties": {},
               "examples": [{}]
             },
+            "nodeAffinity": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeAffinity Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "tolerations": {
+              "type": "array",
+              "default": [],
+              "title": "The tolerations Schema",
+              "items": {},
+              "examples": [[]]
+            },
             "resources": {
               "type": "object",
               "default": {},
@@ -671,6 +735,8 @@
               "replicas": 1,
               "nodeName": "",
               "nodeSelector": {},
+              "nodeAffinity": {},
+              "tolerations": [],
               "resources": {
                 "requests": {
                   "cpu": "25m",
@@ -774,6 +840,21 @@
               "properties": {},
               "examples": [{}]
             },
+            "nodeAffinity": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeAffinity Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "tolerations": {
+              "type": "array",
+              "default": [],
+              "title": "The tolerations Schema",
+              "items": {},
+              "examples": [[]]
+            },
             "resources": {
               "type": "object",
               "default": {},
@@ -849,6 +930,8 @@
               "replicas": 1,
               "nodeName": "",
               "nodeSelector": {},
+              "nodeAffinity": {},
+              "tolerations": [],
               "resources": {
                 "requests": {
                   "cpu": "25m",
@@ -923,6 +1006,21 @@
               "properties": {},
               "examples": [{}]
             },
+            "nodeAffinity": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeAffinity Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "tolerations": {
+              "type": "array",
+              "default": [],
+              "title": "The tolerations Schema",
+              "items": {},
+              "examples": [[]]
+            },
             "resources": {
               "type": "object",
               "default": {},
@@ -994,6 +1092,8 @@
               "replicas": 1,
               "nodeName": "",
               "nodeSelector": {},
+              "nodeAffinity": {},
+              "tolerations": [],
               "resources": {
                 "requests": {
                   "cpu": "25m",
@@ -1061,6 +1161,21 @@
               "required": [],
               "properties": {},
               "examples": [{}]
+            },
+            "nodeAffinity": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeAffinity Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "tolerations": {
+              "type": "array",
+              "default": [],
+              "title": "The tolerations Schema",
+              "items": {},
+              "examples": [[]]
             },
             "waitForServer": {
               "type": "object",
@@ -1132,6 +1247,8 @@
               "pullPolicy": "",
               "nodeName": "",
               "nodeSelector": {},
+              "nodeAffinity": {},
+              "tolerations": [],
               "waitForServer": {
                 "resources": {}
               },
@@ -1206,6 +1323,21 @@
               "properties": {},
               "examples": [{}]
             },
+            "nodeAffinity": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeAffinity Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "tolerations": {
+              "type": "array",
+              "default": [],
+              "title": "The tolerations Schema",
+              "items": {},
+              "examples": [[]]
+            },
             "resources": {
               "type": "object",
               "default": {},
@@ -1243,6 +1375,8 @@
               "pullPolicy": "",
               "nodeName": "",
               "nodeSelector": {},
+              "nodeAffinity": {},
+              "tolerations": [],
               "resources": {},
               "securityContext": {
                 "runAsUser": 1000,
@@ -1311,6 +1445,21 @@
               "required": [],
               "properties": {},
               "examples": [{}]
+            },
+            "nodeAffinity": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeAffinity Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "tolerations": {
+              "type": "array",
+              "default": [],
+              "title": "The tolerations Schema",
+              "items": {},
+              "examples": [[]]
             },
             "resources": {
               "type": "object",
@@ -1383,6 +1532,8 @@
               "replicas": 1,
               "nodeName": "",
               "nodeSelector": {},
+              "nodeAffinity": {},
+              "tolerations": [],
               "resources": {
                 "requests": {
                   "cpu": "25m",
@@ -1457,6 +1608,21 @@
               "properties": {},
               "examples": [{}]
             },
+            "nodeAffinity": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeAffinity Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "tolerations": {
+              "type": "array",
+              "default": [],
+              "title": "The tolerations Schema",
+              "items": {},
+              "examples": [[]]
+            },
             "resources": {
               "type": "object",
               "default": {},
@@ -1528,6 +1694,8 @@
               "replicas": 1,
               "nodeName": "",
               "nodeSelector": {},
+              "nodeAffinity": {},
+              "tolerations": [],
               "resources": {
                 "requests": {
                   "cpu": "25m",
@@ -1602,6 +1770,21 @@
               "properties": {},
               "examples": [{}]
             },
+            "nodeAffinity": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeAffinity Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "tolerations": {
+              "type": "array",
+              "default": [],
+              "title": "The tolerations Schema",
+              "items": {},
+              "examples": [[]]
+            },
             "resources": {
               "type": "object",
               "default": {},
@@ -1673,6 +1856,8 @@
               "replicas": 1,
               "nodeName": "",
               "nodeSelector": {},
+              "nodeAffinity": {},
+              "tolerations": [],
               "resources": {
                 "requests": {
                   "cpu": "25m",
@@ -1747,6 +1932,21 @@
               "properties": {},
               "examples": [{}]
             },
+            "nodeAffinity": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeAffinity Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "tolerations": {
+              "type": "array",
+              "default": [],
+              "title": "The tolerations Schema",
+              "items": {},
+              "examples": [[]]
+            },
             "resources": {
               "type": "object",
               "default": {},
@@ -1818,6 +2018,8 @@
               "replicas": 1,
               "nodeName": "",
               "nodeSelector": {},
+              "nodeAffinity": {},
+              "tolerations": [],
               "resources": {
                 "requests": {
                   "cpu": "25m",
@@ -1892,6 +2094,21 @@
               "properties": {},
               "examples": [{}]
             },
+            "nodeAffinity": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeAffinity Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "tolerations": {
+              "type": "array",
+              "default": [],
+              "title": "The tolerations Schema",
+              "items": {},
+              "examples": [[]]
+            },
             "resources": {
               "type": "object",
               "default": {},
@@ -1963,6 +2180,8 @@
               "replicas": 1,
               "nodeName": "",
               "nodeSelector": {},
+              "nodeAffinity": {},
+              "tolerations": [],
               "resources": {
                 "requests": {
                   "cpu": "25m",
@@ -2037,6 +2256,21 @@
               "properties": {},
               "examples": [{}]
             },
+            "nodeAffinity": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeAffinity Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "tolerations": {
+              "type": "array",
+              "default": [],
+              "title": "The tolerations Schema",
+              "items": {},
+              "examples": [[]]
+            },
             "resources": {
               "type": "object",
               "default": {},
@@ -2108,6 +2342,8 @@
               "replicas": 1,
               "nodeName": "",
               "nodeSelector": {},
+              "nodeAffinity": {},
+              "tolerations": [],
               "resources": {
                 "requests": {
                   "cpu": "25m",
@@ -2182,6 +2418,21 @@
               "properties": {},
               "examples": [{}]
             },
+            "nodeAffinity": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeAffinity Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "tolerations": {
+              "type": "array",
+              "default": [],
+              "title": "The tolerations Schema",
+              "items": {},
+              "examples": [[]]
+            },
             "resources": {
               "type": "object",
               "default": {},
@@ -2253,6 +2504,8 @@
               "replicas": 1,
               "nodeName": "",
               "nodeSelector": {},
+              "nodeAffinity": {},
+              "tolerations": [],
               "resources": {
                 "requests": {
                   "cpu": "25m",
@@ -2327,6 +2580,21 @@
               "required": [],
               "properties": {},
               "examples": [{}]
+            },
+            "nodeAffinity": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeAffinity Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "tolerations": {
+              "type": "array",
+              "default": [],
+              "title": "The tolerations Schema",
+              "items": {},
+              "examples": [[]]
             },
             "resources": {
               "type": "object",
@@ -2483,6 +2751,8 @@
               "replicas": 1,
               "nodeName": "",
               "nodeSelector": {},
+              "nodeAffinity": {},
+              "tolerations": [],
               "resources": {
                 "requests": {
                   "cpu": "25m",
@@ -2526,6 +2796,8 @@
             "replicas": 1,
             "nodeName": "",
             "nodeSelector": {},
+            "nodeAffinity": {},
+            "tolerations": [],
             "resources": {
               "requests": {
                 "cpu": "25m",
@@ -2551,6 +2823,8 @@
             "replicas": 1,
             "nodeName": "",
             "nodeSelector": {},
+            "nodeAffinity": {},
+            "tolerations": [],
             "resources": {
               "requests": {
                 "cpu": "25m",
@@ -2572,6 +2846,8 @@
             "replicas": 1,
             "nodeName": "",
             "nodeSelector": {},
+            "nodeAffinity": {},
+            "tolerations": [],
             "resources": {
               "requests": {
                 "cpu": "25m",
@@ -2592,6 +2868,8 @@
             "pullPolicy": "",
             "nodeName": "",
             "nodeSelector": {},
+            "nodeAffinity": {},
+            "tolerations": [],
             "waitForServer": {
               "resources": {}
             },
@@ -2613,6 +2891,8 @@
             "pullPolicy": "",
             "nodeName": "",
             "nodeSelector": {},
+            "nodeAffinity": {},
+            "tolerations": [],
             "resources": {},
             "securityContext": {
               "runAsUser": 1000,
@@ -2629,6 +2909,8 @@
             "replicas": 1,
             "nodeName": "",
             "nodeSelector": {},
+            "nodeAffinity": {},
+            "tolerations": [],
             "resources": {
               "requests": {
                 "cpu": "25m",
@@ -2650,6 +2932,8 @@
             "replicas": 1,
             "nodeName": "",
             "nodeSelector": {},
+            "nodeAffinity": {},
+            "tolerations": [],
             "resources": {
               "requests": {
                 "cpu": "25m",
@@ -2671,6 +2955,8 @@
             "replicas": 1,
             "nodeName": "",
             "nodeSelector": {},
+            "nodeAffinity": {},
+            "tolerations": [],
             "resources": {
               "requests": {
                 "cpu": "25m",
@@ -2692,6 +2978,8 @@
             "replicas": 1,
             "nodeName": "",
             "nodeSelector": {},
+            "nodeAffinity": {},
+            "tolerations": [],
             "resources": {
               "requests": {
                 "cpu": "25m",
@@ -2713,6 +3001,8 @@
             "replicas": 1,
             "nodeName": "",
             "nodeSelector": {},
+            "nodeAffinity": {},
+            "tolerations": [],
             "resources": {
               "requests": {
                 "cpu": "25m",
@@ -2734,6 +3024,8 @@
             "replicas": 1,
             "nodeName": "",
             "nodeSelector": {},
+            "nodeAffinity": {},
+            "tolerations": [],
             "resources": {
               "requests": {
                 "cpu": "25m",
@@ -2755,6 +3047,8 @@
             "replicas": 1,
             "nodeName": "",
             "nodeSelector": {},
+            "nodeAffinity": {},
+            "tolerations": [],
             "resources": {
               "requests": {
                 "cpu": "25m",
@@ -2776,6 +3070,8 @@
             "replicas": 1,
             "nodeName": "",
             "nodeSelector": {},
+            "nodeAffinity": {},
+            "tolerations": [],
             "resources": {
               "requests": {
                 "cpu": "25m",
@@ -3109,6 +3405,8 @@
           "replicas": 1,
           "nodeName": "",
           "nodeSelector": {},
+          "nodeAffinity": {},
+          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3134,6 +3432,8 @@
           "replicas": 1,
           "nodeName": "",
           "nodeSelector": {},
+          "nodeAffinity": {},
+          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3155,6 +3455,8 @@
           "replicas": 1,
           "nodeName": "",
           "nodeSelector": {},
+          "nodeAffinity": {},
+          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3175,6 +3477,8 @@
           "pullPolicy": "",
           "nodeName": "",
           "nodeSelector": {},
+          "nodeAffinity": {},
+          "tolerations": [],
           "waitForServer": {
             "resources": {}
           },
@@ -3196,6 +3500,8 @@
           "pullPolicy": "",
           "nodeName": "",
           "nodeSelector": {},
+          "nodeAffinity": {},
+          "tolerations": [],
           "resources": {},
           "securityContext": {
             "runAsUser": 1000,
@@ -3212,6 +3518,8 @@
           "replicas": 1,
           "nodeName": "",
           "nodeSelector": {},
+          "nodeAffinity": {},
+          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3233,6 +3541,8 @@
           "replicas": 1,
           "nodeName": "",
           "nodeSelector": {},
+          "nodeAffinity": {},
+          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3254,6 +3564,8 @@
           "replicas": 1,
           "nodeName": "",
           "nodeSelector": {},
+          "nodeAffinity": {},
+          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3275,6 +3587,8 @@
           "replicas": 1,
           "nodeName": "",
           "nodeSelector": {},
+          "nodeAffinity": {},
+          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3296,6 +3610,8 @@
           "replicas": 1,
           "nodeName": "",
           "nodeSelector": {},
+          "nodeAffinity": {},
+          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3317,6 +3633,8 @@
           "replicas": 1,
           "nodeName": "",
           "nodeSelector": {},
+          "nodeAffinity": {},
+          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3338,6 +3656,8 @@
           "replicas": 1,
           "nodeName": "",
           "nodeSelector": {},
+          "nodeAffinity": {},
+          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3359,6 +3679,8 @@
           "replicas": 1,
           "nodeName": "",
           "nodeSelector": {},
+          "nodeAffinity": {},
+          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
