@@ -529,25 +529,6 @@
       "type": "object",
       "default": {},
       "title": "The service Schema",
-      "required": [
-        "registry",
-        "tag",
-        "pullPolicy",
-        "pullSecrets",
-        "glass",
-        "proximityApi",
-        "chronos",
-        "dbInit",
-        "dummyData",
-        "edify",
-        "executor",
-        "griffon",
-        "horizon",
-        "pigeon",
-        "proximityCli",
-        "transcript",
-        "use"
-      ],
       "properties": {
         "registry": {
           "type": "string",
