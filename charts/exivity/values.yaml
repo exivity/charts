@@ -422,8 +422,12 @@ service:
 
   # Proximity Migration Job Configuration
   proximityMigrate:
-    nodeName: "" # Specific node name to run the migration job on (optional)
-    nodeSelector: {} # Node selector for the migration job (independent of proximity API)
+    registry: ""
+    repository: exivity/proximity-api
+    tag: ""
+    pullPolicy: ""
+    nodeName: ""
+    nodeSelector: {}
     nodeAffinity: {}
     tolerations: []
     # securityContext:
@@ -431,6 +435,10 @@ service:
     #   runAsGroup: 1000
     #   fsGroup: 1000
     #   runAsNonRoot: true
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "50Mi"
 
   # Configuration for the 'transcript' service, part of the backend processing components.
   transcript:

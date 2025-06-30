@@ -948,6 +948,165 @@
             }
           ]
         },
+        "proximityMigrate": {
+          "type": "object",
+          "default": {},
+          "title": "The proximityMigrate Schema",
+          "required": [
+            "registry",
+            "repository",
+            "tag",
+            "pullPolicy",
+            "nodeName",
+            "nodeSelector",
+            "resources"
+          ],
+          "properties": {
+            "registry": {
+              "type": "string",
+              "default": "",
+              "title": "The registry Schema",
+              "examples": [""]
+            },
+            "repository": {
+              "type": "string",
+              "default": "",
+              "title": "The repository Schema",
+              "examples": ["exivity/proximity-migrate"]
+            },
+            "tag": {
+              "type": "string",
+              "default": "",
+              "title": "The tag Schema",
+              "examples": [""]
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "",
+              "title": "The pullPolicy Schema",
+              "examples": [""]
+            },
+            "nodeName": {
+              "type": "string",
+              "default": "",
+              "title": "The nodeName Schema",
+              "examples": [""]
+            },
+            "nodeSelector": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeSelector Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "nodeAffinity": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeAffinity Schema",
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            },
+            "tolerations": {
+              "type": "array",
+              "default": [],
+              "title": "The tolerations Schema",
+              "items": {},
+              "examples": [[]]
+            },
+            "resources": {
+              "type": "object",
+              "default": {},
+              "title": "The resources Schema",
+              "required": ["requests"],
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "default": {},
+                  "title": "The requests Schema",
+                  "required": ["cpu", "memory"],
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The cpu Schema",
+                      "examples": ["25m"]
+                    },
+                    "memory": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The memory Schema",
+                      "examples": ["400Mi"]
+                    }
+                  },
+                  "examples": [
+                    {
+                      "cpu": "25m",
+                      "memory": "400Mi"
+                    }
+                  ]
+                }
+              },
+              "examples": [
+                {
+                  "requests": {
+                    "cpu": "25m",
+                    "memory": "400Mi"
+                  }
+                }
+              ]
+            },
+            "securityContext": {
+              "type": "object",
+              "title": "The securityContext Schema",
+              "properties": {
+                "runAsUser": { "type": "integer" },
+                "runAsGroup": { "type": "integer" },
+                "fsGroup": { "type": "integer" },
+                "runAsNonRoot": { "type": "boolean" }
+              },
+              "required": [],
+              "examples": [
+                {
+                  "runAsUser": 1000,
+                  "runAsGroup": 1000,
+                  "fsGroup": 1000,
+                  "runAsNonRoot": true
+                }
+              ]
+            }
+          },
+          "examples": [
+            {
+              "registry": "",
+              "repository": "exivity/proximity-migrate",
+              "tag": "",
+              "pullPolicy": "",
+              "phpMemoryLimit": "3G",
+              "fingerPrinter": "secure_ip_useragent",
+              "servicePort": 80,
+              "serviceType": "ClusterIP",
+              "replicas": 1,
+              "nodeName": "",
+              "nodeSelector": {},
+              "nodeAffinity": {},
+              "tolerations": [],
+              "resources": {
+                "requests": {
+                  "cpu": "25m",
+                  "memory": "400Mi"
+                }
+              },
+              "securityContext": {
+                "runAsUser": 1000,
+                "runAsGroup": 1000,
+                "fsGroup": 1000,
+                "runAsNonRoot": true
+              }
+            }
+          ]
+        },
         "chronos": {
           "type": "object",
           "default": {},
@@ -2839,6 +2998,33 @@
               "runAsNonRoot": true
             }
           },
+          "proximityMigrate": {
+            "registry": "",
+            "repository": "exivity/proximity-migrate",
+            "tag": "",
+            "pullPolicy": "",
+            "phpMemoryLimit": "3G",
+            "fingerPrinter": "secure_ip_useragent",
+            "servicePort": 80,
+            "serviceType": "ClusterIP",
+            "replicas": 1,
+            "nodeName": "",
+            "nodeSelector": {},
+            "nodeAffinity": {},
+            "tolerations": [],
+            "resources": {
+              "requests": {
+                "cpu": "25m",
+                "memory": "400Mi"
+              }
+            },
+            "securityContext": {
+              "runAsUser": 1000,
+              "runAsGroup": 1000,
+              "fsGroup": 1000,
+              "runAsNonRoot": true
+            }
+          },
           "chronos": {
             "registry": "",
             "repository": "exivity/chronos",
@@ -3424,6 +3610,33 @@
         "proximityApi": {
           "registry": "",
           "repository": "exivity/proximity-api",
+          "tag": "",
+          "pullPolicy": "",
+          "phpMemoryLimit": "3G",
+          "fingerPrinter": "secure_ip_useragent",
+          "servicePort": 80,
+          "serviceType": "ClusterIP",
+          "replicas": 1,
+          "nodeName": "",
+          "nodeSelector": {},
+          "nodeAffinity": {},
+          "tolerations": [],
+          "resources": {
+            "requests": {
+              "cpu": "25m",
+              "memory": "400Mi"
+            }
+          },
+          "securityContext": {
+            "runAsUser": 1000,
+            "runAsGroup": 1000,
+            "fsGroup": 1000,
+            "runAsNonRoot": true
+          }
+        },
+        "proximityMigrate": {
+          "registry": "",
+          "repository": "exivity/proximity-migrate",
           "tag": "",
           "pullPolicy": "",
           "phpMemoryLimit": "3G",
