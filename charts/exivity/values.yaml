@@ -91,14 +91,16 @@ storage:
 # LDAP TLS certificate configuration for secure LDAP connectivity.
 # This configuration allows mounting a PEM certificate into the Proximity API container
 # and setting the LDAPTLS_CACERT environment variable to enable LDAP over TLS.
+# Both tlsCacert and tlsCacertPath must be provided together to enable LDAP TLS.
 ldap:
-  enabled: true
   # PEM certificate content for LDAP TLS validation.
   # Can be provided as a multiline string or base64-encoded content.
+  # When empty, LDAP TLS functionality is disabled.
   tlsCacert: ""
 
   # Path where the LDAP TLS certificate will be mounted in the container.
   # This path will be set as the LDAPTLS_CACERT environment variable.
+  # Only used when tlsCacert is provided. Default: "/etc/ssl/certs/ldap.pem"
   tlsCacertPath: "/etc/ssl/certs/ldap.pem"
 
 # Configuration for PostgreSQL, either as an embedded database using the Bitnami PostgreSQL chart or an external database.

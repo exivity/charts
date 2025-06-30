@@ -39,7 +39,6 @@ Validate LDAP certificate configuration with tpl support for multiline strings
   {{- if and $hasCert (not $hasPath) -}}
     {{- required "ldap.tlsCacertPath must be set when providing ldap.tlsCacert" "" -}}
   {{- end -}}
-  {{- if and (not $hasCert) $hasPath -}}
-    {{- required "ldap.tlsCacert must be set when providing ldap.tlsCacertPath" "" -}}
-  {{- end -}}
+  {{/* Note: We allow tlsCacertPath to be set as a default without requiring tlsCacert */}}
+  {{/* Only require tlsCacert when both are provided and we're actually using LDAP TLS */}}
 {{- end -}}
