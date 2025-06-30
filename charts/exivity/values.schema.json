@@ -536,6 +536,7 @@
         "pullSecrets",
         "glass",
         "proximityApi",
+        "proximityMigrate",
         "chronos",
         "dbInit",
         "dummyData",

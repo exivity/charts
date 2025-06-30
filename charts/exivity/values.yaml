@@ -420,17 +420,17 @@ service:
         cpu: "25m"
         memory: "50Mi"
 
-# Proximity Migration Job Configuration
-proximityMigrate:
-  nodeName: "" # Specific node name to run the migration job on (optional)
-  nodeSelector: {} # Node selector for the migration job (independent of proximity API)
-  nodeAffinity: {}
-  tolerations: []
-  # securityContext:
-  #   runAsUser: 1000
-  #   runAsGroup: 1000
-  #   fsGroup: 1000
-  #   runAsNonRoot: true
+  # Proximity Migration Job Configuration
+  proximityMigrate:
+    nodeName: "" # Specific node name to run the migration job on (optional)
+    nodeSelector: {} # Node selector for the migration job (independent of proximity API)
+    nodeAffinity: {}
+    tolerations: []
+    # securityContext:
+    #   runAsUser: 1000
+    #   runAsGroup: 1000
+    #   fsGroup: 1000
+    #   runAsNonRoot: true
 
   # Configuration for the 'transcript' service, part of the backend processing components.
   transcript:
