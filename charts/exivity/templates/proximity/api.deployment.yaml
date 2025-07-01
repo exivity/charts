@@ -1,4 +1,3 @@
-{{- include "proximity-api.validateLdapCert" . }}
 apiVersion: apps/v1
 kind:       Deployment
 metadata:
@@ -25,9 +24,9 @@ spec:
         checksum/{{- include "exivity.fullname" $ -}}-proximity-api-env: {{ include (print $.Template.BasePath "/proximity/api.env.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         {{- if .Values.ldap.tlsCacert }}
-        checksum/{{- include "exivity.fullname" $ -}}-ldap-tls-cert: {{ include (print $.Template.BasePath "/proximity/ldap-secret.yaml") . | sha256sum }}
+        checksum/{{- include "exivity.fullname" $ -}}-ldap-tls-cert: {{ include (print $.Template.BasePath "/proximity/api.secret.yaml") . | sha256sum }}
+        checksum/{{- include "exivity.fullname" $ -}}-ldap-config: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
         {{- end }}
-        checksum/{{- include "exivity.fullname" $ -}}-ldap-config: {{ include (print $.Template.BasePath "/proximity/ldap-configmap.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "proximityApi") | indent 8 }}
@@ -151,8 +150,10 @@ spec:
                 name: {{ include "exivity.fullname" $ -}}-jwt-secret
             - configMapRef:
                 name: {{ include "exivity.fullname" $ -}}-proximity-api-env
+            {{- if .Values.ldap.tlsCacert }}
             - configMapRef:
                 name: {{ include "exivity.fullname" $ -}}-ldap-config
+            {{- end }}
           {{- include "exivity.probes" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
