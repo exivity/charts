@@ -80,16 +80,24 @@ ldap:
   tlsCacertPath: "/etc/ssl/certs/ldap.pem"
 ```
 
-**Important:** Both `tlsCacert` and `tlsCacertPath` must be provided together. The chart will fail validation if only one is configured.
+**Important:** To enable LDAP TLS, provide the `tlsCacert` value. The `tlsCacertPath` has a secure default and can be customized if needed.
 
 ### Installation with LDAP TLS
 
+**Option 1: Using --set-file (certificate from file):**
 ```bash
 helm upgrade --install exivity ./charts/exivity \
     --namespace exivity \
     --create-namespace \
-    --set-file ldap.tlsCacert=path/to/your/ldap-ca.pem \
-    --set ldap.tlsCacertPath=/etc/ssl/certs/ldap.pem
+    --set-file ldap.tlsCacert=path/to/your/ldap-ca.pem
+```
+
+**Option 2: Using values.yaml file (recommended for complex certificates):**
+```bash
+helm upgrade --install exivity ./charts/exivity \
+    --namespace exivity \
+    --create-namespace \
+    --values values.yaml
 ```
 
 ### Using values.yaml
@@ -102,7 +110,7 @@ ldap:
     -----BEGIN CERTIFICATE-----
     # Your LDAP CA certificate content here
     -----END CERTIFICATE-----
-  tlsCacertPath: "/etc/ssl/certs/ldap.pem"
+  # tlsCacertPath: "/etc/ssl/certs/ldap.pem"  # Optional: uses secure default
 ```
 
 Then install:
@@ -118,7 +126,7 @@ helm upgrade --install exivity ./charts/exivity \
 
 When LDAP TLS is configured:
 
-1. **Validation**: The chart validates that both certificate and path are provided together
+1. **Conditional Activation**: LDAP TLS features are enabled when `ldap.tlsCacert` is provided
 2. **Secret Creation**: A Kubernetes Secret is created containing the PEM certificate
 3. **Volume Mount**: The certificate is mounted into the Proximity API container at the specified path with secure permissions (0444)
 4. **Environment Variable**: The `LDAPTLS_CACERT` environment variable is set to the certificate path
@@ -130,28 +138,28 @@ The implementation ensures backward compatibility - if no LDAP TLS configuration
 
 - Certificate files are mounted with read-only permissions (0444)
 - The Secret is created only when `ldap.tlsCacert` is provided
-- If no certificate is configured, LDAP connections will work without TLS validation
-- The certificate is automatically available to all LDAP operations within the Proximity API
+- The `tlsCacertPath` has a secure default (`/etc/ssl/certs/ldap.pem`) that works for most scenarios
 
 ### Troubleshooting
 
-**Chart fails with validation error:**
-- Both `ldap.tlsCacert` and `ldap.tlsCacertPath` must be provided together
-- If you provide a certificate, you must also specify a path
-- If you provide a custom path, you must also provide a certificate
+**LDAP TLS not working:**
+- Ensure `ldap.tlsCacert` contains a valid PEM certificate
 - Verify the PEM certificate format is correct (must start with `-----BEGIN CERTIFICATE-----`)
+- Check that the certificate matches your LDAP server's CA
+- The default certificate path (`/etc/ssl/certs/ldap.pem`) works for most scenarios
 
 **LDAP connection issues:**
 - Check that the certificate matches your LDAP server's CA
 - Verify the certificate path is accessible within the container
 - Review Proximity API logs for LDAP connection errors
+- Ensure your LDAP server supports TLS connections
 
-### Validation Features
+### Implementation Features
 
-The chart includes robust validation to ensure secure LDAP TLS configuration:
+The chart includes robust configuration to ensure secure LDAP TLS implementation:
 
-- **Early Validation**: Chart deployment fails during `helm lint` or `helm template` if configuration is incomplete
-- **Template Support**: Certificate content and paths support Helm templating functions
+- **Conditional Activation**: LDAP TLS resources are only created when `ldap.tlsCacert` is provided
 - **Backward Compatibility**: No changes required for existing deployments without LDAP TLS
 - **Secure Defaults**: Certificate files are mounted with read-only permissions (0444)
-- **Conditional Resources**: LDAP resources are only created when needed
+- **Flexible Configuration**: Default certificate path works for most scenarios, customizable when needed
+- **Standard Helm Support**: Values support standard Helm templating and can be set via `--set`, `--set-file`, or `values.yaml`
