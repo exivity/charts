@@ -61,7 +61,7 @@ spec:
       {{- if .Values.service.chronos.nodeName }}
       nodeName: {{ .Values.service.chronos.nodeName }}
       {{- end }}
-      {{- include "exivity.tolerations" (dict "component" .Values.service.chronos) | nindent 6 }}
-      {{- include "exivity.nodeSelector" (dict "component" .Values.service.chronos) | nindent 6 }}
+      {{- include "exivity.tolerations" (dict "Values" .Values "component" .Values.service.chronos) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "Values" .Values "component" .Values.service.chronos) | nindent 6 }}
       affinity:
-        {{- include "exivity.nodeAffinity" (dict "component" .Values.service.chronos) | nindent 8 }}
+        {{- include "exivity.nodeAffinity" (dict "Values" .Values "component" .Values.service.chronos) | nindent 8 }}

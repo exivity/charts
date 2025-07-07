@@ -77,7 +77,7 @@ spec:
       {{- if .Values.service.edify.nodeName }}
       nodeName: {{ .Values.service.edify.nodeName }}
       {{- end }}
-      {{- include "exivity.tolerations" (dict "component" .Values.service.edify) | nindent 6 }}
-      {{- include "exivity.nodeSelector" (dict "component" .Values.service.edify) | nindent 6 }}
+      {{- include "exivity.tolerations" (dict "Values" .Values "component" .Values.service.edify) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "Values" .Values "component" .Values.service.edify) | nindent 6 }}
       affinity:
-        {{- include "exivity.nodeAffinity" (dict "component" .Values.service.edify) | nindent 8 }}
+        {{- include "exivity.nodeAffinity" (dict "Values" .Values "component" .Values.service.edify) | nindent 8 }}

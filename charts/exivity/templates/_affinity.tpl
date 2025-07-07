@@ -4,10 +4,10 @@ Return the node selector for a component.
 */}}
 {{- define "exivity.nodeSelector" -}}
 {{- $nodeSelector := dict -}}
-{{- if and $.Values (hasKey $.Values "global") -}}
-  {{- $nodeSelector = $.Values.global.nodeSelector | default dict -}}
+{{- if and .Values (hasKey .Values "global") -}}
+  {{- $nodeSelector = .Values.global.nodeSelector | default dict -}}
 {{- end -}}
-{{- if and .component (hasKey .component "nodeSelector") -}}
+{{- if and .component (hasKey .component "nodeSelector") .component.nodeSelector -}}
   {{- $nodeSelector = .component.nodeSelector -}}
 {{- end -}}
 {{- if $nodeSelector -}}
@@ -21,10 +21,10 @@ Return the node affinity for a component.
 */}}
 {{- define "exivity.nodeAffinity" -}}
 {{- $nodeAffinity := dict -}}
-{{- if and $.Values (hasKey $.Values "global") -}}
-  {{- $nodeAffinity = $.Values.global.nodeAffinity | default dict -}}
+{{- if and .Values (hasKey .Values "global") -}}
+  {{- $nodeAffinity = .Values.global.nodeAffinity | default dict -}}
 {{- end -}}
-{{- if and .component (hasKey .component "nodeAffinity") -}}
+{{- if and .component (hasKey .component "nodeAffinity") .component.nodeAffinity -}}
   {{- $nodeAffinity = .component.nodeAffinity -}}
 {{- end -}}
 {{- if $nodeAffinity -}}
@@ -38,10 +38,10 @@ Return the tolerations for a component.
 */}}
 {{- define "exivity.tolerations" -}}
 {{- $tolerations := list -}}
-{{- if and $.Values (hasKey $.Values "global") -}}
-  {{- $tolerations = $.Values.global.tolerations | default list -}}
+{{- if and .Values (hasKey .Values "global") -}}
+  {{- $tolerations = .Values.global.tolerations | default list -}}
 {{- end -}}
-{{- if and .component (hasKey .component "tolerations") -}}
+{{- if and .component (hasKey .component "tolerations") .component.tolerations -}}
   {{- $tolerations = .component.tolerations -}}
 {{- end -}}
 {{- if $tolerations -}}

@@ -84,7 +84,7 @@ spec:
       {{- if .Values.service.pigeon.nodeName }}
       nodeName: {{ .Values.service.pigeon.nodeName }}
       {{- end }}
-      {{- include "exivity.tolerations" (dict "component" .Values.service.pigeon) | nindent 6 }}
-      {{- include "exivity.nodeSelector" (dict "component" .Values.service.pigeon) | nindent 6 }}
+      {{- include "exivity.tolerations" (dict "Values" .Values "component" .Values.service.pigeon) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "Values" .Values "component" .Values.service.pigeon) | nindent 6 }}
       affinity:
-        {{- include "exivity.nodeAffinity" (dict "component" .Values.service.pigeon) | nindent 8 }}
+        {{- include "exivity.nodeAffinity" (dict "Values" .Values "component" .Values.service.pigeon) | nindent 8 }}

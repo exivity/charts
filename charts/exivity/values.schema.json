@@ -588,7 +588,6 @@
             "serviceType",
             "replicas",
             "nodeName",
-            "nodeSelector",
             "resources"
           ],
           "properties": {
@@ -642,7 +641,6 @@
             },
             "nodeSelector": {
               "type": "object",
-              "default": {},
               "title": "The nodeSelector Schema",
               "required": [],
               "properties": {},
@@ -768,7 +766,6 @@
             "serviceType",
             "replicas",
             "nodeName",
-            "nodeSelector",
             "resources"
           ],
           "properties": {
@@ -835,7 +832,6 @@
             },
             "nodeSelector": {
               "type": "object",
-              "default": {},
               "title": "The nodeSelector Schema",
               "required": [],
               "properties": {},
@@ -958,7 +954,6 @@
             "tag",
             "pullPolicy",
             "nodeName",
-            "nodeSelector",
             "resources"
           ],
           "properties": {
@@ -994,7 +989,6 @@
             },
             "nodeSelector": {
               "type": "object",
-              "default": {},
               "title": "The nodeSelector Schema",
               "required": [],
               "properties": {},
@@ -1118,7 +1112,6 @@
             "pullPolicy",
             "replicas",
             "nodeName",
-            "nodeSelector",
             "resources"
           ],
           "properties": {
@@ -1160,7 +1153,6 @@
             },
             "nodeSelector": {
               "type": "object",
-              "default": {},
               "title": "The nodeSelector Schema",
               "required": [],
               "properties": {},
@@ -1279,7 +1271,6 @@
             "tag",
             "pullPolicy",
             "nodeName",
-            "nodeSelector",
             "waitForServer",
             "migration"
           ],
@@ -1316,7 +1307,6 @@
             },
             "nodeSelector": {
               "type": "object",
-              "default": {},
               "title": "The nodeSelector Schema",
               "required": [],
               "properties": {},
@@ -1435,7 +1425,6 @@
             "tag",
             "pullPolicy",
             "nodeName",
-            "nodeSelector",
             "resources"
           ],
           "properties": {
@@ -1477,7 +1466,6 @@
             },
             "nodeSelector": {
               "type": "object",
-              "default": {},
               "title": "The nodeSelector Schema",
               "required": [],
               "properties": {},
@@ -1558,7 +1546,6 @@
             "pullPolicy",
             "replicas",
             "nodeName",
-            "nodeSelector",
             "resources"
           ],
           "properties": {
@@ -1600,7 +1587,6 @@
             },
             "nodeSelector": {
               "type": "object",
-              "default": {},
               "title": "The nodeSelector Schema",
               "required": [],
               "properties": {},
@@ -1720,7 +1706,6 @@
             "pullPolicy",
             "replicas",
             "nodeName",
-            "nodeSelector",
             "resources"
           ],
           "properties": {
@@ -1762,7 +1747,6 @@
             },
             "nodeSelector": {
               "type": "object",
-              "default": {},
               "title": "The nodeSelector Schema",
               "required": [],
               "properties": {},
@@ -1882,7 +1866,6 @@
             "pullPolicy",
             "replicas",
             "nodeName",
-            "nodeSelector",
             "resources"
           ],
           "properties": {
@@ -1924,7 +1907,6 @@
             },
             "nodeSelector": {
               "type": "object",
-              "default": {},
               "title": "The nodeSelector Schema",
               "required": [],
               "properties": {},
@@ -2044,7 +2026,6 @@
             "pullPolicy",
             "replicas",
             "nodeName",
-            "nodeSelector",
             "resources"
           ],
           "properties": {
@@ -2086,7 +2067,6 @@
             },
             "nodeSelector": {
               "type": "object",
-              "default": {},
               "title": "The nodeSelector Schema",
               "required": [],
               "properties": {},
@@ -2206,7 +2186,6 @@
             "pullPolicy",
             "replicas",
             "nodeName",
-            "nodeSelector",
             "resources"
           ],
           "properties": {
@@ -2248,7 +2227,6 @@
             },
             "nodeSelector": {
               "type": "object",
-              "default": {},
               "title": "The nodeSelector Schema",
               "required": [],
               "properties": {},
@@ -2368,7 +2346,6 @@
             "pullPolicy",
             "replicas",
             "nodeName",
-            "nodeSelector",
             "resources"
           ],
           "properties": {
@@ -2410,7 +2387,6 @@
             },
             "nodeSelector": {
               "type": "object",
-              "default": {},
               "title": "The nodeSelector Schema",
               "required": [],
               "properties": {},
@@ -2530,7 +2506,6 @@
             "pullPolicy",
             "replicas",
             "nodeName",
-            "nodeSelector",
             "resources"
           ],
           "properties": {
@@ -2572,7 +2547,6 @@
             },
             "nodeSelector": {
               "type": "object",
-              "default": {},
               "title": "The nodeSelector Schema",
               "required": [],
               "properties": {},
@@ -2692,7 +2666,6 @@
             "pullPolicy",
             "replicas",
             "nodeName",
-            "nodeSelector",
             "resources",
             "initContainers"
           ],
@@ -2735,7 +2708,6 @@
             },
             "nodeSelector": {
               "type": "object",
-              "default": {},
               "title": "The nodeSelector Schema",
               "required": [],
               "properties": {},
@@ -3591,9 +3563,6 @@
           "serviceType": "ClusterIP",
           "replicas": 1,
           "nodeName": "",
-          "nodeSelector": {},
-          "nodeAffinity": {},
-          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3618,9 +3587,6 @@
           "serviceType": "ClusterIP",
           "replicas": 1,
           "nodeName": "",
-          "nodeSelector": {},
-          "nodeAffinity": {},
-          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3645,9 +3611,6 @@
           "serviceType": "ClusterIP",
           "replicas": 1,
           "nodeName": "",
-          "nodeSelector": {},
-          "nodeAffinity": {},
-          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3668,9 +3631,6 @@
           "pullPolicy": "",
           "replicas": 1,
           "nodeName": "",
-          "nodeSelector": {},
-          "nodeAffinity": {},
-          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3690,9 +3650,6 @@
           "tag": "",
           "pullPolicy": "",
           "nodeName": "",
-          "nodeSelector": {},
-          "nodeAffinity": {},
-          "tolerations": [],
           "waitForServer": {
             "resources": {}
           },
@@ -3713,9 +3670,6 @@
           "tag": "main",
           "pullPolicy": "",
           "nodeName": "",
-          "nodeSelector": {},
-          "nodeAffinity": {},
-          "tolerations": [],
           "resources": {},
           "securityContext": {
             "runAsUser": 1000,
@@ -3731,9 +3685,6 @@
           "pullPolicy": "",
           "replicas": 1,
           "nodeName": "",
-          "nodeSelector": {},
-          "nodeAffinity": {},
-          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3754,9 +3705,6 @@
           "pullPolicy": "",
           "replicas": 1,
           "nodeName": "",
-          "nodeSelector": {},
-          "nodeAffinity": {},
-          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3777,9 +3725,6 @@
           "pullPolicy": "",
           "replicas": 1,
           "nodeName": "",
-          "nodeSelector": {},
-          "nodeAffinity": {},
-          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3800,9 +3745,6 @@
           "pullPolicy": "",
           "replicas": 1,
           "nodeName": "",
-          "nodeSelector": {},
-          "nodeAffinity": {},
-          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3823,9 +3765,6 @@
           "pullPolicy": "",
           "replicas": 1,
           "nodeName": "",
-          "nodeSelector": {},
-          "nodeAffinity": {},
-          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3846,9 +3785,6 @@
           "pullPolicy": "",
           "replicas": 1,
           "nodeName": "",
-          "nodeSelector": {},
-          "nodeAffinity": {},
-          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3869,9 +3805,6 @@
           "pullPolicy": "",
           "replicas": 1,
           "nodeName": "",
-          "nodeSelector": {},
-          "nodeAffinity": {},
-          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
@@ -3892,9 +3825,6 @@
           "pullPolicy": "",
           "replicas": 1,
           "nodeName": "",
-          "nodeSelector": {},
-          "nodeAffinity": {},
-          "tolerations": [],
           "resources": {
             "requests": {
               "cpu": "25m",
