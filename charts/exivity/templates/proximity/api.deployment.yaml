@@ -25,7 +25,6 @@ spec:
         checksum/{{- include "exivity.fullname" $ -}}-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         {{- if .Values.ldap.tlsCacert }}
         checksum/{{- include "exivity.fullname" $ -}}-ldap-tls-cert: {{ include (print $.Template.BasePath "/proximity/api.secret.yaml") . | sha256sum }}
-        checksum/{{- include "exivity.fullname" $ -}}-ldap-config: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
         {{- end }}
     spec:
       securityContext:
@@ -150,10 +149,6 @@ spec:
                 name: {{ include "exivity.fullname" $ -}}-jwt-secret
             - configMapRef:
                 name: {{ include "exivity.fullname" $ -}}-proximity-api-env
-            {{- if .Values.ldap.tlsCacert }}
-            - configMapRef:
-                name: {{ include "exivity.fullname" $ -}}-ldap-config
-            {{- end }}
           {{- include "exivity.probes" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:

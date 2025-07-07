@@ -94,9 +94,11 @@ storage:
 # Both tlsCacert and tlsCacertPath must be provided together to enable LDAP TLS.
 ldap:
   # PEM certificate content for LDAP TLS validation.
-  # Can be provided as a multiline string or base64-encoded content.
   # When empty, LDAP TLS functionality is disabled.
-  tlsCacert: ""
+  # tlsCacert: |
+  #   -----BEGIN CERTIFICATE-----
+  #   [Your Root CA certificate here]
+  #   -----END CERTIFICATE-----
 
   # Path where the LDAP TLS certificate will be mounted in the container.
   # This path will be set as the LDAPTLS_CACERT environment variable.
@@ -457,11 +459,11 @@ service:
     caCertificates:
       {}
       # Example placeholders for CA certificates. Replace with your actual certificate data.
-      # rootCA.pem:
+      # rootCA.pem: |
       #   -----BEGIN CERTIFICATE-----
       #   [Your Root CA certificate here]
       #   -----END CERTIFICATE-----
-      # intermediateCA.pem:
+      # intermediateCA.pem: |
       #   -----BEGIN CERTIFICATE-----
       #   [Your Intermediate CA certificate here]
       #   -----END CERTIFICATE-----
@@ -494,10 +496,10 @@ prometheus:
 
 # Proximity Migration Job Configuration
 proximityMigrate:
-  nodeName: ""   # Specific node name to run the migration job on (optional)
+  nodeName: "" # Specific node name to run the migration job on (optional)
   nodeSelector: {} # Node selector for the migration job (independent of proximity API)
   # securityContext:
-    #   runAsUser: 1000
-    #   runAsGroup: 1000
-    #   fsGroup: 1000
-    #   runAsNonRoot: true
+  #   runAsUser: 1000
+  #   runAsGroup: 1000
+  #   fsGroup: 1000
+  #   runAsNonRoot: true

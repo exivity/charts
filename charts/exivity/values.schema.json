@@ -3040,17 +3040,15 @@
       "default": {},
       "title": "LDAP Configuration",
       "description": "Configuration for LDAP over TLS support",
-      "required": [],
+      "required": ["tlsCacertPath"],
       "properties": {
         "tlsCacert": {
           "type": "string",
-          "default": "",
           "title": "LDAP TLS CA Certificate",
           "description": "PEM-encoded CA certificate for LDAP over TLS connections. Must be provided together with tlsCacertPath."
         },
         "tlsCacertPath": {
           "type": "string",
-          "default": "/etc/ssl/certs/ldap.pem",
           "title": "LDAP TLS CA Certificate Path",
           "description": "Path where the LDAP TLS CA certificate will be mounted inside the container. Must be provided together with tlsCacert."
         }
