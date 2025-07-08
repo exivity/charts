@@ -159,9 +159,7 @@ spec:
       {{- if .Values.service.proximityApi.nodeName }}
       nodeName: {{ .Values.service.proximityApi.nodeName }}
       {{- end }}
-      {{- with .Values.service.proximityApi.nodeSelector }}
-      nodeSelector:
-        {{ range $key, $val := . }}
-        {{ $key }}: {{ $val }}
-        {{- end }}
-      {{- end }}
+      {{- include "exivity.tolerations" (dict "Values" .Values "component" .Values.service.proximityApi) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "Values" .Values "component" .Values.service.proximityApi) | nindent 6 }}
+      affinity:
+        {{- include "exivity.nodeAffinity" (dict "Values" .Values "component" .Values.service.proximityApi) | nindent 8 }}

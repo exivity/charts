@@ -60,9 +60,7 @@ spec:
       {{- if .Values.service.dbInit.nodeName }}
       nodeName: {{ .Values.service.dbInit.nodeName }}
       {{- end }}
-      {{- with .Values.service.dbInit.nodeSelector }}
-      nodeSelector:
-        {{ range $key, $val := . }}
-        {{ $key }}: {{ $val }}
-        {{- end }}
-      {{- end }}
+      {{- include "exivity.tolerations" (dict "Values" .Values "component" .Values.service.dbInit) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "Values" .Values "component" .Values.service.dbInit) | nindent 6 }}
+      affinity:
+        {{- include "exivity.nodeAffinity" (dict "Values" .Values "component" .Values.service.dbInit) | nindent 8 }}

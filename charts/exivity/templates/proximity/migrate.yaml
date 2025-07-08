@@ -33,8 +33,10 @@ spec:
             claimName: {{ include "exivity.fullname" $ -}}-etl-config
       containers:
         - name: proximity-migration
-          image: {{ include "exivity.image" (set $ "name" "proximityApi") }}
-          imagePullPolicy: {{ .Values.service.proximityApi.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
+          image: {{ include "exivity.image" (set $ "name" "proximityMigrate") }}
+          imagePullPolicy: {{ .Values.service.proximityMigrate.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
+          resources:
+            {{- toYaml .Values.service.proximityMigrate.resources | nindent 12 }}
           volumeMounts:
             - name: config-shared
               mountPath: /exivity/home/system
@@ -56,12 +58,10 @@ spec:
         - name: {{ $name }}
         {{- end }}
       {{- end }}
-      {{- if .Values.proximityMigrate.nodeName }}
-      nodeName: {{ .Values.proximityMigrate.nodeName }}
+      {{- if .Values.service.proximityMigrate.nodeName }}
+      nodeName: {{ .Values.service.proximityMigrate.nodeName }}
       {{- end }}
-      {{- with .Values.proximityMigrate.nodeSelector }}
-      nodeSelector:
-        {{ range $key, $val := . }}
-        {{ $key }}: {{ $val }}
-        {{- end }}
-      {{- end }}
+      {{- include "exivity.tolerations" (dict "Values" .Values "component" .Values.service.proximityMigrate) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "Values" .Values "component" .Values.service.proximityMigrate) | nindent 6 }}
+      affinity:
+        {{- include "exivity.nodeAffinity" (dict "Values" .Values "component" .Values.service.proximityMigrate) | nindent 8 }}
