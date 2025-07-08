@@ -3489,6 +3489,35 @@
           }
         }
       }
+    },
+    "ldap": {
+      "type": "object",
+      "default": {},
+      "title": "LDAP Configuration",
+      "description": "Configuration for LDAP over TLS support",
+      "required": ["tlsCacertPath"],
+      "properties": {
+        "tlsCacert": {
+          "type": "string",
+          "title": "LDAP TLS CA Certificate",
+          "description": "PEM-encoded CA certificate for LDAP over TLS connections. Must be provided together with tlsCacertPath."
+        },
+        "tlsCacertPath": {
+          "type": "string",
+          "title": "LDAP TLS CA Certificate Path",
+          "description": "Path where the LDAP TLS CA certificate will be mounted inside the container. Must be provided together with tlsCacert."
+        }
+      },
+      "examples": [
+        {
+          "tlsCacert": "",
+          "tlsCacertPath": "/etc/ssl/certs/ldap.pem"
+        },
+        {
+          "tlsCacert": "-----BEGIN CERTIFICATE-----\nMIIDXTCCAkWgAwIBAgIJAKoK/OvD...\n-----END CERTIFICATE-----",
+          "tlsCacertPath": "/etc/ssl/certs/ldap.pem"
+        }
+      ]
     }
   },
   "examples": [
@@ -3874,6 +3903,10 @@
             "enabled": false
           }
         }
+      },
+      "ldap": {
+        "tlsCacert": "",
+        "tlsCacertPath": "/etc/ssl/certs/ldap.pem"
       }
     }
   ]
