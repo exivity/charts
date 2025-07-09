@@ -42,25 +42,11 @@ spec:
               value: "{{ .Values.service.backup.filePrefix }}"
             - name: BACKUP_RETENTION_DAYS
               value: "{{ .Values.service.backup.retentionDays }}"
-            - name: DB_HOST
-              value: {{ .Values.postgresql.host | default (printf "%s-postgresql" (include "exivity.fullname" . )) | quote }}
-            - name: DB_PORT
-              value: {{ .Values.postgresql.port | default 5432 | quote }}
-            - name: DB_USER
-              value: {{ .Values.postgresql.global.postgresql.auth.username | quote }}
-            - name: DB_PASSWORD
-              {{- if empty .Values.postgresql.host }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "exivity.fullname" . }}-postgresql
-                  key: password
-              {{- else }}
-              value: {{ .Values.postgresql.global.postgresql.auth.password | quote }}
-              {{- end }}
-            - name: DB_NAME
-              value: {{ .Values.postgresql.global.postgresql.auth.database | quote }}
-            - name: PG_SSLMODE
-              value: {{ .Values.postgresql.sslmode | default "disable" | quote }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "exivity.fullname" . }}-postgres-config
+            - secretRef:
+                name: {{ include "exivity.fullname" . }}-postgres-secret
           resources:
             {{- toYaml .Values.service.backup.resources | nindent 12 }}
           volumeMounts:
