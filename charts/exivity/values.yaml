@@ -291,6 +291,46 @@ service:
     migration:
       resources: {} # Resources allocated for migration operations, define as needed.
 
+  # Configuration for the PostgreSQL backup job.
+  # This backup is only executed during Helm chart upgrades, not as a regular scheduled job.
+  backup:
+    enabled: true # Whether to run the backup job before migrations during upgrades
+    registry: ""
+    repository: exivity/db-backup
+    tag: ""
+    pullPolicy: ""
+    nodeName: ""
+    nodeSelector: {}
+    nodeAffinity: {}
+    tolerations: []
+    # securityContext:
+    #   runAsUser: 1000
+    #   runAsGroup: 1000
+    #   fsGroup: 1000
+    #   runAsNonRoot: true
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "50Mi"
+    # Backup configuration
+    retentionDays: 7 # Number of days to retain backups
+    filePrefix: "backup" # Prefix for backup files
+    # Backup storage configuration
+    # This storage is independent from other PVCs and requires explicit configuration
+    storage:
+      size: "10Gi" # Size of the backup PVC
+      storageClass: "" # Custom storage class for backup PVC (if empty, uses cluster default)
+      accessModes: # Access modes for backup PVC
+        - "ReadWriteOnce"
+      volumeMode: "Filesystem" # Volume mode: "Filesystem" or "Block"
+      # Optional: selector for binding to specific persistent volumes
+      # selector:
+      #   matchLabels:
+      #     backup: "true"
+      # Optional: additional annotations and labels for the PVC resource itself
+      annotations: {} # Additional annotations for backup PVC
+      labels: {} # Additional labels for backup PVC
+
   # Configuration for the 'dummyData' service, used for deploying dummy data for testing purposes.
   dummyData:
     enabled: false
