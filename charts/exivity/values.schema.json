@@ -1414,6 +1414,239 @@
             }
           ]
         },
+        "backup": {
+          "type": "object",
+          "default": {},
+          "title": "The backup Schema",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false,
+              "title": "Enable backup job"
+            },
+            "registry": {
+              "type": "string",
+              "default": "",
+              "title": "The registry Schema"
+            },
+            "repository": {
+              "type": "string",
+              "default": "",
+              "title": "The repository Schema"
+            },
+            "tag": {
+              "type": "string",
+              "default": "",
+              "title": "The tag Schema"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "",
+              "title": "The pullPolicy Schema"
+            },
+            "nodeName": {
+              "type": "string",
+              "default": "",
+              "title": "The nodeName Schema"
+            },
+            "nodeSelector": {
+              "type": "object",
+              "title": "The nodeSelector Schema",
+              "properties": {},
+              "examples": [{}]
+            },
+            "nodeAffinity": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeAffinity Schema",
+              "properties": {},
+              "examples": [{}]
+            },
+            "tolerations": {
+              "type": "array",
+              "default": [],
+              "title": "The tolerations Schema",
+              "items": {},
+              "examples": [[]]
+            },
+            "resources": {
+              "type": "object",
+              "default": {},
+              "title": "The resources Schema",
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "default": {},
+                  "title": "The requests Schema",
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The cpu Schema"
+                    },
+                    "memory": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The memory Schema"
+                    }
+                  },
+                  "examples": [{ "cpu": "25m", "memory": "50Mi" }]
+                }
+              },
+              "examples": [{ "requests": { "cpu": "25m", "memory": "50Mi" } }]
+            },
+            "retentionDays": {
+              "type": "integer",
+              "default": 7,
+              "title": "Number of days to retain backups",
+              "minimum": 0
+            },
+            "filePrefix": {
+              "type": "string",
+              "default": "backup",
+              "title": "Prefix for backup files"
+            },
+            "storage": {
+              "type": "object",
+              "default": {},
+              "title": "Backup storage configuration",
+              "properties": {
+                "size": {
+                  "type": "string",
+                  "default": "10Gi",
+                  "title": "Size of the backup PVC"
+                },
+                "storageClass": {
+                  "type": "string",
+                  "default": "",
+                  "title": "Custom storage class for backup PVC"
+                },
+                "accessModes": {
+                  "type": "array",
+                  "default": ["ReadWriteOnce"],
+                  "title": "Access modes for backup PVC",
+                  "items": { "type": "string" }
+                },
+                "volumeMode": {
+                  "type": "string",
+                  "default": "Filesystem",
+                  "title": "Volume mode"
+                },
+                "helmResourcePolicy": {
+                  "type": "string",
+                  "default": "keep",
+                  "title": "Whether to keep or delete the PVC on Helm uninstall"
+                },
+                "selector": {
+                  "type": "object",
+                  "title": "PVC selector",
+                  "properties": {},
+                  "examples": [{}]
+                },
+                "annotations": {
+                  "type": "object",
+                  "title": "PVC annotations",
+                  "properties": {},
+                  "examples": [{}]
+                },
+                "labels": {
+                  "type": "object",
+                  "title": "PVC labels",
+                  "properties": {},
+                  "examples": [{}]
+                }
+              }
+            }
+          }
+        },
+        "restore": {
+          "type": "object",
+          "default": {},
+          "title": "The restore Schema",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false,
+              "title": "Enable restore job"
+            },
+            "registry": {
+              "type": "string",
+              "default": "",
+              "title": "The registry Schema"
+            },
+            "repository": {
+              "type": "string",
+              "default": "",
+              "title": "The repository Schema"
+            },
+            "tag": {
+              "type": "string",
+              "default": "",
+              "title": "The tag Schema"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "",
+              "title": "The pullPolicy Schema"
+            },
+            "nodeName": {
+              "type": "string",
+              "default": "",
+              "title": "The nodeName Schema"
+            },
+            "nodeSelector": {
+              "type": "object",
+              "title": "The nodeSelector Schema",
+              "properties": {},
+              "examples": [{}]
+            },
+            "nodeAffinity": {
+              "type": "object",
+              "default": {},
+              "title": "The nodeAffinity Schema",
+              "properties": {},
+              "examples": [{}]
+            },
+            "tolerations": {
+              "type": "array",
+              "default": [],
+              "title": "The tolerations Schema",
+              "items": {},
+              "examples": [[]]
+            },
+            "resources": {
+              "type": "object",
+              "default": {},
+              "title": "The resources Schema",
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "default": {},
+                  "title": "The requests Schema",
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The cpu Schema"
+                    },
+                    "memory": {
+                      "type": "string",
+                      "default": "",
+                      "title": "The memory Schema"
+                    }
+                  },
+                  "examples": [{ "cpu": "25m", "memory": "50Mi" }]
+                }
+              },
+              "examples": [{ "requests": { "cpu": "25m", "memory": "50Mi" } }]
+            },
+            "backupFilename": {
+              "type": "string",
+              "default": "",
+              "title": "Specific backup filename to restore"
+            }
+          }
+        },
         "dummyData": {
           "type": "object",
           "default": {},

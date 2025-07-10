@@ -1,0 +1,68 @@
+{{- if and .Values.service.restore.enabled .Values.service.backup.enabled }}
+{{- fail "You cannot enable both backup and restore at the same time. Please disable one of them." }}
+{{- end }}
+
+{{- if .Values.service.restore.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "exivity.fullname" . }}-db-restore
+  labels:
+    app.kubernetes.io/component: db-restore
+    {{- include "exivity.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": hook-succeeded
+    helm.sh/hook-weight: "-2" # Run before backup (which has weight "-1")
+spec:
+  completions: 1
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: db-restore
+        {{- include "exivity.labels" . | nindent 8 }}
+    spec:
+      securityContext:
+        {{- include "exivity.securityContext" (dict "root" . "component" "restore") | nindent 8 }}
+      volumes:
+        - name: backup-storage
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" . }}-backup
+        {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
+      containers:
+        - name: db-restore
+          image: {{ include "exivity.image" (set . "name" "restore") }}
+          imagePullPolicy: {{ .Values.service.restore.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
+          command: ["restore"]
+          {{- if .Values.service.restore.backupFilename }}
+          args: ["{{ .Values.service.restore.backupFilename }}"]
+          {{- end }}
+          env:
+            - name: BACKUP_DIR_PATH
+              value: "/backups"
+          envFrom:
+            - configMapRef:
+                name: {{ include "exivity.fullname" . }}-postgres-config
+            - secretRef:
+                name: {{ include "exivity.fullname" . }}-postgres-secret
+          resources:
+            {{- toYaml .Values.service.restore.resources | nindent 12 }}
+          volumeMounts:
+            - name: backup-storage
+              mountPath: /backups
+      restartPolicy: Never
+      {{- with .Values.service.pullSecrets }}
+      imagePullSecrets:
+        {{- range $name := .}}
+        - name: {{ $name }}
+        {{- end }}
+      {{- end }}
+      {{- if .Values.service.restore.nodeName }}
+      nodeName: {{ .Values.service.restore.nodeName }}
+      {{- end }}
+      {{- include "exivity.tolerations" (dict "Values" .Values "component" .Values.service.restore) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "Values" .Values "component" .Values.service.restore) | nindent 6 }}
+      affinity:
+        {{- include "exivity.nodeAffinity" (dict "Values" .Values "component" .Values.service.restore) | nindent 8 }}
+{{- end }}

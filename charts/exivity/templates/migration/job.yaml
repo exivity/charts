@@ -22,32 +22,11 @@ spec:
         - name: migration
           image: {{ include "exivity.image" (set $ "name" "dbInit") }}
           imagePullPolicy: {{ .Values.service.dbInit.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
-          args:
-            - "-path"
-            - "./migrations"
-            - "-database"
-            - "postgres://$(PG_USER):$(PG_PASSWORD)@$(PG_HOST):$(PG_PORT)/$(PG_DATABASE)?sslmode=$(PG_SSLMODE)"
-            - "up"
-          env:
-            - name: PG_USER
-              value: {{ $.Values.postgresql.global.postgresql.auth.username | quote }}
-            - name: PG_PASSWORD
-              {{- if empty $.Values.postgresql.host }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "exivity.fullname" $ -}}-postgresql
-                  key:                                      password
-              {{- else }}
-              value: {{ $.Values.postgresql.global.postgresql.auth.password | quote }}
-              {{- end }}
-            - name: PG_DATABASE
-              value: {{ $.Values.postgresql.global.postgresql.auth.database | quote }}
-            - name: PG_HOST
-              value: {{ $.Values.postgresql.host | default (printf "%s-postgresql" (include "exivity.fullname" $ )) | quote }}
-            - name: PG_PORT
-              value: {{ $.Values.postgresql.port | default 5432 | quote}}
-            - name: PG_SSLMODE
-              value: {{ $.Values.postgresql.sslmode | default "disable" | quote  }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "exivity.fullname" . }}-postgres-config
+            - secretRef:
+                name: {{ include "exivity.fullname" . }}-postgres-secret
           resources:
             {{- toYaml .Values.service.dbInit.migration.resources | nindent 12 }}
       restartPolicy: Never
