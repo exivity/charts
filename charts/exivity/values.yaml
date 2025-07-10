@@ -323,6 +323,7 @@ service:
       accessModes: # Access modes for backup PVC
         - "ReadWriteOnce"
       volumeMode: "Filesystem" # Volume mode: "Filesystem" or "Block"
+      helmResourcePolicy: "keep" # Whether to keep or delete the PVC on Helm uninstall ("keep" or "delete")
       # Optional: selector for binding to specific persistent volumes
       # selector:
       #   matchLabels:
@@ -330,6 +331,32 @@ service:
       # Optional: additional annotations and labels for the PVC resource itself
       annotations: {} # Additional annotations for backup PVC
       labels: {} # Additional labels for backup PVC
+
+  # Configuration for the PostgreSQL restore job.
+  # This restore job allows manual restoration of database backups.
+  restore:
+    enabled: false # Whether to enable the restore job functionality
+    registry: ""
+    repository: exivity/db-backup
+    tag: ""
+    pullPolicy: ""
+    nodeName: ""
+    nodeSelector: {}
+    nodeAffinity: {}
+    tolerations: []
+    # securityContext:
+    #   runAsUser: 1000
+    #   runAsGroup: 1000
+    #   fsGroup: 1000
+    #   runAsNonRoot: true
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "50Mi"
+    # Restore configuration
+    backupFilename: "" # Specific backup filename to restore (e.g., "backup-2023-01-01_12-00-00.sql")
+    # If backupFilename is empty, the restore job will restore the most recent backup
+    # Additional restore options
 
   # Configuration for the 'dummyData' service, used for deploying dummy data for testing purposes.
   dummyData:

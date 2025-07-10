@@ -33,8 +33,6 @@ spec:
           image: {{ include "exivity.image" (set . "name" "backup") }}
           imagePullPolicy: {{ .Values.service.backup.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
           command: ["backup"]
-          args:
-            - "{{ .Values.service.backup.filePrefix }}_$(date +%Y%m%d_%H%M%S).sql.gz"
           env:
             - name: BACKUP_DIR_PATH
               value: "/backups"

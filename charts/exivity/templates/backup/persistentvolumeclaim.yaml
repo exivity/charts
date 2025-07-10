@@ -1,4 +1,4 @@
-{{- if .Values.service.backup.enabled }}
+{{- if or .Values.service.backup.enabled .Values.service.restore.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -7,13 +7,13 @@ metadata:
     app.kubernetes.io/component: backup
     {{- include "exivity.labels" . | nindent 4 }}
   {{- with .Values.service.backup.storage.labels }}
-  {{- toYaml . | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   annotations:
-    helm.sh/resource-policy: {{ .Values.storage.helmResourcePolicyKeep | ternary "keep" "delete" }}
-  {{- with .Values.service.backup.storage.annotations }}
-  {{- toYaml . | nindent 4 }}
-  {{- end }}
+    "helm.sh/resource-policy": {{ .Values.service.backup.storage.helmResourcePolicy | quote }}
+    {{- with .Values.service.backup.storage.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   {{- if .Values.service.backup.storage.storageClass }}
   storageClassName: {{ .Values.service.backup.storage.storageClass }}
