@@ -1,3 +1,7 @@
+{{- if and .Values.service.restore.enabled .Values.service.backup.enabled }}
+{{- fail "You cannot enable both backup and restore at the same time. Please disable one of them." }}
+{{- end }}
+
 {{- if .Values.service.restore.enabled }}
 apiVersion: batch/v1
 kind: Job
