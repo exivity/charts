@@ -293,6 +293,7 @@ service:
 
   # Configuration for the PostgreSQL backup job.
   # This backup is only executed during Helm chart upgrades, not as a regular scheduled job.
+  # Note: This backup service is currently in beta.
   backup:
     enabled: false # Whether to run the backup job before migrations during upgrades
     registry: ""
