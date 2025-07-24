@@ -1,0 +1,35 @@
+{{- if or .Values.service.backup.enabled .Values.service.restore.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "exivity.fullname" . }}-backup
+  labels:
+    app.kubernetes.io/component: backup
+    {{- include "exivity.labels" . | nindent 4 }}
+  {{- with .Values.service.backup.storage.labels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  annotations:
+    "helm.sh/resource-policy": {{ .Values.service.backup.storage.helmResourcePolicy | quote }}
+    {{- with .Values.service.backup.storage.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  {{- if .Values.service.backup.storage.storageClass }}
+  storageClassName: {{ .Values.service.backup.storage.storageClass }}
+  {{- end }}
+  accessModes:
+  {{- range .Values.service.backup.storage.accessModes }}
+    - {{ . }}
+  {{- end }}
+  {{- if .Values.service.backup.storage.volumeMode }}
+  volumeMode: {{ .Values.service.backup.storage.volumeMode }}
+  {{- end }}
+  {{- with .Values.service.backup.storage.selector }}
+  selector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.service.backup.storage.size }}
+{{- end }}
