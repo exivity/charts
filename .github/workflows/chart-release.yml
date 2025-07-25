@@ -46,23 +46,11 @@ jobs:
         run: |
           echo "🔍 Testing attestation verification..."
 
-          # Install GitHub CLI if not available
-          if ! command -v gh &> /dev/null; then
-            echo "Installing GitHub CLI..."
-            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-            sudo apt update
-            sudo apt install gh -y
-          fi
-
-          # Verify each chart package
-          for chart in .cr-release-packages/*.tgz; do
-            echo "Verifying: $chart"
-            gh attestation verify "$chart" --owner ${{ github.repository_owner }} || echo "❌ Verification failed for $chart"
-            echo "✅ Verification completed for $chart"
-          done
-
-          echo "🎉 All attestations verified successfully!"
+          # Verify the chart package
+          chart_file=$(ls .cr-release-packages/*.tgz)
+          echo "Verifying: $chart_file"
+          gh attestation verify "$chart_file" --owner ${{ github.repository_owner }}
+          echo "✅ Attestation verified successfully!"
         env:
           GH_TOKEN: ${{ github.token }}
 
