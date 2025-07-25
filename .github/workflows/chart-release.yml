@@ -48,5 +48,6 @@ jobs:
         with:
           charts_dir: charts
           config: cr.yaml
+          skip_packaging: true
         env:
           CR_TOKEN: "${{ secrets.GH_BOT_TOKEN }}"
