@@ -15,8 +15,8 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     env:
-      HELM_RSA_PRIVATE_KEY: ${{ secrets.HELM_RSA_PRIVATE_KEY }}
-      HELM_RSA_PASSPHRASE: ${{ secrets.HELM_RSA_PASSPHRASE }}
+      GPG_PASSPHRASE: ${{ secrets.HELM_RSA_PASSPHRASE }}
+      GPG_PRIVATE_KEY: ${{ secrets.HELM_RSA_PRIVATE_KEY }}
 
     steps:
       - name: Checkout
@@ -32,22 +32,27 @@ jobs:
 
       - name: Prepare GPG key
         run: |
+          # Set up GPG directory and configuration
           mkdir -p ~/.gnupg
           chmod 700 ~/.gnupg
           echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
 
-          # Import private key
-          echo "$HELM_RSA_PRIVATE_KEY" > private.key
-          gpg --batch --import private.key
-          rm private.key
+          # Import the GPG key
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
 
-          # Export keys to keyring files
-          gpg --batch --export > ~/.gnupg/pubring.gpg
-          echo "$HELM_RSA_PASSPHRASE" | gpg --batch --passphrase-fd 0 --export-secret-keys > ~/.gnupg/secring.gpg
+          # Set up chart-releaser GPG directory
+          gpg_dir=.cr-gpg
+          mkdir "$gpg_dir"
+          keyring="$gpg_dir/secring.gpg"
 
-          # Verify files exist
-          ls -la ~/.gnupg/
-          gpg --list-secret-keys
+          # Export the secret key to the keyring file with passphrase
+          echo "$GPG_PASSPHRASE" | gpg --batch --passphrase-fd 0 --export-secret-keys > "$keyring"
+
+          passphrase_file="$gpg_dir/passphrase"
+          echo "$GPG_PASSPHRASE" > "$passphrase_file"
+          echo "CR_PASSPHRASE_FILE=$passphrase_file" >> "$GITHUB_ENV"
+          echo "CR_KEYRING=$keyring" >> "$GITHUB_ENV"
 
       - name: Run chart-releaser
         uses: exivity/chart-releaser-action@v1.7.0
@@ -57,4 +62,3 @@ jobs:
           config: cr.yaml
         env:
           CR_TOKEN: "${{ secrets.GH_BOT_TOKEN }}"
-          GPG_PASSPHRASE: "${{ secrets.HELM_RSA_PASSPHRASE }}"
