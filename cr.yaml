@@ -1,6 +1,4 @@
 owner: Exivity
-git-repo: charts
-git-base-url: https://api.github.com/
-git-upload-url: https://uploads.github.com/
 sign: true
-key: info@exivity.com
+keyring: ~/.gnupg/pubring.gpg
+secret-keyring: ~/.gnupg/secring.gpg
