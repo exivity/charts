@@ -10,6 +10,7 @@ on:
 jobs:
   check-release-notes:
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
     steps:
       - uses: exivity/actions/release-notes@main
         with:
