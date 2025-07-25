@@ -1,6 +1,14 @@
 name: Release Charts
 
 on:
+  push:
+    branches:
+      - main
+    tags:
+      - "exivity-*"
+    paths:
+      - "charts/**" # Any file under charts/
+      - ".github/workflows/chart-release.yml"
   workflow_dispatch:
 
 jobs:
@@ -18,7 +26,23 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           helm repo add bitnami https://charts.bitnami.com/bitnami
 
+      - name: Prepare GPG key
+        run: |
+          gpg_dir=.cr-gpg
+          mkdir "$gpg_dir"
+          keyring="$gpg_dir/secring.gpg"
+          base64 -d <<< "$HELM_RSA_KEY_ID" > "$keyring"
+          passphrase_file="$gpg_dir/passphrase"
+          echo "$HELM_RSA_PASSPHRASE" > "$passphrase_file"
+          echo "CR_PASSPHRASE_FILE=$passphrase_file" >> "$GITHUB_ENV"
+          echo "CR_KEYRING=$keyring" >> "$GITHUB_ENV"
+        env:
+          HELM_RSA_KEY_ID: ${{ secrets.HELM_RSA_KEY_ID }}
+          HELM_RSA_PASSPHRASE: ${{ secrets.HELM_RSA_PASSPHRASE }}
+
       - name: Run chart-releaser
-        uses: exivity/chart-releaser-action@v1.1.0
+        uses: exivity/chart-releaser-action@v1.7.0
+        with:
+          config: cr.yaml
         env:
           CR_TOKEN: "${{ secrets.GH_BOT_TOKEN }}"
