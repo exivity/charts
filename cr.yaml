@@ -1,4 +1,0 @@
-owner: Exivity
-sign: true
-keyring: ~/.gnupg/pubring.gpg
-secret-keyring: ~/.gnupg/secring.gpg
