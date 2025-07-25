@@ -35,10 +35,8 @@ jobs:
           mkdir -p ~/.gnupg
           chmod 700 ~/.gnupg
           echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
-
           # Import the GPG key
           echo "$HELM_RSA_PRIVATE_KEY" | gpg --batch --import
-
           # Export public and secret keys to the expected locations
           gpg --batch --export > ~/.gnupg/pubring.gpg
           echo "$HELM_RSA_PASSPHRASE" | gpg --batch --passphrase-fd 0 --export-secret-keys > ~/.gnupg/secring.gpg
@@ -48,6 +46,5 @@ jobs:
         with:
           charts_dir: charts
           config: cr.yaml
-          skip_packaging: true
         env:
           CR_TOKEN: "${{ secrets.GH_BOT_TOKEN }}"

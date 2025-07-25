@@ -1,3 +1,6 @@
+owner: Exivity
+git-repo: charts
+git-base-url: https://api.github.com/
+git-upload-url: https://uploads.github.com/
 sign: true
-owner: exivity
-git-base-url: https://github.com/exivity/charts
+key: info@exivity.com
