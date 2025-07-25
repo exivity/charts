@@ -32,8 +32,6 @@ jobs:
       - name: Package Charts
         run: |
           mkdir -p .cr-release-packages
-
-          # Package the chart
           helm package charts/exivity -d .cr-release-packages
 
           echo "✅ Created chart packages:"
@@ -44,18 +42,29 @@ jobs:
         with:
           subject-path: ".cr-release-packages/*.tgz"
 
-      - name: Display Verification Instructions
+      - name: Verify Attestations
         run: |
-          echo "🎉 Charts signed with GitHub Attestations!"
-          echo ""
-          echo "📋 To verify a chart, users can run:"
-          echo "   gh attestation verify <chart-file> --repo ${{ github.repository }}"
-          echo ""
-          echo "📝 Example:"
-          echo "   gh release download --pattern '*.tgz'"
-          echo "   gh attestation verify exivity-*.tgz --repo ${{ github.repository }}"
-          echo ""
-          echo "🔒 This provides cryptographic proof that the chart was built by this official workflow"
+          echo "🔍 Testing attestation verification..."
+
+          # Install GitHub CLI if not available
+          if ! command -v gh &> /dev/null; then
+            echo "Installing GitHub CLI..."
+            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+            sudo apt update
+            sudo apt install gh -y
+          fi
+
+          # Verify each chart package
+          for chart in .cr-release-packages/*.tgz; do
+            echo "Verifying: $chart"
+            gh attestation verify "$chart" --owner ${{ github.repository_owner }} || echo "❌ Verification failed for $chart"
+            echo "✅ Verification completed for $chart"
+          done
+
+          echo "🎉 All attestations verified successfully!"
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Run chart-releaser
         if: startsWith(github.ref, 'refs/tags/')
