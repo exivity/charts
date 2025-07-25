@@ -14,9 +14,6 @@ jobs:
     permissions:
       contents: write
     runs-on: ubuntu-latest
-    env:
-      GPG_PASSPHRASE: ${{ secrets.HELM_RSA_PASSPHRASE }}
-      GPG_PRIVATE_KEY: ${{ secrets.HELM_RSA_PRIVATE_KEY }}
 
     steps:
       - name: Checkout
@@ -30,35 +27,7 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           helm repo add bitnami https://charts.bitnami.com/bitnami
 
-      - name: Prepare GPG key
-        run: |
-          # Set up GPG directory and configuration
-          mkdir -p ~/.gnupg
-          chmod 700 ~/.gnupg
-          echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
-          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
-
-          # Import the GPG key
-          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
-
-          # Set up chart-releaser GPG directory
-          gpg_dir=.cr-gpg
-          mkdir "$gpg_dir"
-          keyring="$gpg_dir/secring.gpg"
-
-          # Export the secret key to the keyring file with passphrase
-          echo "$GPG_PASSPHRASE" | gpg --batch --passphrase-fd 0 --export-secret-keys > "$keyring"
-
-          passphrase_file="$gpg_dir/passphrase"
-          echo "$GPG_PASSPHRASE" > "$passphrase_file"
-          echo "CR_PASSPHRASE_FILE=$passphrase_file" >> "$GITHUB_ENV"
-          echo "CR_KEYRING=$keyring" >> "$GITHUB_ENV"
-
       - name: Run chart-releaser
-        uses: exivity/chart-releaser-action@v1.7.0
-        # if: startsWith(github.ref, 'refs/tags/')
-        with:
-          charts_dir: charts
-          config: cr.yaml
+        uses: exivity/chart-releaser-action@v1.2.1
         env:
           CR_TOKEN: "${{ secrets.GH_BOT_TOKEN }}"
