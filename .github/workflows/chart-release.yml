@@ -2,10 +2,21 @@ name: Release Charts
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+      - feat/github-artifact-attestations
+    tags:
+      - "exivity-*"
 
 jobs:
   helm-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -18,7 +29,38 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           helm repo add bitnami https://charts.bitnami.com/bitnami
 
+      - name: Package Charts
+        run: |
+          mkdir -p .cr-release-packages
+
+          # Package the chart
+          helm package charts/exivity -d .cr-release-packages
+
+          echo "✅ Created chart packages:"
+          ls -la .cr-release-packages/
+
+      - name: Create GitHub Attestations
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: ".cr-release-packages/*.tgz"
+
+      - name: Display Verification Instructions
+        run: |
+          echo "🎉 Charts signed with GitHub Attestations!"
+          echo ""
+          echo "📋 To verify a chart, users can run:"
+          echo "   gh attestation verify <chart-file> --repo ${{ github.repository }}"
+          echo ""
+          echo "📝 Example:"
+          echo "   gh release download --pattern '*.tgz'"
+          echo "   gh attestation verify exivity-*.tgz --repo ${{ github.repository }}"
+          echo ""
+          echo "🔒 This provides cryptographic proof that the chart was built by this official workflow"
+
       - name: Run chart-releaser
-        uses: exivity/chart-releaser-action@v1.1.0
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: exivity/chart-releaser-action@v1.7.0
+        with:
+          skip_packaging: true
         env:
           CR_TOKEN: "${{ secrets.GH_BOT_TOKEN }}"
