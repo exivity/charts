@@ -13,7 +13,7 @@ jobs:
   helm-release:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      # contents: write
       id-token: write
       attestations: write
 
@@ -51,8 +51,8 @@ jobs:
           echo "Verifying: $chart_file"
           gh attestation verify "$chart_file" --owner ${{ github.repository_owner }}
           echo "✅ Attestation verified successfully!"
-        env:
-          GH_TOKEN: ${{ github.token }}
+        # env:
+        #   GH_TOKEN: ${{ github.token }}
 
       - name: Run chart-releaser
         if: startsWith(github.ref, 'refs/tags/')
