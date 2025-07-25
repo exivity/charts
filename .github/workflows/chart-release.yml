@@ -14,6 +14,10 @@ jobs:
     permissions:
       contents: write
     runs-on: ubuntu-latest
+    env:
+      HELM_RSA_PRIVATE_KEY: ${{ secrets.HELM_RSA_PRIVATE_KEY }}
+      HELM_RSA_PASSPHRASE: ${{ secrets.HELM_RSA_PASSPHRASE }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,6 +29,34 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           helm repo add bitnami https://charts.bitnami.com/bitnami
+
+      - name: Prepare GPG key
+        run: |
+          mkdir -p ~/.gnupg
+          chmod 700 ~/.gnupg
+          echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
+
+          # Import the GPG key
+          echo "$HELM_RSA_PRIVATE_KEY" | gpg --batch --import
+
+          # Export public and secret keys to the expected locations
+          gpg --batch --export > ~/.gnupg/pubring.gpg
+          echo "$HELM_RSA_PASSPHRASE" | gpg --batch --passphrase-fd 0 --export-secret-keys > ~/.gnupg/secring.gpg
+
+          # Extract key information for debugging and cr.yaml configuration
+          echo "=== GPG Key Information ==="
+          gpg --list-secret-keys --keyid-format LONG
+          echo "=== Extract Key Identifiers for cr.yaml ==="
+          # Extract the email address
+          EMAIL=$(gpg --list-secret-keys | grep -oE '\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b' | head -1)
+          echo "Email address: $EMAIL"
+          # Extract the name
+          NAME=$(gpg --list-secret-keys | grep uid | sed -n 's/.*uid.*\[\w*\] \(.*\) <.*/\1/p' | head -1)
+          echo "Name: $NAME"
+          # Extract key ID
+          KEY_ID=$(gpg --list-secret-keys --keyid-format SHORT | grep sec | awk '{print $2}' | cut -d'/' -f2 | head -1)
+          echo "Key ID: $KEY_ID"
+          echo "=== Use one of these values in cr.yaml for the 'key:' field ==="
 
       - name: Run chart-releaser
         uses: exivity/chart-releaser-action@v1.7.0
