@@ -590,3 +590,7 @@ prometheus:
     enabled: false
     serviceMonitor:
       enabled: false
+
+logfiles:
+  deleteDays: 365         # Delete logfiles after N days
+  compressDays: 30         # Compress logfiles after N days
