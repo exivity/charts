@@ -2,10 +2,21 @@ name: Release Charts
 
 on:
   workflow_dispatch:
+  push:
+    branches: ["main"]
+    tags:
+      - "exivity-*"
+    paths:
+      - 'charts/**'       # Any file under charts/
+      - '.github/workflows/chart-release.yml'
 
 jobs:
   helm-release:
     runs-on: ubuntu-latest
+    env:
+      GPG_KEY_ID: ${{ secrets.HELM_RSA_KEY_ID }}
+      GPG_PASSPHRASE: ${{ secrets.HELM_RSA_PASSPHRASE }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -18,7 +29,67 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           helm repo add bitnami https://charts.bitnami.com/bitnami
 
-      - name: Run chart-releaser
-        uses: exivity/chart-releaser-action@v1.1.0
+      - name: Configure GPG
+        run: |
+          mkdir -p ~/.gnupg
+          chmod 700 ~/.gnupg
+          echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
+          
+          SECRET_CONTENT="${{ secrets.HELM_RSA_PRIVATE_KEY }}"
+          
+          echo "${{ secrets.HELM_RSA_PRIVATE_KEY }}" | gpg --batch --import
+          
+          gpg --batch --export > ~/.gnupg/pubring.gpg
+          echo "$GPG_PASSPHRASE" | gpg --batch --passphrase-fd 0 --export-secret-keys > ~/.gnupg/secring.gpg
+
+      - name: Package and Sign Charts
+        run: |
+          KEY_NAME=$(gpg --list-secret-keys --with-colons "$GPG_KEY_ID" | grep "^uid" | head -1 | cut -d: -f10)
+          echo "$GPG_PASSPHRASE" > /tmp/passphrase.txt
+          chmod 600 /tmp/passphrase.txt
+          
+          # Create .cr-release-packages directory for chart-releaser-action
+          mkdir -p .cr-release-packages
+          
+          chart_dir=charts/exivity
+          helm package --sign "$chart_dir" \
+            --key "$KEY_NAME" \
+            --keyring ~/.gnupg/secring.gpg \
+            --passphrase-file /tmp/passphrase.txt \
+            --destination .cr-release-packages
+          
+          rm -f /tmp/passphrase.txt
+          
+          # List created packages for verification
+          echo "✅ Created signed packages:"
+          ls -la .cr-release-packages/
+
+      - name: Validate Signed Charts 
+        run: |
+          mkdir -p ~/.gnupg
+          chmod 700 ~/.gnupg
+          echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
+          
+          SECRET_CONTENT="${{ secrets.HELM_RSA_PRIVATE_KEY }}"
+          
+          echo "${{ secrets.HELM_RSA_PRIVATE_KEY }}" | gpg --batch --import
+          gpg --batch --export > ~/.gnupg/pubring.gpg
+          
+          # Validate charts from the .cr-release-packages directory
+          find .cr-release-packages -maxdepth 1 -type f -name '*.tgz' -print -exec helm verify {} \;
+
+          echo "✅ Charts are properly signed and verified."
+
+      - name: Run chart-releaser (release only on tag push)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: exivity/chart-releaser-action@v1.7.0
+        with:
+          skip_packaging: true
         env:
           CR_TOKEN: "${{ secrets.GH_BOT_TOKEN }}"
+
+      - name: Cleanup
+        if: always()
+        run: |
+          gpg --batch --yes --delete-secret-keys "$GPG_KEY_ID" 2>/dev/null || true
+          gpg --batch --yes --delete-keys "$GPG_KEY_ID" 2>/dev/null || true
