@@ -15,6 +15,7 @@ jobs:
         name:
           - chronos
           - db
+          - db-backup
           - edify
           - executor
           - glass
