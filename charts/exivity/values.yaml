@@ -110,6 +110,10 @@ ldap:
 # The embedded PostgreSQL chart is primarily intended for testing and non-production purposes.
 postgresql:
   enabled: true # Determines if the Bitnami PostgreSQL chart should be installed. Set to false when using an external database.
+  # IMPORTANT: Bitnami has announced the deprecation and deletion of their public Docker Hub images (docker.io/bitnami) as of September 29th, 2025. See: https://community.broadcom.com/tanzu/blogs/beltran-rueda-borrego/2025/08/18/how-to-prepare-for-the-bitnami-changes-coming-soon
+  # To avoid breaking existing deployments, we now use the Bitnami Legacy registry (bitnamilegacy/postgresql). This is a temporary, unsupported solution and will not receive updates or security patches.
+  # For production environments, Exivity strongly recommends migrating to a managed or self-hosted PostgreSQL instance outside of this Helm chart. The embedded chart is only intended for testing and evaluation.
+  # We are actively working on a workflow to help users migrate to managed/self-hosted services, which will not be shipped in future versions of this chart.
   image:
     repository: bitnamilegacy/postgresql
   global:
@@ -141,6 +145,10 @@ postgresql:
 # For more options and details, refer to the Bitnami RabbitMQ Helm chart: https://bitnami.com/stack/rabbitmq/helm
 rabbitmq:
   enabled: true # Determines if the Bitnami RabbitMQ chart should be installed. Set to false when using an external MQ.
+  # IMPORTANT: Bitnami has announced the deprecation and deletion of their public Docker Hub images (docker.io/bitnami) as of September 29th, 2025. See: https://community.broadcom.com/tanzu/blogs/beltran-rueda-borrego/2025/08/18/how-to-prepare-for-the-bitnami-changes-coming-soon
+  # To avoid breaking existing deployments, we now use the Bitnami Legacy registry (bitnamilegacy/rabbitmq). This is a temporary, unsupported solution and will not receive updates or security patches.
+  # For production environments, Exivity strongly recommends migrating to a managed or self-hosted RabbitMQ instance outside of this Helm chart. The embedded chart is only intended for testing and evaluation.
+  # We are actively working on a workflow to help users migrate to managed/self-hosted services, which will not be shipped in future versions of this chart.
   image:
     repository: bitnamilegacy/rabbitmq
   clustering:
