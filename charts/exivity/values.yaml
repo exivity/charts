@@ -110,6 +110,8 @@ ldap:
 # The embedded PostgreSQL chart is primarily intended for testing and non-production purposes.
 postgresql:
   enabled: true # Determines if the Bitnami PostgreSQL chart should be installed. Set to false when using an external database.
+  image:
+    repository: bitnamilegacy/postgresql
   global:
     postgresql:
       auth:
@@ -139,6 +141,8 @@ postgresql:
 # For more options and details, refer to the Bitnami RabbitMQ Helm chart: https://bitnami.com/stack/rabbitmq/helm
 rabbitmq:
   enabled: true # Determines if the Bitnami RabbitMQ chart should be installed. Set to false when using an external MQ.
+  image:
+    repository: bitnamilegacy/rabbitmq
   clustering:
     enabled: false # Determines if clustering is enabled for RabbitMQ.
 
@@ -332,7 +336,7 @@ service:
       # Optional: additional annotations and labels for the PVC resource itself
       annotations: {} # Additional annotations for backup PVC
       labels: {} # Additional labels for backup PVC
- 
+
   # Configuration for the 'dummyData' service, used for deploying dummy data for testing purposes.
   dummyData:
     enabled: false
