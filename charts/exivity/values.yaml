@@ -359,6 +359,18 @@ service:
     # If backupFilename is empty, the restore job will restore the most recent backup
     # Additional restore options
 
+    # IMPORTANT: Restore functionality limitations
+    # The automated restore functionality may NOT work with managed database services (such as
+    # DigitalOcean Managed Databases, AWS RDS, Google Cloud SQL, etc.) due to permission
+    # restrictions imposed by the provider. Managed databases typically do not grant
+    # superuser privileges required for database-level operations like DROP DATABASE or CREATE DATABASE.
+    #
+    # For managed databases, it is recommended to use your cloud provider's native
+    # backup and restore tools instead of this automated restore job.
+    #
+    # This restore service is primarily designed for use with the embedded
+    # Bitnami PostgreSQL database deployed as part of this Helm chart.
+
   # Configuration for the 'dummyData' service, used for deploying dummy data for testing purposes.
   dummyData:
     enabled: false
