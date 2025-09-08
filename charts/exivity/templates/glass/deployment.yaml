@@ -48,9 +48,7 @@ spec:
       {{- if .Values.service.glass.nodeName }}
       nodeName: {{ .Values.service.glass.nodeName }}
       {{- end }}
-      {{- with .Values.service.glass.nodeSelector }}
-      nodeSelector:
-        {{ range $key, $val := . }}
-        {{ $key }}: {{ $val }}
-        {{- end }}
-      {{- end }}
+      {{- include "exivity.tolerations" (dict "Values" .Values "component" .Values.service.glass) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "Values" .Values "component" .Values.service.glass) | nindent 6 }}
+      affinity:
+        {{- include "exivity.nodeAffinity" (dict "Values" .Values "component" .Values.service.glass) | nindent 8 }}

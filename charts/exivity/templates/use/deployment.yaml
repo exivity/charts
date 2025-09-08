@@ -114,9 +114,7 @@ spec:
       {{- if .Values.service.use.nodeName }}
       nodeName: {{ .Values.service.use.nodeName }}
       {{- end }}
-      {{- with .Values.service.use.nodeSelector }}
-      nodeSelector:
-        {{ range $key, $val := . }}
-        {{ $key }}: {{ $val }}
-        {{- end }}
-      {{- end }}
+      {{- include "exivity.tolerations" (dict "Values" .Values "component" .Values.service.use) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "Values" .Values "component" .Values.service.use) | nindent 6 }}
+      affinity:
+        {{- include "exivity.nodeAffinity" (dict "Values" .Values "component" .Values.service.use) | nindent 8 }}

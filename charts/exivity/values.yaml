@@ -88,11 +88,34 @@ storage:
       import: 1Gi
       report: 1Gi
 
+# LDAP TLS certificate configuration for secure LDAP connectivity.
+# This configuration allows mounting a PEM certificate into the Proximity API container
+# and setting the LDAPTLS_CACERT environment variable to enable LDAP over TLS.
+# Both tlsCacert and tlsCacertPath must be provided together to enable LDAP TLS.
+ldap:
+  # PEM certificate content for LDAP TLS validation.
+  # When empty, LDAP TLS functionality is disabled.
+  # tlsCacert: |
+  #   -----BEGIN CERTIFICATE-----
+  #   [Your Root CA certificate here]
+  #   -----END CERTIFICATE-----
+
+  # Path where the LDAP TLS certificate will be mounted in the container.
+  # This path will be set as the LDAPTLS_CACERT environment variable.
+  # Only used when tlsCacert is provided. Default: "/etc/ssl/certs/ldap.pem"
+  tlsCacertPath: "/etc/ssl/certs/ldap.pem"
+
 # Configuration for PostgreSQL, either as an embedded database using the Bitnami PostgreSQL chart or an external database.
 # It is recommended to use an external PostgreSQL server for production environments to ensure scalability and manageability.
 # The embedded PostgreSQL chart is primarily intended for testing and non-production purposes.
 postgresql:
   enabled: true # Determines if the Bitnami PostgreSQL chart should be installed. Set to false when using an external database.
+  # IMPORTANT: Bitnami has announced the deprecation and deletion of their public Docker Hub images (docker.io/bitnami) as of September 29th, 2025. See: https://community.broadcom.com/tanzu/blogs/beltran-rueda-borrego/2025/08/18/how-to-prepare-for-the-bitnami-changes-coming-soon
+  # To avoid breaking existing deployments, we now use the Bitnami Legacy registry (bitnamilegacy/postgresql). This is a temporary, unsupported solution and will not receive updates or security patches.
+  # For production environments, Exivity strongly recommends migrating to a managed or self-hosted PostgreSQL instance outside of this Helm chart. The embedded chart is only intended for testing and evaluation.
+  # We are actively working on a workflow to help users migrate to managed/self-hosted services, which will not be shipped in future versions of this chart.
+  image:
+    repository: bitnamilegacy/postgresql
   global:
     postgresql:
       auth:
@@ -122,6 +145,12 @@ postgresql:
 # For more options and details, refer to the Bitnami RabbitMQ Helm chart: https://bitnami.com/stack/rabbitmq/helm
 rabbitmq:
   enabled: true # Determines if the Bitnami RabbitMQ chart should be installed. Set to false when using an external MQ.
+  # IMPORTANT: Bitnami has announced the deprecation and deletion of their public Docker Hub images (docker.io/bitnami) as of September 29th, 2025. See: https://community.broadcom.com/tanzu/blogs/beltran-rueda-borrego/2025/08/18/how-to-prepare-for-the-bitnami-changes-coming-soon
+  # To avoid breaking existing deployments, we now use the Bitnami Legacy registry (bitnamilegacy/rabbitmq). This is a temporary, unsupported solution and will not receive updates or security patches.
+  # For production environments, Exivity strongly recommends migrating to a managed or self-hosted RabbitMQ instance outside of this Helm chart. The embedded chart is only intended for testing and evaluation.
+  # We are actively working on a workflow to help users migrate to managed/self-hosted services, which will not be shipped in future versions of this chart.
+  image:
+    repository: bitnamilegacy/rabbitmq
   clustering:
     enabled: false # Determines if clustering is enabled for RabbitMQ.
 
@@ -142,6 +171,15 @@ global:
     runAsGroup: 1000
     fsGroup: 1000
     runAsNonRoot: true
+  # Default node selector for all components. Can be overridden by individual components.
+  # This does not cover external helm chart dependency Postgres and Rabbitmq. This need to be set on those components individually.
+  nodeSelector: {}
+  # Default node affinity for all components. Can be overridden by individual components.
+  # This does not cover external helm chart dependency Postgres and Rabbitmq. This need to be set on those components individually.
+  nodeAffinity: {}
+  # Default tolerations for all components. Can be overridden by individual components.
+  # This does not cover external helm chart dependency Postgres and Rabbitmq. This need to be set on those components individually.
+  tolerations: []
 
 # General service configuration, defaults apply when specific service settings are not provided.
 service:
@@ -177,6 +215,8 @@ service:
     replicas: 1
     nodeName: ""
     nodeSelector: {}
+    nodeAffinity: {}
+    tolerations: []
     # securityContext:
     #   runAsUser: 1000
     #   runAsGroup: 1000
@@ -207,6 +247,8 @@ service:
     replicas: 1
     nodeName: ""
     nodeSelector: {}
+    nodeAffinity: {}
+    tolerations: []
     # securityContext:
     #   runAsUser: 1000
     #   runAsGroup: 1000
@@ -226,6 +268,8 @@ service:
     replicas: 1
     nodeName: ""
     nodeSelector: {}
+    nodeAffinity: {}
+    tolerations: []
     # securityContext:
     #   runAsUser: 1000
     #   runAsGroup: 1000
@@ -244,6 +288,8 @@ service:
     pullPolicy: ""
     nodeName: ""
     nodeSelector: {}
+    nodeAffinity: {}
+    tolerations: []
     # securityContext:
     #   runAsUser: 1000
     #   runAsGroup: 1000
@@ -257,6 +303,86 @@ service:
     migration:
       resources: {} # Resources allocated for migration operations, define as needed.
 
+  # Configuration for the PostgreSQL backup job.
+  # This backup is only executed during Helm chart upgrades, not as a regular scheduled job.
+  # Note: This backup service is currently in beta.
+  backup:
+    enabled: false # Whether to run the backup job before migrations during upgrades
+    registry: ""
+    repository: exivity/db-backup
+    tag: ""
+    pullPolicy: ""
+    nodeName: ""
+    nodeSelector: {}
+    nodeAffinity: {}
+    tolerations: []
+    # securityContext:
+    #   runAsUser: 1000
+    #   runAsGroup: 1000
+    #   fsGroup: 1000
+    #   runAsNonRoot: true
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "50Mi"
+    # Backup configuration
+    retentionDays: 7 # Number of days to retain backups
+    filePrefix: "backup" # Prefix for backup files
+    # Backup storage configuration
+    # This storage is independent from other PVCs and requires explicit configuration
+    storage:
+      size: "10Gi" # Size of the backup PVC
+      storageClass: "" # Custom storage class for backup PVC (if empty, uses cluster default)
+      accessModes: # Access modes for backup PVC
+        - "ReadWriteOnce"
+      volumeMode: "Filesystem" # Volume mode: "Filesystem" or "Block"
+      helmResourcePolicy: "keep" # Whether to keep or delete the PVC on Helm uninstall ("keep" or "delete")
+      # Optional: selector for binding to specific persistent volumes
+      # selector:
+      #   matchLabels:
+      #     backup: "true"
+      # Optional: additional annotations and labels for the PVC resource itself
+      annotations: {} # Additional annotations for backup PVC
+      labels: {} # Additional labels for backup PVC
+
+  # Configuration for the PostgreSQL restore job.
+  # This restore job allows manual restoration of database backups.
+  restore:
+    enabled: false # Whether to enable the restore job functionality
+    registry: ""
+    repository: exivity/db-backup
+    tag: ""
+    pullPolicy: ""
+    nodeName: ""
+    nodeSelector: {}
+    nodeAffinity: {}
+    tolerations: []
+    # securityContext:
+    #   runAsUser: 1000
+    #   runAsGroup: 1000
+    #   fsGroup: 1000
+    #   runAsNonRoot: true
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "50Mi"
+    # Restore configuration
+    backupFilename: "" # Specific backup filename to restore (e.g., "backup-2023-01-01_12-00-00.sql")
+    # If backupFilename is empty, the restore job will restore the most recent backup
+    # Additional restore options
+
+    # IMPORTANT: Restore functionality limitations
+    # The automated restore functionality may NOT work with managed database services (such as
+    # DigitalOcean Managed Databases, AWS RDS, Google Cloud SQL, etc.) due to permission
+    # restrictions imposed by the provider. Managed databases typically do not grant
+    # superuser privileges required for database-level operations like DROP DATABASE or CREATE DATABASE.
+    #
+    # For managed databases, it is recommended to use your cloud provider's native
+    # backup and restore tools instead of this automated restore job.
+    #
+    # This restore service is primarily designed for use with the embedded
+    # Bitnami PostgreSQL database deployed as part of this Helm chart.
+
   # Configuration for the 'dummyData' service, used for deploying dummy data for testing purposes.
   dummyData:
     enabled: false
@@ -266,6 +392,8 @@ service:
     pullPolicy: ""
     nodeName: ""
     nodeSelector: {}
+    nodeAffinity: {}
+    tolerations: []
     # securityContext:
     #   runAsUser: 1000
     #   runAsGroup: 1000
@@ -282,6 +410,8 @@ service:
     replicas: 1
     nodeName: ""
     nodeSelector: {}
+    nodeAffinity: {}
+    tolerations: []
     # securityContext:
     #   runAsUser: 1000
     #   runAsGroup: 1000
@@ -303,6 +433,8 @@ service:
     replicas: 1
     nodeName: ""
     nodeSelector: {}
+    nodeAffinity: {}
+    tolerations: []
     # securityContext:
     #   runAsUser: 1000
     #   runAsGroup: 1000
@@ -322,6 +454,8 @@ service:
     replicas: 1
     nodeName: ""
     nodeSelector: {}
+    nodeAffinity: {}
+    tolerations: []
     # securityContext:
     #   runAsUser: 1000
     #   runAsGroup: 1000
@@ -341,6 +475,8 @@ service:
     replicas: 1
     nodeName: ""
     nodeSelector: {}
+    nodeAffinity: {}
+    tolerations: []
     # securityContext:
     #   runAsUser: 1000
     #   runAsGroup: 1000
@@ -360,6 +496,8 @@ service:
     replicas: 1
     nodeName: ""
     nodeSelector: {}
+    nodeAffinity: {}
+    tolerations: []
     # securityContext:
     #   runAsUser: 1000
     #   runAsGroup: 1000
@@ -379,6 +517,28 @@ service:
     replicas: 1
     nodeName: ""
     nodeSelector: {}
+    nodeAffinity: {}
+    tolerations: []
+    # securityContext:
+    #   runAsUser: 1000
+    #   runAsGroup: 1000
+    #   fsGroup: 1000
+    #   runAsNonRoot: true
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "50Mi"
+
+  # Proximity Migration Job Configuration
+  proximityMigrate:
+    registry: ""
+    repository: exivity/proximity-api
+    tag: ""
+    pullPolicy: ""
+    nodeName: ""
+    nodeSelector: {}
+    nodeAffinity: {}
+    tolerations: []
     # securityContext:
     #   runAsUser: 1000
     #   runAsGroup: 1000
@@ -398,6 +558,8 @@ service:
     replicas: 1
     nodeName: ""
     nodeSelector: {}
+    nodeAffinity: {}
+    tolerations: []
     # securityContext:
     #   runAsUser: 1000
     #   runAsGroup: 1000
@@ -417,6 +579,8 @@ service:
     replicas: 1
     nodeName: ""
     nodeSelector: {}
+    nodeAffinity: {}
+    tolerations: []
     # securityContext:
     #   runAsUser: 1000
     #   runAsGroup: 1000
@@ -442,11 +606,11 @@ service:
     caCertificates:
       {}
       # Example placeholders for CA certificates. Replace with your actual certificate data.
-      # rootCA.pem:
+      # rootCA.pem: |
       #   -----BEGIN CERTIFICATE-----
       #   [Your Root CA certificate here]
       #   -----END CERTIFICATE-----
-      # intermediateCA.pem:
+      # intermediateCA.pem: |
       #   -----BEGIN CERTIFICATE-----
       #   [Your Intermediate CA certificate here]
       #   -----END CERTIFICATE-----
@@ -476,8 +640,3 @@ prometheus:
     enabled: false
     serviceMonitor:
       enabled: false
-
-# Proximity Migration Job Configuration
-proximityMigrate:
-  nodeName: ""   # Specific node name to run the migration job on (optional)
-  nodeSelector: {} # Node selector for the migration job (independent of proximity API)
