@@ -110,6 +110,12 @@ ldap:
 # The embedded PostgreSQL chart is primarily intended for testing and non-production purposes.
 postgresql:
   enabled: true # Determines if the Bitnami PostgreSQL chart should be installed. Set to false when using an external database.
+  # IMPORTANT: Bitnami has announced the deprecation and deletion of their public Docker Hub images (docker.io/bitnami) as of September 29th, 2025. See: https://community.broadcom.com/tanzu/blogs/beltran-rueda-borrego/2025/08/18/how-to-prepare-for-the-bitnami-changes-coming-soon
+  # To avoid breaking existing deployments, we now use the Bitnami Legacy registry (bitnamilegacy/postgresql). This is a temporary, unsupported solution and will not receive updates or security patches.
+  # For production environments, Exivity strongly recommends migrating to a managed or self-hosted PostgreSQL instance outside of this Helm chart. The embedded chart is only intended for testing and evaluation.
+  # We are actively working on a workflow to help users migrate to managed/self-hosted services, which will not be shipped in future versions of this chart.
+  image:
+    repository: bitnamilegacy/postgresql
   global:
     postgresql:
       auth:
@@ -139,6 +145,12 @@ postgresql:
 # For more options and details, refer to the Bitnami RabbitMQ Helm chart: https://bitnami.com/stack/rabbitmq/helm
 rabbitmq:
   enabled: true # Determines if the Bitnami RabbitMQ chart should be installed. Set to false when using an external MQ.
+  # IMPORTANT: Bitnami has announced the deprecation and deletion of their public Docker Hub images (docker.io/bitnami) as of September 29th, 2025. See: https://community.broadcom.com/tanzu/blogs/beltran-rueda-borrego/2025/08/18/how-to-prepare-for-the-bitnami-changes-coming-soon
+  # To avoid breaking existing deployments, we now use the Bitnami Legacy registry (bitnamilegacy/rabbitmq). This is a temporary, unsupported solution and will not receive updates or security patches.
+  # For production environments, Exivity strongly recommends migrating to a managed or self-hosted RabbitMQ instance outside of this Helm chart. The embedded chart is only intended for testing and evaluation.
+  # We are actively working on a workflow to help users migrate to managed/self-hosted services, which will not be shipped in future versions of this chart.
+  image:
+    repository: bitnamilegacy/rabbitmq
   clustering:
     enabled: false # Determines if clustering is enabled for RabbitMQ.
 
@@ -358,6 +370,18 @@ service:
     backupFilename: "" # Specific backup filename to restore (e.g., "backup-2023-01-01_12-00-00.sql")
     # If backupFilename is empty, the restore job will restore the most recent backup
     # Additional restore options
+
+    # IMPORTANT: Restore functionality limitations
+    # The automated restore functionality may NOT work with managed database services (such as
+    # DigitalOcean Managed Databases, AWS RDS, Google Cloud SQL, etc.) due to permission
+    # restrictions imposed by the provider. Managed databases typically do not grant
+    # superuser privileges required for database-level operations like DROP DATABASE or CREATE DATABASE.
+    #
+    # For managed databases, it is recommended to use your cloud provider's native
+    # backup and restore tools instead of this automated restore job.
+    #
+    # This restore service is primarily designed for use with the embedded
+    # Bitnami PostgreSQL database deployed as part of this Helm chart.
 
   # Configuration for the 'dummyData' service, used for deploying dummy data for testing purposes.
   dummyData:
