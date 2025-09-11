@@ -9,7 +9,7 @@ licence: "demo"
 # Secret keys used for application security. Random values are generated on installation if not set.
 # Random values are generated on installation if not set, but it's recommended to specify values for production.
 secret:
-  appKey: "" The key must be a 32-character random string encoded in base64. Using php artisan key:generate is safer and easier.
+  appKey: "" # The key must be a 32-character random string encoded in base64. Using php artisan key:generate is safer and easier.
   jwtSecret: "" # Used for signing JWTs. Specify a value for production.
 
 ingress:
