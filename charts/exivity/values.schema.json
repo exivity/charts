@@ -39,11 +39,14 @@
         "appKey": {
           "type": "string",
           "default": "",
-          "title": "The appKey Schema",
+          "title": "Laravel Application Key",
+          "description": "ERROR PREVENTION: APP_KEY must be either: (1) Empty string for auto-generation, (2) Plain 32 alphanumeric characters, OR (3) Base64-encoded key with 'base64:' prefix. Invalid APP_KEY causes Laravel RuntimeException: 'Unsupported cipher or incorrect key length'. Generate with: php artisan key:generate --show",
           "examples": [
-            "ieR3rai9aijeghingo9LeaCaipah4lohxiliekaem3chahph0iemeeghai3ohfah"
+            "",
+            "abcdefghijklmnopqrstuvwxyz123456",
+            "base64:MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI="
           ],
-          "maxLength": 64
+          "pattern": "^(|[a-zA-Z0-9]{32}|base64:[A-Za-z0-9+/]{16,88}={0,2})$"
         },
         "jwtSecret": {
           "type": "string",
