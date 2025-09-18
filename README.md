@@ -2,7 +2,8 @@
 
 [![Documentation](https://img.shields.io/badge/docs-helm%20chart-blue?style=flat-square&logo=kubernetes)](https://docs.exivity.com/getting%20started/installation/kubernetes/)
 
-This Helm chart deploys Exivity, a comprehensive cloud metering and billing solution, on Kubernetes clusters.
+This Helm chart deploys Exivity, a comprehensive cloud metering and billing
+solution, on Kubernetes clusters.
 
 ## Prerequisites
 
@@ -12,7 +13,30 @@ This Helm chart deploys Exivity, a comprehensive cloud metering and billing solu
 
 ## Getting Started
 
-### 1. Add the Helm Repository
+Exivity charts are available through multiple distribution methods. Choose the
+one that works best for your setup:
+
+### Distribution Methods
+
+#### Method 1: Traditional Helm Repository (Current)
+
+```bash
+helm repo add exivity https://charts.exivity.com
+helm repo update
+```
+
+#### Method 2: OCI Registry (Recommended - Better Performance)
+
+```bash
+# No need to add repo, install directly from OCI registry
+helm install exivity oci://registry-1.docker.io/exivity/exivity
+```
+
+> **💡 Tip**: OCI registries provide better performance, reliability, and are
+> the future of Helm chart distribution. We recommend using the OCI method for
+> new installations.
+
+### 1. Add the Helm Repository (Traditional Method)
 
 ```bash
 helm repo add exivity https://charts.exivity.com
@@ -31,11 +55,13 @@ helm upgrade --install exivity exivity/exivity \
     --set storage.storageClass=<your-storage-class>
 ```
 
-Replace `<your-storage-class>` with your preferred storage class that supports ReadWriteMany access mode.
+Replace `<your-storage-class>` with your preferred storage class that supports
+ReadWriteMany access mode.
 
 ### 3. Storage Solutions
 
-Exivity is tested with various storage solutions including NFS and Longhorn. Here are examples for common setups:
+Exivity is tested with various storage solutions including NFS and Longhorn.
+Here are examples for common setups:
 
 #### NFS Storage with nfs-ganesha-server-and-external-provisioner
 
@@ -62,7 +88,8 @@ helm upgrade --install exivity exivity/exivity \
 
 If you're using Longhorn, you can install Exivity with:
 
-> **Note**: Longhorn support is currently in beta. While it works, we cannot ensure the same level of stability as NFS storage solutions.
+> **Note**: Longhorn support is currently in beta. While it works, we cannot
+> ensure the same level of stability as NFS storage solutions.
 
 ```bash
 helm upgrade --install exivity exivity/exivity \
@@ -76,12 +103,12 @@ helm upgrade --install exivity exivity/exivity \
 
 ### Basic Configuration
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `licence` | Exivity license key (use "demo" for evaluation) | `"demo"` |
-| `storage.storageClass` | Storage class for persistent volumes | `""` |
-| `ingress.enabled` | Enable ingress | `true` |
-| `ingress.host` | Hostname for the ingress | `"exivity"` |
+| Parameter              | Description                                     | Default     |
+| ---------------------- | ----------------------------------------------- | ----------- |
+| `licence`              | Exivity license key (use "demo" for evaluation) | `"demo"`    |
+| `storage.storageClass` | Storage class for persistent volumes            | `""`        |
+| `ingress.enabled`      | Enable ingress                                  | `true`      |
+| `ingress.host`         | Hostname for the ingress                        | `"exivity"` |
 
 ### Example: Custom Values
 
@@ -110,12 +137,17 @@ helm upgrade --install exivity exivity/exivity \
 
 ## Advanced Configuration
 
-For detailed configuration options, see the [examples](./charts/exivity/examples/) directory:
+For detailed configuration options, see the
+[examples](./charts/exivity/examples/) directory:
 
-- [GUI as Website](./charts/exivity/examples/gui-as-website.yaml) - Configure ingress for web access
-- [External PostgreSQL](./charts/exivity/examples/separate-postgresql.yaml) - Use external PostgreSQL
-- [External RabbitMQ](./charts/exivity/examples/separate-rabbitmq.yaml) - Use external RabbitMQ
-- [Larger PostgreSQL](./charts/exivity/examples/larger-postgresql.yaml) - Scale PostgreSQL resources
+- [GUI as Website](./charts/exivity/examples/gui-as-website.yaml) - Configure
+  ingress for web access
+- [External PostgreSQL](./charts/exivity/examples/separate-postgresql.yaml) -
+  Use external PostgreSQL
+- [External RabbitMQ](./charts/exivity/examples/separate-rabbitmq.yaml) - Use
+  external RabbitMQ
+- [Larger PostgreSQL](./charts/exivity/examples/larger-postgresql.yaml) - Scale
+  PostgreSQL resources
 
 ## Accessing Exivity
 
@@ -133,4 +165,5 @@ helm uninstall exivity -n exivity
 
 ## Support
 
-For more detailed installation instructions, visit the [Exivity Installation Guide](https://docs.exivity.com/getting%20started/installation/kubernetes/).
+For more detailed installation instructions, visit the
+[Exivity Installation Guide](https://docs.exivity.com/getting%20started/installation/kubernetes/).
