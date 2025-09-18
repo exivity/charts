@@ -35,15 +35,23 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Push to Docker Hub OCI Registry
+      - name: Push to Docker Hub OCI Registry (TEST MODE - DISABLED)
         run: |
           for chart in .cr-release-packages/*.tgz; do
-            echo "ushing $chart to Docker Hub OCI registry..."
-            helm push "$chart" oci://registry-1.docker.io/${{ secrets.DOCKER_HUB_USER }}
-            echo "Successfully pushed to oci://registry-1.docker.io/${{ secrets.DOCKER_HUB_USER }}"
+            echo "🧪 TEST MODE: Would push $chart to Docker Hub OCI registry..."
+            # helm push "$chart" oci://registry-1.docker.io/${{ secrets.DOCKER_HUB_USER }}
+            echo "🧪 TEST MODE: Would push to oci://registry-1.docker.io/${{ secrets.DOCKER_HUB_USER }}"
           done
 
-      - name: Run chart-releaser
-        uses: exivity/chart-releaser-action@v1.1.0
-        env:
-          CR_TOKEN: "${{ secrets.GH_BOT_TOKEN }}"
+      # COMMENTED OUT FOR TESTING - Uncomment when ready for real releases
+      # - name: Run chart-releaser
+      #   uses: exivity/chart-releaser-action@v1.1.0
+      #   env:
+      #     CR_TOKEN: "${{ secrets.GH_BOT_TOKEN }}"
+
+      - name: Test Summary
+        run: |
+          echo "🧪 TEST MODE COMPLETE - No actual releases created"
+          echo "📦 Charts that would be published:"
+          ls -la .cr-release-packages/
+          echo "🔄 To enable real publishing, uncomment the chart-releaser step"
