@@ -38,9 +38,9 @@ jobs:
       - name: Push to Docker Hub OCI Registry (TEST MODE - DISABLED)
         run: |
           for chart in .cr-release-packages/*.tgz; do
-            echo "🧪 TEST MODE: Would push $chart to Docker Hub OCI registry..."
-            # helm push "$chart" oci://registry-1.docker.io/${{ secrets.DOCKER_HUB_USER }}
-            echo "🧪 TEST MODE: Would push to oci://registry-1.docker.io/${{ secrets.DOCKER_HUB_USER }}"
+            echo "Testing OCI push for: $chart"
+            helm push --dry-run "$chart" oci://registry-1.docker.io/${{ secrets.DOCKER_HUB_USER }}
+            echo "Dry-run successful - chart is OCI compatible!"
           done
 
       # COMMENTED OUT FOR TESTING - Uncomment when ready for real releases
