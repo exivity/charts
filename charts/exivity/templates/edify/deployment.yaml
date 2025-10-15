@@ -18,6 +18,7 @@ spec:
         {{- include "exivity.labels" $ | indent 8 }}
       annotations:
         checksum/{{- include "exivity.fullname" $ -}}-config-edify: {{ include (print $.Template.BasePath "/edify/configmap.yaml") . | sha256sum }}
+        checksum/{{- include "exivity.fullname" $ -}}-licence-key: {{ include (print $.Template.BasePath "/proximity/api.secret.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "edify") | indent 8 }}
@@ -46,6 +47,11 @@ spec:
           resources:
             {{- toYaml .Values.service.edify.resources | nindent 12 }}
           env:
+            - name: EXIVITY_LICENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ -}}-licence-key
+                  key:                                     license.key
             - name: EXIVITY_BACKEND_LOG_LEVEL
               value: "{{ .Values.logLevel.backend }}"
             - name:  ENABLE_PROMETHEUS
