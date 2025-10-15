@@ -32,3 +32,4 @@ deploy:
       command: |
         . /tmp/chart_version.env
         helm push ./tenant-$CHART_VERSION.tgz oci://${OKTETO_REGISTRY_URL}/okteto
+        
