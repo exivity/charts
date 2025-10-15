@@ -1,13 +1,34 @@
 deploy:
   commands:
-    - name: Install dependencies
+    - name: Set CHART_VERSION
+      command: |
+        BASE_VERSION=0.0.0
+        BRANCH_NAME=${OKTETO_GIT_BRANCH:-${GITHUB_REF_NAME:-unknown}}
+        SAFE_BRANCH=$(echo "$BRANCH_NAME" | tr '/_' '--')
+        CHART_VERSION="$BASE_VERSION-$SAFE_BRANCH"
+        export CHART_VERSION
+        echo "Using CHART_VERSION: $CHART_VERSION"
+        echo "CHART_VERSION=$CHART_VERSION" > /tmp/chart_version.env
+    - name: Install dependencies for exivity
       command: helm dependency update charts/exivity
+    - name: Install dependencies for tenant
+      command: helm dependency update charts/tenant
     - name: Login registry
       command: |
         helm registry login ${OKTETO_REGISTRY_URL} -u ${OKTETO_USERNAME} -p ${OKTETO_TOKEN}
-    - name: Package chart
+    - name: Package exivity chart
       command: |
-        helm package ./charts/exivity --version 0.0.1
-    - name: Push chart to registry
+        . /tmp/chart_version.env
+        helm package ./charts/exivity --version $CHART_VERSION
+    - name: Package tenant chart
       command: |
-        helm push ./exivity-0.0.1.tgz oci://${OKTETO_REGISTRY_URL}/okteto
+        . /tmp/chart_version.env
+        helm package ./charts/tenant --version $CHART_VERSION
+    - name: Push exivity chart to registry
+      command: |
+        . /tmp/chart_version.env
+        helm push ./exivity-$CHART_VERSION.tgz oci://${OKTETO_REGISTRY_URL}/okteto
+    - name: Push tenant chart to registry
+      command: |
+        . /tmp/chart_version.env
+        helm push ./tenant-$CHART_VERSION.tgz oci://${OKTETO_REGISTRY_URL}/okteto
