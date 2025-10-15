@@ -20,15 +20,7 @@ deploy:
       command: |
         . /tmp/chart_version.env
         helm package ./charts/exivity --version $CHART_VERSION
-    - name: Package tenant chart
-      command: |
-        . /tmp/chart_version.env
-        helm package ./charts/tenant --version $CHART_VERSION
     - name: Push exivity chart to registry
       command: |
         . /tmp/chart_version.env
         helm push ./exivity-$CHART_VERSION.tgz oci://${OKTETO_REGISTRY_URL}/okteto
-    - name: Push tenant chart to registry
-      command: |
-        . /tmp/chart_version.env
-        helm push ./tenant-$CHART_VERSION.tgz oci://${OKTETO_REGISTRY_URL}/okteto
