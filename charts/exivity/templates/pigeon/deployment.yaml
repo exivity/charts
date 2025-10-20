@@ -62,14 +62,6 @@ spec:
             - secretRef:
                 name: {{ include "exivity.fullname" $ -}}-app-key
           env:
-            - name:  REDIS_HOST
-              value: exivity-redis-master
-            - name:  REDIS_PORT
-              value: "6379"
-            - name:  CACHE_DRIVER
-              value: redis
-            - name:  QUEUE_DRIVER
-              value: redis
             - name:  EXIVITY_BACKEND_LOG_LEVEL
               value: "{{ .Values.logLevel.backend }}"
             - name:  ENABLE_PROMETHEUS
