@@ -1,9 +1,16 @@
 name: okteto-registry
+permissions:
+  contents: read
 on:
-  workflow_dispatch: 
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch name to checkout'
+        required: false
+        default: 'main'
   push:
-    branches:
-      - main
+    branches: [ main ]
+  pull_request:
 
 jobs:
   upload-chart:
@@ -13,6 +20,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch || github.head_ref || github.ref_name || github.ref }}
 
       - name: Context
         uses: exivity/okteto-context-action@latest
