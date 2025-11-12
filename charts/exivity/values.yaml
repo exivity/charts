@@ -641,6 +641,8 @@ prometheus:
     serviceMonitor:
       enabled: false
 
+# Log files management: automatic compression and deletion
+# Recommends: Reducing retention days can improve performance
 logfiles:
-  deleteDays: 365         # Delete logfiles after N days
-  compressDays: 30         # Compress logfiles after N days
+  deleteDays: 365 # Delete logfiles after N days
+  compressDays: 30 # Compress logfiles after N days
