@@ -23,6 +23,8 @@ spec:
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-glass-log
+        {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
+      {{- include "exivity.initPermissions" (dict "root" . "component" "glass" "volumes" (list "log")) | nindent 6 }}
       containers:
         - name:            glass
           image: {{ include "exivity.image" (set $ "name" "glass") }}
@@ -46,9 +48,7 @@ spec:
       {{- if .Values.service.glass.nodeName }}
       nodeName: {{ .Values.service.glass.nodeName }}
       {{- end }}
-      {{- with .Values.service.glass.nodeSelector }}
-      nodeSelector:
-        {{ range $key, $val := . }}
-        {{ $key }}: {{ $val }}
-        {{- end }}
-      {{- end }}
+      {{- include "exivity.tolerations" (dict "Values" .Values "component" .Values.service.glass) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "Values" .Values "component" .Values.service.glass) | nindent 6 }}
+      affinity:
+        {{- include "exivity.nodeAffinity" (dict "Values" .Values "component" .Values.service.glass) | nindent 8 }}

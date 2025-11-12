@@ -31,6 +31,8 @@ spec:
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-chronos-log
+        {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
+      {{- include "exivity.initPermissions" (dict "root" . "component" "chronos" "volumes" (list "config" "log")) | nindent 6 }}
       containers:
         - name:            chronos
           image: {{ include "exivity.image" (set $ "name" "chronos") }}
@@ -59,9 +61,7 @@ spec:
       {{- if .Values.service.chronos.nodeName }}
       nodeName: {{ .Values.service.chronos.nodeName }}
       {{- end }}
-      {{- with .Values.service.chronos.nodeSelector }}
-      nodeSelector:
-        {{ range $key, $val := . }}
-        {{ $key }}: {{ $val }}
-        {{- end }}
-      {{- end }}
+      {{- include "exivity.tolerations" (dict "Values" .Values "component" .Values.service.chronos) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "Values" .Values "component" .Values.service.chronos) | nindent 6 }}
+      affinity:
+        {{- include "exivity.nodeAffinity" (dict "Values" .Values "component" .Values.service.chronos) | nindent 8 }}

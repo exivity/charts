@@ -1,0 +1,67 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "exivity.fullname" . }}-proximity-migration
+  labels:
+    app.kubernetes.io/component: proximity-migration
+    {{- include "exivity.labels" . | indent 4 }}
+  annotations:
+    "helm.sh/hook": post-upgrade,post-install
+    "helm.sh/hook-delete-policy": hook-succeeded
+    helm.sh/hook-weight: "1" 
+spec:
+  completions: 1
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: proximity-migration
+        {{- include "exivity.labels" . | indent 8 }}
+      annotations:
+        checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/{{- include "exivity.fullname" $ -}}-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+    spec:
+      securityContext:
+        {{- include "exivity.securityContext" (dict "root" . "component" "proximityMigrate") | indent 8 }}
+      volumes:
+        - name: config-shared
+          configMap:
+            name: {{ include "exivity.fullname" . }}-config-shared
+            readOnly: true
+        - name: config
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-etl-config
+      containers:
+        - name: proximity-migration
+          image: {{ include "exivity.image" (set $ "name" "proximityMigrate") }}
+          imagePullPolicy: {{ .Values.service.proximityMigrate.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
+          resources:
+            {{- toYaml .Values.service.proximityMigrate.resources | nindent 12 }}
+          volumeMounts:
+            - name: config-shared
+              mountPath: /exivity/home/system
+            - name:      config
+              mountPath: /exivity/home/system/config
+          command: [php]
+          args:
+            - /app/artisan
+            - exivity:migrate-db
+          envFrom:
+            - secretRef:
+                name: {{ include "exivity.fullname" . }}-app-key
+            - secretRef:
+                name: {{ include "exivity.fullname" $ -}}-jwt-secret
+      restartPolicy: Never
+      {{- with .Values.service.pullSecrets }}
+      imagePullSecrets:
+        {{- range $name := .}}
+        - name: {{ $name }}
+        {{- end }}
+      {{- end }}
+      {{- if .Values.service.proximityMigrate.nodeName }}
+      nodeName: {{ .Values.service.proximityMigrate.nodeName }}
+      {{- end }}
+      {{- include "exivity.tolerations" (dict "Values" .Values "component" .Values.service.proximityMigrate) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "Values" .Values "component" .Values.service.proximityMigrate) | nindent 6 }}
+      affinity:
+        {{- include "exivity.nodeAffinity" (dict "Values" .Values "component" .Values.service.proximityMigrate) | nindent 8 }}

@@ -8,6 +8,9 @@ on:
 
 jobs:
   image-release:
+    permissions:
+      contents: read
+      packages: read
     if: ${{ github.ref_type == 'tag' }}
     runs-on: ubuntu-latest
     strategy:
@@ -15,6 +18,7 @@ jobs:
         name:
           - chronos
           - db
+          - db-backup
           - edify
           - executor
           - glass

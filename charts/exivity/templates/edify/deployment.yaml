@@ -18,13 +18,21 @@ spec:
         {{- include "exivity.labels" $ | indent 8 }}
       annotations:
         checksum/{{- include "exivity.fullname" $ -}}-config-edify: {{ include (print $.Template.BasePath "/edify/configmap.yaml") . | sha256sum }}
+        checksum/{{- include "exivity.fullname" $ -}}-licence-pub: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
+        checksum/{{- include "exivity.fullname" $ -}}-licence-key: {{ include (print $.Template.BasePath "/proximity/api.secret.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "edify") | indent 8 }}
       volumes:
         - name: config-file
-          configMap:
-            name: {{ include "exivity.fullname" $ -}}-config-edify
+          projected:
+            sources:
+              - configMap:
+                  name: {{ include "exivity.fullname" $ -}}-config-edify
+              - configMap:
+                  name: {{ include "exivity.fullname" $ -}}-licence-pub
+              - secret:
+                  name: {{ include "exivity.fullname" $ -}}-licence-key
         - name: config
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-etl-config
@@ -37,6 +45,8 @@ spec:
         - name: report
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-report
+        {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
+      {{- include "exivity.initPermissions" (dict "root" . "component" "edify" "volumes" (list "config" "extracted" "log" "report")) | nindent 6 }}
       containers:
         - name:            edify
           image: {{ include "exivity.image" (set $ "name" "edify") }}
@@ -75,9 +85,7 @@ spec:
       {{- if .Values.service.edify.nodeName }}
       nodeName: {{ .Values.service.edify.nodeName }}
       {{- end }}
-      {{- with .Values.service.edify.nodeSelector }}
-      nodeSelector:
-        {{ range $key, $val := . }}
-        {{ $key }}: {{ $val }}
-        {{- end }}
-      {{- end }}
+      {{- include "exivity.tolerations" (dict "Values" .Values "component" .Values.service.edify) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "Values" .Values "component" .Values.service.edify) | nindent 6 }}
+      affinity:
+        {{- include "exivity.nodeAffinity" (dict "Values" .Values "component" .Values.service.edify) | nindent 8 }}

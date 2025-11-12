@@ -43,6 +43,8 @@ spec:
         - name: report
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-report
+        {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
+      {{- include "exivity.initPermissions" (dict "root" . "component" "transcript" "volumes" (list "config" "exported" "extracted" "import" "log" "report")) | nindent 6 }}
       containers:
         - name:            transcript
           image: {{ include "exivity.image" (set $ "name" "transcript") }}
@@ -84,9 +86,7 @@ spec:
       {{- if .Values.service.transcript.nodeName }}
       nodeName: {{ .Values.service.transcript.nodeName }}
       {{- end }}
-      {{- with .Values.service.transcript.nodeSelector }}
-      nodeSelector:
-        {{ range $key, $val := . }}
-        {{ $key }}: {{ $val }}
-        {{- end }}
-      {{- end }}
+      {{- include "exivity.tolerations" (dict "Values" .Values "component" .Values.service.transcript) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "Values" .Values "component" .Values.service.transcript) | nindent 6 }}
+      affinity:
+        {{- include "exivity.nodeAffinity" (dict "Values" .Values "component" .Values.service.transcript) | nindent 8 }}

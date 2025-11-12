@@ -46,6 +46,8 @@ spec:
         - name: exported
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-exported
+        {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
+      {{- include "exivity.initPermissions" (dict "root" . "component" "proximityCli" "volumes" (list "log" "config" "import" "report" "extracted" "exported")) | nindent 6 }}
       containers:
         - name:            proximity-cli
           image: {{ include "exivity.image" (set $ "name" "proximityCli") }}
@@ -88,9 +90,7 @@ spec:
       {{- if .Values.service.proximityCli.nodeName }}
       nodeName: {{ .Values.service.proximityCli.nodeName }}
       {{- end }}
-      {{- with .Values.service.proximityCli.nodeSelector }}
-      nodeSelector:
-        {{ range $key, $val := . }}
-        {{ $key }}: {{ $val }}
-        {{- end }}
-      {{- end }}
+      {{- include "exivity.tolerations" (dict "Values" .Values "component" .Values.service.proximityCli) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "Values" .Values "component" .Values.service.proximityCli) | nindent 6 }}
+      affinity:
+        {{- include "exivity.nodeAffinity" (dict "Values" .Values "component" .Values.service.proximityCli) | nindent 8 }}

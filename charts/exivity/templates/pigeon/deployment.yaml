@@ -37,6 +37,8 @@ spec:
         - name: config-volume
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-etl-config
+        {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
+      {{- include "exivity.initPermissions" (dict "root" . "component" "pigeon" "volumes" (list "log" "exported" "import" "config-volume")) | nindent 6 }}
       containers:
         - name:            pigeon
           image: {{ include "exivity.image" (set $ "name" "pigeon") }}
@@ -60,14 +62,6 @@ spec:
             - secretRef:
                 name: {{ include "exivity.fullname" $ -}}-app-key
           env:
-            - name:  REDIS_HOST
-              value: exivity-redis-master
-            - name:  REDIS_PORT
-              value: "6379"
-            - name:  CACHE_DRIVER
-              value: redis
-            - name:  QUEUE_DRIVER
-              value: redis
             - name:  EXIVITY_BACKEND_LOG_LEVEL
               value: "{{ .Values.logLevel.backend }}"
             - name:  ENABLE_PROMETHEUS
@@ -82,9 +76,7 @@ spec:
       {{- if .Values.service.pigeon.nodeName }}
       nodeName: {{ .Values.service.pigeon.nodeName }}
       {{- end }}
-      {{- with .Values.service.pigeon.nodeSelector }}
-      nodeSelector:
-        {{ range $key, $val := . }}
-        {{ $key }}: {{ $val }}
-        {{- end }}
-      {{- end }}
+      {{- include "exivity.tolerations" (dict "Values" .Values "component" .Values.service.pigeon) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "Values" .Values "component" .Values.service.pigeon) | nindent 6 }}
+      affinity:
+        {{- include "exivity.nodeAffinity" (dict "Values" .Values "component" .Values.service.pigeon) | nindent 8 }}

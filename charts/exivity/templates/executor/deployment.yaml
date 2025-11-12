@@ -43,6 +43,8 @@ spec:
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-executor-log
+        {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
+      {{- include "exivity.initPermissions" (dict "root" . "component" "executor" "volumes" (list "config" "import" "report" "exported" "extracted" "log")) | nindent 6 }}
       containers:
         - name:            executor
           image: {{ include "exivity.image" (set $ "name" "executor") }}
@@ -79,9 +81,7 @@ spec:
       {{- if .Values.service.executor.nodeName }}
       nodeName: {{ .Values.service.executor.nodeName }}
       {{- end }}
-      {{- with .Values.service.executor.nodeSelector }}
-      nodeSelector:
-        {{ range $key, $val := . }}
-        {{ $key }}: {{ $val }}
-        {{- end }}
-      {{- end }}
+      {{- include "exivity.tolerations" (dict "Values" .Values "component" .Values.service.executor) | nindent 6 }}
+      {{- include "exivity.nodeSelector" (dict "Values" .Values "component" .Values.service.executor) | nindent 6 }}
+      affinity:
+        {{- include "exivity.nodeAffinity" (dict "Values" .Values "component" .Values.service.executor) | nindent 8 }}
