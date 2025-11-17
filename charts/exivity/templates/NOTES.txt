@@ -14,42 +14,6 @@ PLEASE REMOVE YOUR SECRETS FROM YOUR `values.yaml` FILE BEFORE COMMITTING TO SOU
 {{ if not .Release.IsUpgrade -}}Installed{{- else -}}Upgraded{{- end }} Exivity v{{ .Chart.Version }} as `{{ include "exivity.fullname" $ }}`.
 It can take a few minutes for the containers to download and start up.
 
-{{- if and .Values.rabbitmq.enabled .Release.IsUpgrade .Values.rabbitmq.nameOverride }}
-
-===============================================
- RabbitMQ UPGRADE INFORMATION
-===============================================
-
-A new RabbitMQ instance has been deployed alongside your existing one:
-
-  OLD INSTANCE: {{ include "exivity.fullname" $ }}-rabbitmq
-  NEW INSTANCE: {{ include "exivity.fullname" $ }}-{{ .Values.rabbitmq.nameOverride }}
-
-✅ NEXT STEPS:
-
-1. Verify both instances are running:
-   # Old RabbitMQ (if still exists):
-   kubectl get pods -l app.kubernetes.io/name=rabbitmq -n <your-namespace>
-   
-   # New RabbitMQ (with nameOverride):
-   kubectl get pods -l app.kubernetes.io/name={{ .Values.rabbitmq.nameOverride }} -n <your-namespace>
-
-2. Check new RabbitMQ service is available:
-   kubectl get svc {{ include "exivity.fullname" $ }}-{{ .Values.rabbitmq.nameOverride }} -n <your-namespace>
-
-3. Your applications will automatically use the new service:
-   Service: {{ include "exivity.fullname" $ }}-{{ .Values.rabbitmq.nameOverride }}
-
-4. When ready to clean up the old instance (⚠️  PERMANENT DATA DELETION):
-   kubectl delete pvc data-{{ include "exivity.fullname" $ }}-rabbitmq-0 -n <your-namespace>
-
-ℹ️  NOTE: Replace <your-namespace> with your actual Kubernetes namespace.
-
-⚠️  WARNING: Only delete PVCs when you no longer need the old RabbitMQ data!
-
-===============================================
-{{- end }}
-
 {{ if $.Values.ingress.enabled -}}
 You can start using Exivity at: http{{- if $.Values.ingress.tls.enabled -}}s{{- end -}}://{{ $.Values.ingress.host }}/
 {{- else -}}

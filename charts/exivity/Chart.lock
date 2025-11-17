@@ -1,9 +1,9 @@
 dependencies:
 - name: postgresql
-  repository: https://exivity.github.io/bitnami-charts
-  version: 17.0.2
+  repository: https://charts.bitnami.com/bitnami
+  version: 11.9.13
 - name: rabbitmq
-  repository: https://exivity.github.io/bitnami-charts
-  version: 16.0.17
-digest: sha256:f8095ded99d892c6bd4d39b1f569f65993a6d6d6e57efc6ae61ee272a95f7a88
-generated: "2025-10-06T12:14:09.121297483+02:00"
+  repository: https://charts.bitnami.com/bitnami
+  version: 11.1.1
+digest: sha256:25e0a83ac8d66776dd573f50a1c738384b95e62d695caa864c732b12c3524949
+generated: "2022-10-31T13:06:46.350793+01:00"
