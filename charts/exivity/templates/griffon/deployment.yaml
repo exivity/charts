@@ -30,7 +30,7 @@ spec:
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
       initContainers:
         {{- include "exivity.initConfigContainer" (dict "root" . "appname" "" "path" "" "queue" "") | nindent 8 }}
-      {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "griffon" "volumes" (list "config" "log")) | nindent 8 }}
+        {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "griffon" "volumes" (list "config" "log")) | nindent 8 }}
       containers:
         - name:            griffon
           image: {{ include "exivity.image" (set $ "name" "griffon") }}

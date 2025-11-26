@@ -46,7 +46,7 @@ spec:
       {{- end }}
       initContainers:
         {{- include "exivity.initConfigContainer" (dict "root" . "appname" "use" "path" "/exivity/program/bin/use" "queue" "EXTRACT") | nindent 8 }}
-      {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "use" "volumes" (list "etl-config" "exported" "extracted" "import" "log")) | nindent 8 }}
+        {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "use" "volumes" (list "etl-config" "exported" "extracted" "import" "log")) | nindent 8 }}
       {{- if gt (len (default "" .Values.service.use.caCertificates)) 0 }}
         - name: install-ca-cert
           image: {{ include "exivity.image" (set $ "name" "use") }}

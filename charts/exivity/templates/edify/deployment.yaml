@@ -45,7 +45,7 @@ spec:
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
       initContainers:
         {{- include "exivity.initConfigContainer" (dict "root" . "appname" "edify" "path" "/exivity/program/bin/edify" "queue" "REPORT") | nindent 8 }}
-      {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "edify" "volumes" (list "config" "extracted" "log" "report")) | nindent 8 }}
+        {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "edify" "volumes" (list "config" "extracted" "log" "report")) | nindent 8 }}
       containers:
         - name:            edify
           image: {{ include "exivity.image" (set $ "name" "edify") }}

@@ -67,17 +67,11 @@
       mountPath: /exivity/home/system
 {{- end }}
 
-{{/*
-Define the shared emptyDir volume for generated config files.
-*/}}
 {{- define "exivity.configGeneratedVolume" -}}
 - name: config-generated
   emptyDir: {}
 {{- end }}
 
-{{/*
-Define the volume mount for the generated config in application containers.
-*/}}
 {{- define "exivity.configGeneratedVolumeMount" -}}
 - name: config-generated
   mountPath: /exivity/home/system/config.json

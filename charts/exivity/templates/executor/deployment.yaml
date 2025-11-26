@@ -42,7 +42,7 @@ spec:
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
       initContainers:
         {{- include "exivity.initConfigContainer" (dict "root" . "appname" "executor" "path" "${program}" "queue" "EXECUTE") | nindent 8 }}
-      {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "executor" "volumes" (list "config" "import" "report" "exported" "extracted" "log")) | nindent 8 }}
+        {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "executor" "volumes" (list "config" "import" "report" "exported" "extracted" "log")) | nindent 8 }}
       containers:
         - name:            executor
           image: {{ include "exivity.image" (set $ "name" "executor") }}
