@@ -17,7 +17,6 @@ spec:
         app.kubernetes.io/component: proximity-api
         {{- include "exivity.labels" $ | indent 8 }}
       annotations:
-        checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-licence-pub: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-licence-key: {{ include (print $.Template.BasePath "/proximity/api.secret.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-lock: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
@@ -30,15 +29,13 @@ spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "proximityApi") | indent 8 }}
       volumes:
-        - name: projected
-          projected:
-            sources:
-              - configMap:
-                  name: {{ include "exivity.fullname" $ -}}-config-shared
-              - configMap:
-                  name: {{ include "exivity.fullname" $ -}}-licence-pub
-              - secret:
-                  name: {{ include "exivity.fullname" $ -}}-licence-key
+        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
+        - name: licence-pub
+          configMap:
+            name: {{ include "exivity.fullname" $ -}}-licence-pub
+        - name: licence-key
+          secret:
+            secretName: {{ include "exivity.fullname" $ -}}-licence-key
         - name: exivity-lock
           configMap:
             name: {{ include "exivity.fullname" $ -}}-lock
@@ -88,7 +85,9 @@ spec:
             defaultMode: 0444
         {{- end }}
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
-      {{- include "exivity.initPermissions" (dict "root" . "component" "proximityApi" "volumes" (list "log" "log-chronos" "log-edify" "log-griffon" "log-horizon" "log-pigeon" "log-transcript" "log-use" "config" "import" "report" "exported" "extracted")) | nindent 6 }}
+      initContainers:
+        {{- include "exivity.initConfigContainer" (dict "root" . "appname" "" "path" "" "queue" "") | nindent 8 }}
+      {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "proximityApi" "volumes" (list "log" "log-chronos" "log-edify" "log-griffon" "log-horizon" "log-pigeon" "log-transcript" "log-use" "config" "import" "report" "exported" "extracted")) | nindent 8 }}
       containers:
         - name: proximity-api
           image: {{ include "exivity.image" (set $ "name" "proximityApi") }}
@@ -102,8 +101,13 @@ spec:
           volumeMounts:
             - name:      config
               mountPath: /exivity/home/system/config
-            - name:      projected
-              mountPath: /exivity/home/system
+            {{- include "exivity.configGeneratedVolumeMount" . | nindent 12 }}
+            - name:      licence-pub
+              mountPath: /exivity/home/system/licence.pub
+              subPath:   license.pub
+            - name:      licence-key
+              mountPath: /exivity/home/system/license.key
+              subPath:   license.key
             - name:      exported
               mountPath: /exivity/home/exported
             - name:      extracted

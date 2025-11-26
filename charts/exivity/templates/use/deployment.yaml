@@ -16,15 +16,11 @@ spec:
       labels:
         app.kubernetes.io/component: use
         {{- include "exivity.labels" $ | indent 8 }}
-      annotations:
-        checksum/{{- include "exivity.fullname" $ -}}-config-use: {{ include (print $.Template.BasePath "/use/configmap.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "use") | indent 8 }}
       volumes:
-        - name: config-file
-          configMap:
-            name: {{ include "exivity.fullname" $ -}}-config-use
+        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
         - name: etl-config
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-etl-config
@@ -49,6 +45,7 @@ spec:
             secretName: {{ include "exivity.fullname" $ -}}-use-certificates
       {{- end }}
       initContainers:
+        {{- include "exivity.initConfigContainer" (dict "root" . "appname" "use" "path" "/exivity/program/bin/use" "queue" "EXTRACT") | nindent 8 }}
       {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "use" "volumes" (list "etl-config" "exported" "extracted" "import" "log")) | nindent 8 }}
       {{- if gt (len (default "" .Values.service.use.caCertificates)) 0 }}
         - name: install-ca-cert
@@ -76,8 +73,7 @@ spec:
           resources:
             {{- toYaml .Values.service.use.resources | nindent 12 }}
           volumeMounts:
-            - name:      config-file
-              mountPath: /exivity/home/system
+            {{- include "exivity.configGeneratedVolumeMount" . | nindent 12 }}
             - name:      etl-config
               mountPath: /exivity/home/system/config
             - name:      exported

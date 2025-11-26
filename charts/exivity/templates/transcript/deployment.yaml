@@ -16,15 +16,11 @@ spec:
       labels:
         app.kubernetes.io/component: transcript
         {{- include "exivity.labels" $ | indent 8 }}
-      annotations:
-        checksum/{{- include "exivity.fullname" $ -}}-config-transcript: {{ include (print $.Template.BasePath "/transcript/configmap.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "transcript") | indent 8 }}
       volumes:
-        - name: config-file
-          configMap:
-            name: {{ include "exivity.fullname" $ -}}-config-transcript
+        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
         - name: config
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-etl-config
@@ -44,7 +40,9 @@ spec:
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-report
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
-      {{- include "exivity.initPermissions" (dict "root" . "component" "transcript" "volumes" (list "config" "exported" "extracted" "import" "log" "report")) | nindent 6 }}
+      initContainers:
+        {{- include "exivity.initConfigContainer" (dict "root" . "appname" "transcript" "path" "/exivity/program/bin/transcript" "queue" "TRANSFORM") | nindent 8 }}
+      {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "transcript" "volumes" (list "config" "exported" "extracted" "import" "log" "report")) | nindent 8 }}
       containers:
         - name:            transcript
           image: {{ include "exivity.image" (set $ "name" "transcript") }}
@@ -54,8 +52,7 @@ spec:
           volumeMounts:
             - name:      config
               mountPath: /exivity/home/system/config
-            - name:      config-file
-              mountPath: /exivity/home/system
+            {{- include "exivity.configGeneratedVolumeMount" . | nindent 12 }}
             - name:      exported
               mountPath: /exivity/home/exported
             - name:      extracted

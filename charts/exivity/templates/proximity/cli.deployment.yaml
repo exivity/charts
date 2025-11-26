@@ -17,16 +17,13 @@ spec:
         app.kubernetes.io/component: proximity-cli
         {{- include "exivity.labels" $ | indent 8 }}
       annotations:
-        checksum/{{- include "exivity.fullname" $ -}}-config-proximity-cli: {{ include (print $.Template.BasePath "/proximity/cli.configmap.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-proximity-cli-env: {{ include (print $.Template.BasePath "/proximity/cli.env.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "proximityCli") | indent 8 }}
       volumes:
-        - name: config-file
-          configMap:
-            name: {{ include "exivity.fullname" $ -}}-config-proximity-cli
+        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-proximity-cli-log
@@ -46,7 +43,9 @@ spec:
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-exported
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
-      {{- include "exivity.initPermissions" (dict "root" . "component" "proximityCli" "volumes" (list "log" "config" "import" "report" "extracted" "exported")) | nindent 6 }}
+      initContainers:
+        {{- include "exivity.initConfigContainer" (dict "root" . "appname" "proximity-cli" "path" "/usr/bin/php" "queue" "PROXIMITY") | nindent 8 }}
+      {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "proximityCli" "volumes" (list "log" "config" "import" "report" "extracted" "exported")) | nindent 8 }}
       containers:
         - name:            proximity-cli
           image: {{ include "exivity.image" (set $ "name" "proximityCli") }}
@@ -56,8 +55,7 @@ spec:
           volumeMounts:
             - name:      config
               mountPath: /exivity/home/system/config
-            - name:      config-file
-              mountPath: /exivity/home/system
+            {{- include "exivity.configGeneratedVolumeMount" . | nindent 12 }}
             - name:      exported
               mountPath: /exivity/home/system/exported
             - name:      extracted
