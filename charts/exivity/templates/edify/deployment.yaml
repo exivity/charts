@@ -66,7 +66,7 @@ spec:
               mountPath: /exivity/home/system/config
             {{- include "exivity.configGeneratedVolumeMount" . | nindent 12 }}
             - name:      licence-pub
-              mountPath: /exivity/home/system/licence.pub
+              mountPath: /exivity/home/system/license.pub
               subPath:   license.pub
             - name:      licence-key
               mountPath: /exivity/home/system/license.key
