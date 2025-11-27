@@ -4,7 +4,7 @@ kind: ConfigMap
 metadata:
   name: {{ include "exivity.fullname" $ -}}-dummy-data-preset
   labels:
-    app.kubernetes.io/component: {{ $.data.appname | default "shared" }}
+    app.kubernetes.io/component: dummy-data
     {{- include "exivity.labels" $ | indent 4 }}
 data:
   preset.yaml: |-
