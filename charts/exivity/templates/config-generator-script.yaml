@@ -1,0 +1,205 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "exivity.fullname" . }}-config-generator
+  labels:
+    app.kubernetes.io/component: config-generator
+    {{- include "exivity.labels" . | nindent 4 }}
+data:
+  generate-config.sh: |
+    #!/bin/sh
+    set -e
+    
+    # Export all config values from mounted configmap and secret files
+    export DB_HOST=$(cat /config/postgres/POSTGRES_HOST)
+    export DB_PORT=$(cat /config/postgres/POSTGRES_PORT)
+    export DB_SSLMODE=$(cat /config/postgres/POSTGRES_SSLMODE)
+    export DB_NAME=$(cat /config/postgres/POSTGRES_DB)
+    export DB_USER=$(cat /config/postgres/POSTGRES_USER)
+    export DB_PASSWORD=$(cat /secrets/postgres/POSTGRES_PASSWORD)
+    export MQ_HOST=$(cat /config/rabbitmq/RABBITMQ_HOST)
+    export MQ_PORT=$(cat /config/rabbitmq/RABBITMQ_PORT)
+    export MQ_SECURE=$(cat /config/rabbitmq/RABBITMQ_SECURE)
+    export MQ_VHOST=$(cat /config/rabbitmq/RABBITMQ_VHOST)
+    export MQ_USER=$(cat /secrets/rabbitmq/RABBITMQ_USERNAME)
+    export MQ_PASSWORD=$(cat /secrets/rabbitmq/RABBITMQ_PASSWORD)
+    
+    # Build base config from exported env vars
+    jq -n \
+      --arg db_host "$DB_HOST" \
+      --arg db_port "$DB_PORT" \
+      --arg db_sslmode "$DB_SSLMODE" \
+      --arg db_name "$DB_NAME" \
+      --arg db_user "$DB_USER" \
+      --arg db_pass "$DB_PASSWORD" \
+      --arg mq_host "$MQ_HOST" \
+      --arg mq_port "$MQ_PORT" \
+      --arg mq_secure "$MQ_SECURE" \
+      --arg mq_vhost "$MQ_VHOST" \
+      --arg mq_user "$MQ_USER" \
+      --arg mq_pass "$MQ_PASSWORD" \
+      '{
+        db: {
+          driver: "postgres",
+          parameters: {
+            host: $db_host,
+            port: ($db_port | tonumber),
+            sslmode: $db_sslmode,
+            dbname: $db_name,
+            user: $db_user,
+            password: $db_pass,
+            connect_timeout: 10
+          }
+        },
+        mq: {
+          servers: [{
+            host: $mq_host,
+            port: ($mq_port | tonumber),
+            secure: ($mq_secure == "true")
+          }],
+          user: $mq_user,
+          password: $mq_pass,
+          vhost: $mq_vhost,
+          redialPeriod: 5
+        },
+        chronos: {
+          TTL: 60
+        },
+        griffon: {
+          TTL: 10
+        }
+      }' > /tmp/base-config.json
+    
+    # Add merlin configuration if parameters provided
+    if [ -n "$APPNAME" ]; then
+      if [ "$APPNAME" = "use" ]; then
+        jq --arg appname "$APPNAME" \
+           --arg path "$PATH_VAR" \
+           --arg queue "$QUEUE" \
+           '.merlin = {
+             reservedCPU: 0,
+             programs: {
+               ($appname): {
+                 component: $appname,
+                 path: $path,
+                 queue: $queue,
+                 CPU: 0,
+                 params: "${params}",
+                 RAM: 0
+               }
+             }
+           }' /tmp/base-config.json > /exivity/home/system/config.json
+      else
+        jq --arg appname "$APPNAME" \
+           --arg path "$PATH_VAR" \
+           --arg queue "$QUEUE" \
+           '.merlin = {
+             reservedCPU: 0,
+             programs: {
+               ($appname): {
+                 component: $appname,
+                 path: $path,
+                 queue: $queue,
+                 CPU: 0,
+                 RAM: 0
+               }
+             }
+           }' /tmp/base-config.json > /exivity/home/system/config.json
+      fi
+    else
+      mv /tmp/base-config.json /exivity/home/system/config.json
+    fi
+  
+  generate-pigeon-config.sh: |
+    #!/bin/sh
+    set -e
+    
+    # Export all config values from mounted configmap and secret files
+    export DB_HOST=$(cat /config/postgres/POSTGRES_HOST)
+    export DB_PORT=$(cat /config/postgres/POSTGRES_PORT)
+    export DB_SSLMODE=$(cat /config/postgres/POSTGRES_SSLMODE)
+    export DB_NAME=$(cat /config/postgres/POSTGRES_DB)
+    export DB_USER=$(cat /config/postgres/POSTGRES_USER)
+    export DB_PASSWORD=$(cat /secrets/postgres/POSTGRES_PASSWORD)
+    export MQ_HOST=$(cat /config/rabbitmq/RABBITMQ_HOST)
+    export MQ_PORT=$(cat /config/rabbitmq/RABBITMQ_PORT)
+    export MQ_SECURE=$(cat /config/rabbitmq/RABBITMQ_SECURE)
+    export MQ_VHOST=$(cat /config/rabbitmq/RABBITMQ_VHOST)
+    export MQ_USER=$(cat /secrets/rabbitmq/RABBITMQ_USERNAME)
+    export MQ_PASSWORD=$(cat /secrets/rabbitmq/RABBITMQ_PASSWORD)
+    
+    # Build pigeon config from exported env vars
+    jq -n \
+      --arg db_host "$DB_HOST" \
+      --arg db_port "$DB_PORT" \
+      --arg db_sslmode "$DB_SSLMODE" \
+      --arg db_name "$DB_NAME" \
+      --arg db_user "$DB_USER" \
+      --arg db_pass "$DB_PASSWORD" \
+      --arg mq_host "$MQ_HOST" \
+      --arg mq_port "$MQ_PORT" \
+      --arg mq_secure "$MQ_SECURE" \
+      --arg mq_vhost "$MQ_VHOST" \
+      --arg mq_user "$MQ_USER" \
+      --arg mq_pass "$MQ_PASSWORD" \
+      '{
+        db: {
+          driver: "postgres",
+          parameters: {
+            host: $db_host,
+            port: ($db_port | tonumber),
+            sslmode: $db_sslmode,
+            dbname: $db_name,
+            user: $db_user,
+            password: $db_pass,
+            connect_timeout: 10
+          }
+        },
+        mq: {
+          servers: [{
+            host: $mq_host,
+            port: ($mq_port | tonumber),
+            secure: ($mq_secure == "true")
+          }],
+          user: $mq_user,
+          password: $mq_pass,
+          vhost: $mq_vhost,
+          redialPeriod: 5
+        },
+        chronos: {
+          TTL: 60
+        },
+        griffon: {
+          TTL: 10
+        },
+        merlin: {
+          reservedCPU: 1,
+          heartbeatPeriod: 5,
+          programs: {
+            pigeon: {
+              path: "/usr/bin/php",
+              queue: "PIGEON",
+              CPU: 0,
+              RAM: 0
+            },
+            workflow_ended: {
+              component: "pigeon",
+              path: "/usr/bin/php",
+              queue: "WORKFLOW_EVENT",
+              topic: "evt.workflow_status.griffon.#",
+              params: "common/pigeon/pigeon.phar event:post workflow_ended ${payload}",
+              CPU: 0.25,
+              RAM: 250
+            },
+            report_published: {
+              component: "pigeon",
+              path: "/usr/bin/php",
+              queue: "REPORT_PUBLISHED",
+              topic: "evt.report_published.proximity.#",
+              params: "common/pigeon/pigeon.phar event:post report_published ${payload}",
+              CPU: 0.25,
+              RAM: 250
+            }
+          }
+        }
+      }' > /exivity/home/system/config.json
