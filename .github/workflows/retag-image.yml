@@ -23,6 +23,10 @@ on:
         description: Target image tag
         required: true
 
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   retag-image:
     runs-on: ubuntu-latest
