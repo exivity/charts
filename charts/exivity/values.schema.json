@@ -41,10 +41,10 @@
           "type": "string",
           "default": "",
           "title": "Laravel Application Key",
-          "description": "ERROR PREVENTION: APP_KEY must be either: (1) Empty string for auto-generation, (2) Plain 32 alphanumeric characters, OR (3) Base64-encoded key with 'base64:' prefix. Invalid APP_KEY causes Laravel RuntimeException: 'Unsupported cipher or incorrect key length'. Generate with: php artisan key:generate --show",
+          "description": "The application encryption key used by Laravel for encrypting and decrypting sensitive data with AES-256-CBC cipher. This value can be left empty for automatic generation during installation or specified as a base64-encoded key with the 'base64:' prefix (standard Laravel format). If an invalid or incorrectly formatted key is provided, a Laravel RuntimeException will be thrown. A valid key can be generated using: php artisan key:generate --show",
           "examples": [
             "",
-            "abcdefghijklmnopqrstuvwxyz123456",
+            "ZC9GxTNHyDyYOZYidN240FuhsB0QJxZs",
             "base64:MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI="
           ],
           "pattern": "^(|[a-zA-Z0-9]{32}|base64:[A-Za-z0-9+/]{16,88}={0,2})$"
