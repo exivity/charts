@@ -34,7 +34,7 @@ data:
       "mq": {
           "servers": [
               {
-                  "host":   {{ $.Values.rabbitmq.host | default (printf "%s-rabbitmq" (include "exivity.fullname" $ )) | quote }},
+                  "host":   {{ if $.Values.rabbitmq.host }}{{ $.Values.rabbitmq.host | quote }}{{ else if $.Values.rabbitmq.nameOverride }}{{ printf "%s-%s" (include "exivity.fullname" $) $.Values.rabbitmq.nameOverride | quote }}{{ else }}{{ printf "%s-rabbitmq" (include "exivity.fullname" $) | quote }}{{ end }},
                   "port":   {{ $.Values.rabbitmq.port | default 5672 }},
                   "secure": {{ $.Values.rabbitmq.secure | default false }}
               }

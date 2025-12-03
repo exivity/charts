@@ -5,6 +5,10 @@ on:
     - cron: "0 4 * * *"
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   image-release:
     runs-on: ubuntu-latest
