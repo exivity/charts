@@ -26,10 +26,33 @@
       "examples": [""]
     },
     "licence": {
-      "type": "string",
-      "default": "",
+      "oneOf": [
+        {
+          "type": "string",
+          "title": "Direct licence value"
+        },
+        {
+          "type": "object",
+          "title": "Secret reference",
+          "required": ["secretName", "key"],
+          "properties": {
+            "secretName": {
+              "type": "string",
+              "title": "Name of the Kubernetes secret"
+            },
+            "key": {
+              "type": "string",
+              "title": "Key within the secret"
+            }
+          }
+        }
+      ],
+      "default": "demo",
       "title": "The licence Schema",
-      "examples": ["demo"]
+      "examples": [
+        "demo",
+        { "secretName": "exivity-secrets", "key": "LICENCE" }
+      ]
     },
     "secret": {
       "type": "object",
@@ -38,25 +61,73 @@
       "required": ["appKey", "jwtSecret"],
       "properties": {
         "appKey": {
-          "type": "string",
+          "oneOf": [
+            {
+              "type": "string",
+              "title": "Direct secret value",
+              "maxLength": 64
+            },
+            {
+              "type": "object",
+              "title": "Secret reference",
+              "required": ["secretName", "key"],
+              "properties": {
+                "secretName": {
+                  "type": "string",
+                  "title": "Name of the Kubernetes secret"
+                },
+                "key": {
+                  "type": "string",
+                  "title": "Key within the secret"
+                }
+              }
+            }
+          ],
           "default": "",
           "title": "The appKey Schema",
           "examples": [
-            "ieR3rai9aijeghingo9LeaCaipah4lohxiliekaem3chahph0iemeeghai3ohfah"
-          ],
-          "maxLength": 64
+            "ieR3rai9aijeghingo9LeaCaipah4lohxiliekaem3chahph0iemeeghai3ohfah",
+            { "secretName": "exivity-secrets", "key": "APP_KEY" }
+          ]
         },
         "jwtSecret": {
-          "type": "string",
+          "oneOf": [
+            {
+              "type": "string",
+              "title": "Direct secret value"
+            },
+            {
+              "type": "object",
+              "title": "Secret reference",
+              "required": ["secretName", "key"],
+              "properties": {
+                "secretName": {
+                  "type": "string",
+                  "title": "Name of the Kubernetes secret"
+                },
+                "key": {
+                  "type": "string",
+                  "title": "Key within the secret"
+                }
+              }
+            }
+          ],
           "default": "",
           "title": "The jwtSecret Schema",
-          "examples": [""]
+          "examples": [
+            "my-jwt-secret-value",
+            { "secretName": "exivity-secrets", "key": "JWT_SECRET" }
+          ]
         }
       },
       "examples": [
         {
           "appKey": "",
           "jwtSecret": ""
+        },
+        {
+          "appKey": { "secretName": "exivity-secrets", "key": "APP_KEY" },
+          "jwtSecret": { "secretName": "exivity-secrets", "key": "JWT_SECRET" }
         }
       ]
     },
@@ -253,16 +324,58 @@
                       "examples": ["exivity"]
                     },
                     "username": {
-                      "type": "string",
-                      "default": "",
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "title": "Direct username value"
+                        },
+                        {
+                          "type": "object",
+                          "title": "Secret reference",
+                          "required": ["secretName", "key"],
+                          "properties": {
+                            "secretName": {
+                              "type": "string"
+                            },
+                            "key": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      ],
+                      "default": "exivity",
                       "title": "The username Schema",
-                      "examples": ["exivity"]
+                      "examples": [
+                        "exivity",
+                        { "secretName": "db-secret", "key": "USERNAME" }
+                      ]
                     },
                     "password": {
-                      "type": "string",
-                      "default": "",
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "title": "Direct password value"
+                        },
+                        {
+                          "type": "object",
+                          "title": "Secret reference",
+                          "required": ["secretName", "key"],
+                          "properties": {
+                            "secretName": {
+                              "type": "string"
+                            },
+                            "key": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      ],
+                      "default": "Password12!",
                       "title": "The password Schema",
-                      "examples": ["Password12!"]
+                      "examples": [
+                        "Password12!",
+                        { "secretName": "db-secret", "key": "PASSWORD" }
+                      ]
                     },
                     "postgresPassword": {
                       "type": "string",
@@ -390,16 +503,62 @@
           "required": ["username", "password"],
           "properties": {
             "username": {
-              "type": "string",
+              "oneOf": [
+                {
+                  "type": "string",
+                  "title": "Direct username value"
+                },
+                {
+                  "type": "object",
+                  "title": "Secret reference",
+                  "required": ["secretName", "key"],
+                  "properties": {
+                    "secretName": {
+                      "type": "string",
+                      "title": "Name of the Kubernetes secret"
+                    },
+                    "key": {
+                      "type": "string",
+                      "title": "Key within the secret"
+                    }
+                  }
+                }
+              ],
               "default": "",
               "title": "The username Schema",
-              "examples": ["user"]
+              "examples": [
+                "user",
+                { "secretName": "mq-secret", "key": "USERNAME" }
+              ]
             },
             "password": {
-              "type": "string",
+              "oneOf": [
+                {
+                  "type": "string",
+                  "title": "Direct password value"
+                },
+                {
+                  "type": "object",
+                  "title": "Secret reference",
+                  "required": ["secretName", "key"],
+                  "properties": {
+                    "secretName": {
+                      "type": "string",
+                      "title": "Name of the Kubernetes secret"
+                    },
+                    "key": {
+                      "type": "string",
+                      "title": "Key within the secret"
+                    }
+                  }
+                }
+              ],
               "default": "",
               "title": "The password Schema",
-              "examples": ["pass"]
+              "examples": [
+                "pass",
+                { "secretName": "mq-secret", "key": "PASSWORD" }
+              ]
             }
           },
           "examples": [
@@ -3732,7 +3891,27 @@
       "required": ["tlsCacertPath"],
       "properties": {
         "tlsCacert": {
-          "type": "string",
+          "oneOf": [
+            {
+              "type": "string",
+              "title": "Direct certificate value"
+            },
+            {
+              "type": "object",
+              "title": "Secret reference",
+              "required": ["secretName", "key"],
+              "properties": {
+                "secretName": {
+                  "type": "string",
+                  "title": "Name of the Kubernetes secret"
+                },
+                "key": {
+                  "type": "string",
+                  "title": "Key within the secret"
+                }
+              }
+            }
+          ],
           "title": "LDAP TLS CA Certificate",
           "description": "PEM-encoded CA certificate for LDAP over TLS connections. Must be provided together with tlsCacertPath."
         },

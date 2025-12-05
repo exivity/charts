@@ -9,5 +9,7 @@ data:
   POSTGRES_HOST: {{ .Values.postgresql.host | default (printf "%s-postgresql" (include "exivity.fullname" . )) | quote }}
   POSTGRES_PORT: {{ .Values.postgresql.port | quote }}
   POSTGRES_DB: {{ .Values.postgresql.global.postgresql.auth.database | quote }}
+  {{- if not (include "exivity.isSecretRef" .Values.postgresql.global.postgresql.auth.username) }}
   POSTGRES_USER: {{ .Values.postgresql.global.postgresql.auth.username | quote }}
+  {{- end }}
   POSTGRES_SSLMODE: {{ .Values.postgresql.sslmode | default "disable" | quote }}
