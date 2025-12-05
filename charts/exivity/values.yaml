@@ -23,8 +23,7 @@ ingress:
   # Example values: '10.0.0.1', '10.244.0.0/16', '127.0.0.1, 10.244.0.0/16', or '*'.
   trustedProxy: ""
 
-  annotations:
-    {}
+  annotations: {}
     # Example annotations for ingress behavior:
     # kubernetes.io/ingress.allow-http:         "false"
     # nginx.ingress.kubernetes.io/ssl-redirect: "true"
@@ -608,8 +607,7 @@ service:
 
     # CA certificates configuration section. Add CA certificates that your service uses here.
     # Each certificate should be listed as a key-value pair, where the key is a unique identifier.
-    caCertificates:
-      {}
+    caCertificates: {}
       # Example placeholders for CA certificates. Replace with your actual certificate data.
       # rootCA.pem: |
       #   -----BEGIN CERTIFICATE-----
@@ -645,3 +643,9 @@ prometheus:
     enabled: false
     serviceMonitor:
       enabled: false
+
+# Log files management: automatic compression and deletion
+# Recommendation: Reducing retention days can improve performance
+logfiles:
+  deleteDays: 365 # Log files older than this number of days will be deleted
+  compressDays: 30 # Log files older than this number of days will be compressed (only applies when deleteDays is greater than compressDays)
