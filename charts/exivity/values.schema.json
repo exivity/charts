@@ -15,7 +15,8 @@
     "service",
     "logLevel",
     "probes",
-    "prometheus"
+    "prometheus",
+    "logfiles"
   ],
   "properties": {
     "nameOverride": {
@@ -3930,6 +3931,41 @@
           "tlsCacertPath": "/etc/ssl/certs/ldap.pem"
         }
       ]
+    },
+    "logfiles": {
+      "type": "object",
+      "default": {},
+      "title": "Log Files Management Configuration",
+      "description": "Configuration for automatic log file compression and deletion to improve performance",
+      "required": ["deleteDays", "compressDays"],
+      "properties": {
+        "deleteDays": {
+          "type": "integer",
+          "default": 365,
+          "title": "Delete Days",
+          "description": "Delete log files after N days. Must be a positive integer.",
+          "minimum": 0,
+          "examples": [365, 90, 180]
+        },
+        "compressDays": {
+          "type": "integer",
+          "default": 30,
+          "title": "Compress Days",
+          "description": "Compress log files after N days. Must be a positive integer.",
+          "minimum": 0,
+          "examples": [30, 7, 14]
+        }
+      },
+      "examples": [
+        {
+          "deleteDays": 365,
+          "compressDays": 30
+        },
+        {
+          "deleteDays": 7,
+          "compressDays": 0
+        }
+      ]
     }
   },
   "examples": [
@@ -4319,6 +4355,10 @@
       "ldap": {
         "tlsCacert": "",
         "tlsCacertPath": "/etc/ssl/certs/ldap.pem"
+      },
+      "logfiles": {
+        "deleteDays": 365,
+        "compressDays": 30
       }
     }
   ]
