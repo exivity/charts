@@ -29,7 +29,7 @@ spec:
             name: {{ include "exivity.fullname" $ -}}-licence-pub
         - name: licence-key
           secret:
-            secretName: {{ include "exivity.fullname" $ -}}-licence-key
+            secretName: {{ include "exivity.secretRefName" (dict "value" $.Values.licence "defaultName" (printf "%s-licence-key" (include "exivity.fullname" $)) "context" $) }}
         - name: config
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-etl-config

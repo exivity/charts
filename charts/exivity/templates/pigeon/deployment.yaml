@@ -57,7 +57,7 @@ spec:
               mountPath: /exivity/home/system/config
           envFrom:
             - secretRef:
-                name: {{ include "exivity.fullname" $ -}}-app-key
+                name: {{ include "exivity.secretRefName" (dict "value" $.Values.secret.appKey "defaultName" (printf "%s-app-key" (include "exivity.fullname" $)) "context" $) }}
           env:
             - name:  EXIVITY_BACKEND_LOG_LEVEL
               value: "{{ .Values.logLevel.backend }}"

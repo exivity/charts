@@ -92,7 +92,7 @@ spec:
             {{- end }}
           envFrom:
             - secretRef:
-                name: {{ include "exivity.fullname" $ -}}-app-key
+                name: {{ include "exivity.secretRefName" (dict "value" $.Values.secret.appKey "defaultName" (printf "%s-app-key" (include "exivity.fullname" $)) "context" $) }}
           env:
             - name:  RUN_DELAY
               value: "10"
