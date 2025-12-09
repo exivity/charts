@@ -10,17 +10,9 @@ data:
     #!/bin/sh
     set -e
     
-    # Export all config values from mounted configmap and secret files
-    export DB_HOST=$(cat /config/postgres/POSTGRES_HOST)
-    export DB_PORT=$(cat /config/postgres/POSTGRES_PORT)
-    export DB_SSLMODE=$(cat /config/postgres/POSTGRES_SSLMODE)
-    export DB_NAME=$(cat /config/postgres/POSTGRES_DB)
-    export DB_USER=$(cat /config/postgres/POSTGRES_USER)
+    # Export secret values from mounted secret files
+    export DB_USER=$(cat /secrets/postgres/POSTGRES_USER)
     export DB_PASSWORD=$(cat /secrets/postgres/POSTGRES_PASSWORD)
-    export MQ_HOST=$(cat /config/rabbitmq/RABBITMQ_HOST)
-    export MQ_PORT=$(cat /config/rabbitmq/RABBITMQ_PORT)
-    export MQ_SECURE=$(cat /config/rabbitmq/RABBITMQ_SECURE)
-    export MQ_VHOST=$(cat /config/rabbitmq/RABBITMQ_VHOST)
     export MQ_USER=$(cat /secrets/rabbitmq/RABBITMQ_USERNAME)
     export MQ_PASSWORD=$(cat /secrets/rabbitmq/RABBITMQ_PASSWORD)
     
@@ -114,20 +106,12 @@ data:
     #!/bin/sh
     set -e
     
-    # Export all config values from mounted configmap and secret files
-    export DB_HOST=$(cat /config/postgres/POSTGRES_HOST)
-    export DB_PORT=$(cat /config/postgres/POSTGRES_PORT)
-    export DB_SSLMODE=$(cat /config/postgres/POSTGRES_SSLMODE)
-    export DB_NAME=$(cat /config/postgres/POSTGRES_DB)
-    export DB_USER=$(cat /config/postgres/POSTGRES_USER)
+    # Export secret values from mounted secret files
+    export DB_USER=$(cat /secrets/postgres/POSTGRES_USER)
     export DB_PASSWORD=$(cat /secrets/postgres/POSTGRES_PASSWORD)
-    export MQ_HOST=$(cat /config/rabbitmq/RABBITMQ_HOST)
-    export MQ_PORT=$(cat /config/rabbitmq/RABBITMQ_PORT)
-    export MQ_SECURE=$(cat /config/rabbitmq/RABBITMQ_SECURE)
-    export MQ_VHOST=$(cat /config/rabbitmq/RABBITMQ_VHOST)
     export MQ_USER=$(cat /secrets/rabbitmq/RABBITMQ_USERNAME)
     export MQ_PASSWORD=$(cat /secrets/rabbitmq/RABBITMQ_PASSWORD)
-    
+ 
     # Build pigeon config from exported env vars
     jq -n \
       --arg db_host "$DB_HOST" \
