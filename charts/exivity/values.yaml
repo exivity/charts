@@ -23,7 +23,8 @@ ingress:
   # Example values: '10.0.0.1', '10.244.0.0/16', '127.0.0.1, 10.244.0.0/16', or '*'.
   trustedProxy: ""
 
-  annotations: {}
+  annotations:
+    {}
     # Example annotations for ingress behavior:
     # kubernetes.io/ingress.allow-http:         "false"
     # nginx.ingress.kubernetes.io/ssl-redirect: "true"
@@ -167,6 +168,12 @@ rabbitmq:
   port: 5672 # Port number on which the external RabbitMQ server is accessible.
   vhost: "" # Virtual host for RabbitMQ, if applicable.
   secure: false # Indicates if the connection to RabbitMQ should be secured (true/false). Set to true to enable TLS for RabbitMQ communication.
+
+configGenerator:
+  registry: ghcr.io
+  repository: exivity/jq
+  tag: "sha-9d8fe68"
+  pullPolicy: IfNotPresent
 
 global:
   # Global security context applied to all services unless overridden per service.
@@ -607,7 +614,8 @@ service:
 
     # CA certificates configuration section. Add CA certificates that your service uses here.
     # Each certificate should be listed as a key-value pair, where the key is a unique identifier.
-    caCertificates: {}
+    caCertificates:
+      {}
       # Example placeholders for CA certificates. Replace with your actual certificate data.
       # rootCA.pem: |
       #   -----BEGIN CERTIFICATE-----

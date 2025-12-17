@@ -8,6 +8,7 @@
     "nameOverride",
     "licence",
     "secret",
+    "configGenerator",
     "ingress",
     "storage",
     "postgresql",
@@ -57,6 +58,46 @@
         {
           "appKey": "",
           "jwtSecret": ""
+        }
+      ]
+    },
+    "configGenerator": {
+      "type": "object",
+      "default": {},
+      "title": "The configGenerator Schema",
+      "required": ["registry", "repository", "tag", "pullPolicy"],
+      "properties": {
+        "registry": {
+          "type": "string",
+          "default": "ghcr.io",
+          "title": "The registry Schema",
+          "examples": ["ghcr.io"]
+        },
+        "repository": {
+          "type": "string",
+          "default": "exivity/jq",
+          "title": "The repository Schema",
+          "examples": ["exivity/jq"]
+        },
+        "tag": {
+          "type": "string",
+          "default": "",
+          "title": "The tag Schema",
+          "examples": ["sha-9d8fe68"]
+        },
+        "pullPolicy": {
+          "type": "string",
+          "default": "IfNotPresent",
+          "title": "The pullPolicy Schema",
+          "examples": ["IfNotPresent", "Always", "Never"]
+        }
+      },
+      "examples": [
+        {
+          "registry": "ghcr.io",
+          "repository": "exivity/jq",
+          "tag": "sha-9d8fe68",
+          "pullPolicy": "IfNotPresent"
         }
       ]
     },
