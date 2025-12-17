@@ -37,8 +37,8 @@ Shared volume mounts for config generation
             "driver": "postgres",
             "parameters": {
               "host": "{{ .root.Values.postgresql.host | default (printf "%s-postgresql" (include "exivity.fullname" .root)) }}",
-              "port": {{ .root.Values.postgresql.port | default 5432 }},
-              "sslmode": "{{ .root.Values.postgresql.sslmode | default "disable" }}",
+              "port": {{ .root.Values.postgresql.port }},
+              "sslmode": "{{ .root.Values.postgresql.sslmode }}",
               "dbname": "{{ .root.Values.postgresql.global.postgresql.auth.database }}",
               "user": $db_user,
               "password": $db_password,
@@ -48,12 +48,12 @@ Shared volume mounts for config generation
           "mq": {
             "servers": [{
               "host": "{{ if .root.Values.rabbitmq.host }}{{ .root.Values.rabbitmq.host }}{{ else if .root.Values.rabbitmq.nameOverride }}{{ printf "%s-%s" (include "exivity.fullname" .root) .root.Values.rabbitmq.nameOverride }}{{ else }}{{ printf "%s-rabbitmq" (include "exivity.fullname" .root) }}{{ end }}",
-              "port": {{ .root.Values.rabbitmq.port | default 5672 }},
-              "secure": {{ .root.Values.rabbitmq.secure | default false }}
+              "port": {{ .root.Values.rabbitmq.port }},
+              "secure": {{ .root.Values.rabbitmq.secure }}
             }],
             "user": $mq_user,
             "password": $mq_password,
-            "vhost": "{{ .root.Values.rabbitmq.vhost | default "/" }}",
+            "vhost": "{{ .root.Values.rabbitmq.vhost }}",
             "redialPeriod": 5
           },
           "chronos": {
@@ -125,8 +125,8 @@ Shared volume mounts for config generation
             "driver": "postgres",
             "parameters": {
               "host": "{{ .Values.postgresql.host | default (printf "%s-postgresql" (include "exivity.fullname" .)) }}",
-              "port": {{ .Values.postgresql.port | default 5432 }},
-              "sslmode": "{{ .Values.postgresql.sslmode | default "disable" }}",
+              "port": {{ .Values.postgresql.port }},
+              "sslmode": "{{ .Values.postgresql.sslmode }}",
               "dbname": "{{ .Values.postgresql.global.postgresql.auth.database }}",
               "user": $db_user,
               "password": $db_password,
@@ -136,12 +136,12 @@ Shared volume mounts for config generation
           "mq": {
             "servers": [{
               "host": "{{ if .Values.rabbitmq.host }}{{ .Values.rabbitmq.host }}{{ else if .Values.rabbitmq.nameOverride }}{{ printf "%s-%s" (include "exivity.fullname" .) .Values.rabbitmq.nameOverride }}{{ else }}{{ printf "%s-rabbitmq" (include "exivity.fullname" .) }}{{ end }}",
-              "port": {{ .Values.rabbitmq.port | default 5672 }},
-              "secure": {{ .Values.rabbitmq.secure | default false }}
+              "port": {{ .Values.rabbitmq.port }},
+              "secure": {{ .Values.rabbitmq.secure }}
             }],
             "user": $mq_user,
             "password": $mq_password,
-            "vhost": "{{ .Values.rabbitmq.vhost | default "/" }}",
+            "vhost": "{{ .Values.rabbitmq.vhost }}",
             "redialPeriod": 5
           },
           "merlin": {

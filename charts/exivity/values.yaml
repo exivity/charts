@@ -128,7 +128,7 @@ postgresql:
   # Configuration for using an external PostgreSQL database.
   host: "" # Hostname of the external database server, if applicable.
   port: 5432 # Port number on which the external database server is accessible.
-  sslmode: "" # SSL mode for database connection: 'disable', 'require', 'verify-ca', or 'verify-full'.
+  sslmode: "disable" # SSL mode for database connection: 'disable', 'require', 'verify-ca', or 'verify-full'.
 
   # Example of customizing the embedded Bitnami PostgreSQL chart for larger deployments.
   # For more options and details, refer to the Bitnami PostgreSQL Helm chart: https://bitnami.com/stack/postgresql/helm
@@ -166,7 +166,7 @@ rabbitmq:
   # Configuration for using an external RabbitMQ server.
   host: "" # Hostname of the external RabbitMQ server, if applicable.
   port: 5672 # Port number on which the external RabbitMQ server is accessible.
-  vhost: "" # Virtual host for RabbitMQ, if applicable.
+  vhost: "/" # Virtual host for RabbitMQ, if applicable.
   secure: false # Indicates if the connection to RabbitMQ should be secured (true/false). Set to true to enable TLS for RabbitMQ communication.
 
 configGenerator:

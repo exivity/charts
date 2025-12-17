@@ -361,9 +361,9 @@
         },
         "sslmode": {
           "type": "string",
-          "default": "",
+          "default": "disable",
           "title": "The sslmode Schema",
-          "examples": [""]
+          "examples": ["disable"]
         }
       },
       "examples": [
@@ -464,9 +464,9 @@
         },
         "vhost": {
           "type": "string",
-          "default": "",
+          "default": "/",
           "title": "The vhost Schema",
-          "examples": [""]
+          "examples": ["/"]
         },
         "secure": {
           "type": "boolean",
