@@ -1,22 +1,3 @@
-{{/*
-Shared volume mounts for config generation
-*/}}
-{{- define "exivity.configGeneratorVolumeMounts" -}}
-- name: config-generated
-  mountPath: /exivity/home/system
-- name: config-generator-script
-  mountPath: /scripts
-  readOnly: true
-- name: postgres-secret
-  mountPath: /secrets/postgres
-  readOnly: true
-- name: rabbitmq-secret
-  mountPath: /secrets/rabbitmq
-  readOnly: true
-{{- end }}
-
-------------------------------------
-
 {{- define "exivity.initConfigContainer" -}}
 {{- $appname := .appname -}}
 {{- $path := .path -}}
@@ -203,14 +184,14 @@ Shared volume mounts for config generation
 
 ------------------------------------
 
-{{- define "exivity.configGeneratedVolume" -}}
+{{- define "exivity.configVolume" -}}
 - name: config-generated
   emptyDir: {}
 {{- end }}
 
 ------------------------------------
 
-{{- define "exivity.configGeneratedVolumeMount" -}}
+{{- define "exivity.configVolumeMount" -}}
 - name: config-generated
   mountPath: /exivity/home/system/config.json
   subPath: config.json

@@ -20,7 +20,7 @@ spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "horizon") | indent 8 }}
       volumes:
-        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
+        {{- include "exivity.configVolume" . | nindent 8 }}
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-horizon-log
@@ -40,7 +40,7 @@ spec:
             - name:  ENABLE_PROMETHEUS
               value: "{{ .Values.prometheus.metricServer.enabled }}"
           volumeMounts:
-            {{- include "exivity.configGeneratedVolumeMount" . | nindent 12 }}
+            {{- include "exivity.configVolumeMount" . | nindent 12 }}
             - name:      log
               mountPath: /exivity/home/log/horizon
             - name:      log

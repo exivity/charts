@@ -20,7 +20,7 @@ spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "use") | indent 8 }}
       volumes:
-        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
+        {{- include "exivity.configVolume" . | nindent 8 }}
         - name: etl-config
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-etl-config
@@ -73,7 +73,7 @@ spec:
           resources:
             {{- toYaml .Values.service.use.resources | nindent 12 }}
           volumeMounts:
-            {{- include "exivity.configGeneratedVolumeMount" . | nindent 12 }}
+            {{- include "exivity.configVolumeMount" . | nindent 12 }}
             - name:      etl-config
               mountPath: /exivity/home/system/config
             - name:      exported

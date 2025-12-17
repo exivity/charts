@@ -23,7 +23,7 @@ spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "edify") | indent 8 }}
       volumes:
-        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
+        {{- include "exivity.configVolume" . | nindent 8 }}
         - name: licence-pub
           configMap:
             name: {{ include "exivity.fullname" $ -}}-licence-pub
@@ -64,7 +64,7 @@ spec:
           volumeMounts:
             - name:      config
               mountPath: /exivity/home/system/config
-            {{- include "exivity.configGeneratedVolumeMount" . | nindent 12 }}
+            {{- include "exivity.configVolumeMount" . | nindent 12 }}
             - name:      licence-pub
               mountPath: /exivity/home/system/license.pub
               subPath:   license.pub

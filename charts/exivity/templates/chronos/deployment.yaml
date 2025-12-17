@@ -20,7 +20,7 @@ spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "chronos") | indent 8 }}
       volumes:
-        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
+        {{- include "exivity.configVolume" . | nindent 8 }}
         - name: config
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-chronos-config
@@ -45,7 +45,7 @@ spec:
           volumeMounts:
             - name:      config
               mountPath: /exivity/home/system/config
-            {{- include "exivity.configGeneratedVolumeMount" . | nindent 12 }}
+            {{- include "exivity.configVolumeMount" . | nindent 12 }}
             - name:      log
               mountPath: /exivity/home/log/chronos
           {{- include "exivity.probes" $ | indent 10}}

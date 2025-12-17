@@ -20,7 +20,7 @@ spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "griffon") | indent 8 }}
       volumes:
-        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
+        {{- include "exivity.configVolume" . | nindent 8 }}
         - name: config
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-griffon-config
@@ -43,7 +43,7 @@ spec:
             - name:  ENABLE_PROMETHEUS
               value: "{{ .Values.prometheus.metricServer.enabled }}"
           volumeMounts:
-            {{- include "exivity.configGeneratedVolumeMount" . | nindent 12 }}
+            {{- include "exivity.configVolumeMount" . | nindent 12 }}
             - name:      config
               mountPath: /exivity/home/system/config
             - name:      log

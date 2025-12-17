@@ -20,7 +20,7 @@ spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "pigeon") | indent 8 }}
       volumes:
-        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
+        {{- include "exivity.configVolume" . | nindent 8 }}
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-pigeon-log
@@ -44,7 +44,7 @@ spec:
           resources:
             {{- toYaml .Values.service.pigeon.resources | nindent 12 }}
           volumeMounts:
-            {{- include "exivity.configGeneratedVolumeMount" . | nindent 12 }}
+            {{- include "exivity.configVolumeMount" . | nindent 12 }}
             - name:      log
               mountPath: /exivity/home/log/pigeon
             - name:      log
