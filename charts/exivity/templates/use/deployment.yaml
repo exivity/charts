@@ -13,6 +13,9 @@ spec:
       {{- include "exivity.matchLabels" $ | indent 6 }}
   template:
     metadata:
+      annotations:
+        checksum/postgres-secret: {{ include (print $.Template.BasePath "/postgres-secret.yaml") . | sha256sum }}
+        checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/component: use
         {{- include "exivity.labels" $ | indent 8 }}
@@ -45,7 +48,7 @@ spec:
             secretName: {{ include "exivity.fullname" $ -}}-use-certificates
       {{- end }}
       initContainers:
-        {{- include "exivity.initConfigContainer" (dict "root" . "appname" "use" "path" "/exivity/program/bin/use" "queue" "EXTRACT") | nindent 8 }}
+        {{- include "exivity.initConfigContainer" (set $ "data" (dict "appname" "use" "path" "/exivity/program/bin/use" "queue" "EXTRACT")) | nindent 8 }}
         {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "use" "volumes" (list "etl-config" "exported" "extracted" "import" "log")) | nindent 8 }}
       {{- if gt (len (default "" .Values.service.use.caCertificates)) 0 }}
         - name: install-ca-cert

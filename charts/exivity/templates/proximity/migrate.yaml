@@ -19,6 +19,8 @@ spec:
         {{- include "exivity.labels" . | indent 8 }}
       annotations:
         checksum/{{- include "exivity.fullname" $ -}}-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/postgres-secret: {{ include (print $.Template.BasePath "/postgres-secret.yaml") . | sha256sum }}
+        checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "proximityMigrate") | indent 8 }}
@@ -28,7 +30,7 @@ spec:
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-etl-config
       initContainers:
-        {{- include "exivity.initConfigContainer" (dict "root" . "appname" "" "path" "" "queue" "") | nindent 8 }}
+        {{- include "exivity.initConfigContainer" (set $ "data" (dict "appname" "" "path" "" "queue" "")) | nindent 8 }}
       containers:
         - name: proximity-migration
           image: {{ include "exivity.image" (set $ "name" "proximityMigrate") }}

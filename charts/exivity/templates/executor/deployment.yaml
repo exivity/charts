@@ -13,6 +13,9 @@ spec:
       {{- include "exivity.matchLabels" $ | indent 6 }}
   template:
     metadata:
+      annotations:
+        checksum/postgres-secret: {{ include (print $.Template.BasePath "/postgres-secret.yaml") . | sha256sum }}
+        checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/component: executor
         {{- include "exivity.labels" $ | indent 8 }}
@@ -41,7 +44,7 @@ spec:
             claimName: {{ include "exivity.fullname" $ -}}-executor-log
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
       initContainers:
-        {{- include "exivity.initConfigContainer" (dict "root" . "appname" "executor" "path" "${program}" "queue" "EXECUTE") | nindent 8 }}
+        {{- include "exivity.initConfigContainer" (set $ "data" (dict "appname" "executor" "path" "${program}" "queue" "EXECUTE")) | nindent 8 }}
         {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "executor" "volumes" (list "config" "import" "report" "exported" "extracted" "log")) | nindent 8 }}
       containers:
         - name:            executor

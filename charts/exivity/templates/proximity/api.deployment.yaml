@@ -22,6 +22,8 @@ spec:
         checksum/{{- include "exivity.fullname" $ -}}-lock: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-proximity-api-env: {{ include (print $.Template.BasePath "/proximity/api.env.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/postgres-secret: {{ include (print $.Template.BasePath "/postgres-secret.yaml") . | sha256sum }}
+        checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         {{- if .Values.ldap.tlsCacert }}
         checksum/{{- include "exivity.fullname" $ -}}-ldap-tls-cert: {{ include (print $.Template.BasePath "/proximity/api.secret.yaml") . | sha256sum }}
         {{- end }}
@@ -86,7 +88,7 @@ spec:
         {{- end }}
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
       initContainers:
-        {{- include "exivity.initConfigContainer" (dict "root" . "appname" "" "path" "" "queue" "") | nindent 8 }}
+        {{- include "exivity.initConfigContainer" (set $ "data" (dict "appname" "" "path" "" "queue" "")) | nindent 8 }}
         {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "proximityApi" "volumes" (list "log" "log-chronos" "log-edify" "log-griffon" "log-horizon" "log-pigeon" "log-transcript" "log-use" "config" "import" "report" "exported" "extracted")) | nindent 8 }}
       containers:
         - name: proximity-api

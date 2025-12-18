@@ -13,6 +13,9 @@ spec:
       {{- include "exivity.matchLabels" $ | indent 6 }}
   template:
     metadata:
+      annotations:
+        checksum/postgres-secret: {{ include (print $.Template.BasePath "/postgres-secret.yaml") . | sha256sum }}
+        checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/component: griffon
         {{- include "exivity.labels" $ | indent 8 }}
@@ -29,7 +32,7 @@ spec:
             claimName: {{ include "exivity.fullname" $ -}}-griffon-log
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
       initContainers:
-        {{- include "exivity.initConfigContainer" (dict "root" . "appname" "" "path" "" "queue" "") | nindent 8 }}
+        {{- include "exivity.initConfigContainer" (set $ "data" (dict "appname" "" "path" "" "queue" "")) | nindent 8 }}
         {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "griffon" "volumes" (list "config" "log")) | nindent 8 }}
       containers:
         - name:            griffon

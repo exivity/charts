@@ -13,6 +13,9 @@ spec:
       {{- include "exivity.matchLabels" $ | indent 6 }}
   template:
     metadata:
+      annotations:
+        checksum/postgres-secret: {{ include (print $.Template.BasePath "/postgres-secret.yaml") . | sha256sum }}
+        checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/component: transcript
         {{- include "exivity.labels" $ | indent 8 }}
@@ -41,7 +44,7 @@ spec:
             claimName: {{ include "exivity.fullname" $ -}}-report
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
       initContainers:
-        {{- include "exivity.initConfigContainer" (dict "root" . "appname" "transcript" "path" "/exivity/program/bin/transcript" "queue" "TRANSFORM") | nindent 8 }}
+        {{- include "exivity.initConfigContainer" (set $ "data" (dict "appname" "transcript" "path" "/exivity/program/bin/transcript" "queue" "TRANSFORM")) | nindent 8 }}
         {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "transcript" "volumes" (list "config" "exported" "extracted" "import" "log" "report")) | nindent 8 }}
       containers:
         - name:            transcript

@@ -15,6 +15,9 @@ spec:
   ttlSecondsAfterFinished: 300
   template:
     metadata:
+      annotations:
+        checksum/postgres-secret: {{ include (print $.Template.BasePath "/postgres-secret.yaml") . | sha256sum }}
+        checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/component: dummy-data
         {{- include "exivity.labels" $ | indent 8 }}
@@ -42,7 +45,7 @@ spec:
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-extracted
       initContainers:
-        {{- include "exivity.initConfigContainer" (dict "root" . "appname" "" "path" "" "queue" "") | nindent 8 }}
+        {{- include "exivity.initConfigContainer" (set $ "data" (dict "appname" "" "path" "" "queue" "")) | nindent 8 }}
       containers:
         - name:            dummy-data
           image:           {{ include "exivity.image" (set $ "name" "dummyData") }}

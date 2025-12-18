@@ -20,6 +20,8 @@ spec:
         checksum/{{- include "exivity.fullname" $ -}}-proximity-cli-env: {{ include (print $.Template.BasePath "/proximity/cli.env.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-config-logfiles: {{ include (print $.Template.BasePath "/logfiles-configmap.yaml") . | sha256sum }}
+        checksum/postgres-secret: {{ include (print $.Template.BasePath "/postgres-secret.yaml") . | sha256sum }}
+        checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "proximityCli") | indent 8 }}
@@ -45,7 +47,7 @@ spec:
             claimName: {{ include "exivity.fullname" $ -}}-exported
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
       initContainers:
-        {{- include "exivity.initConfigContainer" (dict "root" . "appname" "proximity-cli" "path" "/usr/bin/php" "queue" "PROXIMITY") | nindent 8 }}
+        {{- include "exivity.initConfigContainer" (set $ "data" (dict "appname" "proximity-cli" "path" "/usr/bin/php" "queue" "PROXIMITY")) | nindent 8 }}
         {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "proximityCli" "volumes" (list "log" "config" "import" "report" "extracted" "exported")) | nindent 8 }}
       containers:
         - name:            proximity-cli

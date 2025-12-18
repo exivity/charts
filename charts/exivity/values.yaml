@@ -169,12 +169,6 @@ rabbitmq:
   vhost: "/" # Virtual host for RabbitMQ, if applicable.
   secure: false # Indicates if the connection to RabbitMQ should be secured (true/false). Set to true to enable TLS for RabbitMQ communication.
 
-configGenerator:
-  registry: ghcr.io
-  repository: exivity/jq
-  tag: "sha-9d8fe68"
-  pullPolicy: IfNotPresent
-
 global:
   # Global security context applied to all services unless overridden per service.
   securityContext:
@@ -214,6 +208,13 @@ service:
   #   .dockerconfigjson: <base64-encoded-docker-config-json>
   #
   # Replace <base64-encoded-docker-config-json> with the base64-encoded JSON string that contains the registry authentication information.
+
+  # Configuration for the init container that generates config.json files
+  configGenerator:
+    registry: ""
+    repository: exivity/jq
+    tag: ""
+    pullPolicy: ""
 
   # Configuration for the 'glass' service, Exivity's front-end component.
   glass:

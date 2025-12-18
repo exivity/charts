@@ -13,6 +13,9 @@ spec:
       {{- include "exivity.matchLabels" $ | indent 6 }}
   template:
     metadata:
+      annotations:
+        checksum/postgres-secret: {{ include (print $.Template.BasePath "/postgres-secret.yaml") . | sha256sum }}
+        checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/component: pigeon
         {{- include "exivity.labels" $ | indent 8 }}
