@@ -587,7 +587,7 @@
               "type": "string",
               "default": "",
               "title": "The registry Schema",
-              "examples": [""]
+              "examples": ["docker.io"]
             },
             "repository": {
               "type": "string",
@@ -599,7 +599,7 @@
               "type": "string",
               "default": "",
               "title": "The tag Schema",
-              "examples": [""]
+              "examples": ["3.7.0"]
             },
             "pullPolicy": {
               "type": "string",

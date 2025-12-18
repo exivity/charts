@@ -3,8 +3,8 @@
 {{- $path := .data.path -}}
 {{- $queue := .data.queue -}}
 - name: generate-config
-  image: {{ $.Values.service.configGenerator.registry }}/{{ $.Values.service.configGenerator.repository }}:{{ $.Values.service.configGenerator.tag }}
-  imagePullPolicy: {{ $.Values.service.configGenerator.pullPolicy }}
+  image: {{ $.Values.service.configGenerator.registry | default $.Values.service.registry }}/{{ $.Values.service.configGenerator.repository }}:{{ $.Values.service.configGenerator.tag | default $.Values.service.tag | default (printf "exivity-%s" $.Chart.Version) }}
+  imagePullPolicy: {{ $.Values.service.configGenerator.pullPolicy | default $.Values.service.pullPolicy }}
   command: ["/bin/sh", "-c"]
   args:
     - |
@@ -91,8 +91,8 @@
 
 {{- define "exivity.initPigeonConfigContainer" -}}
 - name: generate-config
-  image: {{ .Values.service.configGenerator.registry }}/{{ .Values.service.configGenerator.repository }}:{{ .Values.service.configGenerator.tag }}
-  imagePullPolicy: {{ .Values.service.configGenerator.pullPolicy }}
+  image: {{ .Values.service.configGenerator.registry | default .Values.service.registry }}/{{ .Values.service.configGenerator.repository }}:{{ .Values.service.configGenerator.tag | default .Values.service.tag | default (printf "exivity-%s" .Chart.Version) }}
+  imagePullPolicy: {{ .Values.service.configGenerator.pullPolicy | default .Values.service.pullPolicy }}
   command: ["/bin/sh", "-c"]
   args:
     - |
