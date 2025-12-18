@@ -51,7 +51,7 @@ spec:
             {{- include "exivity.configVolumeMount" . | nindent 12 }}
             - name:      log
               mountPath: /exivity/home/log/chronos
-          {{ include "exivity.probes" $ | indent 10 }}
+          {{- include "exivity.probes" $ | nindent 10 }}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
         {{- range $name := .}}
