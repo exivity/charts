@@ -50,26 +50,6 @@ spec:
               value:  "{{ .Values.logLevel.backend }}"
             - name:  ENABLE_PROMETHEUS
               value: "{{ .Values.prometheus.metricServer.enabled }}"
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "exivity.fullname" $ }}-postgres-secret
-                  key: POSTGRES_USER
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "exivity.fullname" $ }}-postgres-secret
-                  key: POSTGRES_PASSWORD
-            - name: MQ_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "exivity.fullname" $ }}-rabbitmq-secret
-                  key: RABBITMQ_USERNAME
-            - name: MQ_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "exivity.fullname" $ }}-rabbitmq-secret
-                  key: RABBITMQ_PASSWORD
           volumeMounts:
             - name:      config
               mountPath: /exivity/home/system/config
