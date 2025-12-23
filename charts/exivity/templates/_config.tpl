@@ -26,8 +26,8 @@ data:
           "port":            {{ $.Values.postgresql.port | default 5432 }},
           "sslmode":         {{ $.Values.postgresql.sslmode | default "disable" | quote }},
           "dbname":          {{ $.Values.postgresql.global.postgresql.auth.database | quote }},
-          "user":            {{ $.Values.postgresql.global.postgresql.auth.username | quote }},
-          "password":        {{ $.Values.postgresql.global.postgresql.auth.password | quote }},
+          "user":            "{{ "{{" }}DB_USER{{ "}}" }}",
+          "password":        "{{ "{{" }}DB_PASSWORD{{ "}}" }}",
           "connect_timeout": 10
         }
       },
@@ -39,8 +39,8 @@ data:
                   "secure": {{ $.Values.rabbitmq.secure | default false }}
               }
           ],
-          "user":         {{ $.Values.rabbitmq.auth.username | quote }},
-          "password":     {{ $.Values.rabbitmq.auth.password | quote }},
+          "user":         "{{ "{{" }}MQ_USER{{ "}}" }}",
+          "password":     "{{ "{{" }}MQ_PASSWORD{{ "}}" }}",
           "vhost":        {{ $.Values.rabbitmq.vhost | default "/" | quote }},
           "redialPeriod": 5
       },
