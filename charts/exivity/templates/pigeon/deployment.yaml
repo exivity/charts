@@ -14,6 +14,7 @@ spec:
   template:
     metadata:
       annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/pigeon/configmap.yaml") . | sha256sum }}
         checksum/postgres-secret: {{ include (print $.Template.BasePath "/postgres-secret.yaml") . | sha256sum }}
         checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
       labels:
@@ -23,7 +24,8 @@ spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "pigeon") | indent 8 }}
       volumes:
-        {{- include "exivity.configVolume" . | nindent 8 }}
+        {{- include "exivity.configTemplateVolume" (dict "configMapName" (printf "%s-config-pigeon" (include "exivity.fullname" $))) | nindent 8 }}
+        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-pigeon-log
@@ -38,7 +40,7 @@ spec:
             claimName: {{ include "exivity.fullname" $ -}}-etl-config
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
       initContainers:
-        {{- include "exivity.initPigeonConfigContainer" . | nindent 8 }}
+        {{- include "exivity.initConfigInjector" . | nindent 8 }}
         {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "pigeon" "volumes" (list "log" "exported" "import" "config-volume")) | nindent 8 }}
       containers:
         - name:            pigeon
@@ -66,6 +68,26 @@ spec:
               value: "{{ .Values.logLevel.backend }}"
             - name:  ENABLE_PROMETHEUS
               value: "{{ .Values.prometheus.metricServer.enabled }}"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-postgres-secret
+                  key: POSTGRES_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: MQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: MQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
           {{- include "exivity.probes" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:

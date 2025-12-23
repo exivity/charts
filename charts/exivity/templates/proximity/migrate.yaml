@@ -25,12 +25,13 @@ spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "proximityMigrate") | indent 8 }}
       volumes:
-        {{- include "exivity.configVolume" . | nindent 8 }}
-        - name: config
+        {{- include "exivity.configTemplateVolume" (dict "configMapName" (printf "%s-config-shared" (include "exivity.fullname" $))) | nindent 8 }}
+        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
+        - name: etl-config
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-etl-config
       initContainers:
-        {{- include "exivity.initConfigContainer" (set $ "data" (dict "appname" "" "path" "" "queue" "")) | nindent 8 }}
+        {{- include "exivity.initConfigInjector" . | nindent 8 }}
       containers:
         - name: proximity-migration
           image: {{ include "exivity.image" (set $ "name" "proximityMigrate") }}
@@ -38,13 +39,34 @@ spec:
           resources:
             {{- toYaml .Values.service.proximityMigrate.resources | nindent 12 }}
           volumeMounts:
-            {{- include "exivity.configVolumeMount" . | nindent 12 }}
-            - name:      config
+            - name:      etl-config
               mountPath: /exivity/home/system/config
+            {{- include "exivity.configVolumeMount" . | nindent 12 }}
           command: [php]
           args:
             - /app/artisan
             - exivity:migrate-db
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-postgres-secret
+                  key: POSTGRES_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: MQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: MQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
           envFrom:
             - secretRef:
                 name: {{ include "exivity.fullname" . }}-app-key

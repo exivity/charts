@@ -25,7 +25,6 @@ spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "dummyData") | indent 8 }}
       volumes:
-        {{- include "exivity.configVolume" . | nindent 8 }}
         - name: preset-file
           configMap:
             name: {{ include "exivity.fullname" $ -}}-dummy-data-preset
@@ -44,8 +43,6 @@ spec:
         - name: extracted
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-extracted
-      initContainers:
-        {{- include "exivity.initConfigContainer" (set $ "data" (dict "appname" "" "path" "" "queue" "")) | nindent 8 }}
       containers:
         - name:            dummy-data
           image:           {{ include "exivity.image" (set $ "name" "dummyData") }}
@@ -57,10 +54,29 @@ spec:
               value: /exivity/home/system/preset/preset.yaml
             - name: EXIVITY_HOME_PATH
               value: /exivity/home
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-postgres-secret
+                  key: POSTGRES_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: MQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: MQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
           resources:
             {{- toYaml .Values.service.dummyData.resources | nindent 12 }}
           volumeMounts:
-            {{- include "exivity.configVolumeMount" . | nindent 12 }}
             - name:      config
               mountPath: /exivity/home/system/config
             - name:      exported

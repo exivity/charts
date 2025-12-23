@@ -17,6 +17,7 @@ spec:
         app.kubernetes.io/component: proximity-api
         {{- include "exivity.labels" $ | indent 8 }}
       annotations:
+        checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-licence-pub: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-licence-key: {{ include (print $.Template.BasePath "/proximity/api.secret.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-lock: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
@@ -31,7 +32,11 @@ spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "proximityApi") | indent 8 }}
       volumes:
-        {{- include "exivity.configVolume" . | nindent 8 }}
+        {{- include "exivity.configTemplateVolume" (dict "configMapName" (printf "%s-config-shared" (include "exivity.fullname" $))) | nindent 8 }}
+        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
+        - name: config-shared
+          configMap:
+            name: {{ include "exivity.fullname" $ -}}-config-shared
         - name: licence-pub
           configMap:
             name: {{ include "exivity.fullname" $ -}}-licence-pub
@@ -88,7 +93,7 @@ spec:
         {{- end }}
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
       initContainers:
-        {{- include "exivity.initConfigContainer" (set $ "data" (dict "appname" "" "path" "" "queue" "")) | nindent 8 }}
+        {{- include "exivity.initConfigInjector" . | nindent 8 }}
         {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "proximityApi" "volumes" (list "log" "log-chronos" "log-edify" "log-griffon" "log-horizon" "log-pigeon" "log-transcript" "log-use" "config" "import" "report" "exported" "extracted")) | nindent 8 }}
       containers:
         - name: proximity-api
@@ -148,6 +153,26 @@ spec:
                 secretKeyRef:
                   name: {{ include "exivity.fullname" $ -}}-licence-key
                   key:                                     license.key
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-postgres-secret
+                  key: POSTGRES_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: MQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: MQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
           envFrom:
             - secretRef:
                 name: {{ include "exivity.fullname" $ -}}-app-key

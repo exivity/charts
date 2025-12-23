@@ -19,13 +19,15 @@ spec:
       annotations:
         checksum/{{- include "exivity.fullname" $ -}}-licence-pub: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-licence-key: {{ include (print $.Template.BasePath "/proximity/api.secret.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/edify/configmap.yaml") . | sha256sum }}
         checksum/postgres-secret: {{ include (print $.Template.BasePath "/postgres-secret.yaml") . | sha256sum }}
         checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "edify") | indent 8 }}
       volumes:
-        {{- include "exivity.configVolume" . | nindent 8 }}
+        {{- include "exivity.configTemplateVolume" (dict "configMapName" (printf "%s-config-edify" (include "exivity.fullname" $))) | nindent 8 }}
+        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
         - name: licence-pub
           configMap:
             name: {{ include "exivity.fullname" $ -}}-licence-pub
@@ -46,8 +48,8 @@ spec:
             claimName: {{ include "exivity.fullname" $ -}}-report
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
       initContainers:
-        {{- include "exivity.initConfigContainer" (set $ "data" (dict "appname" "edify" "path" "/exivity/program/bin/edify" "queue" "REPORT")) | nindent 8 }}
-        {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "edify" "volumes" (list "config" "extracted" "log" "report")) | nindent 8 }}
+        {{- include "exivity.initConfigInjector" . | nindent 8 }}
+        {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "edify" "volumes" (list "config")) | nindent 8 }}
       containers:
         - name:            edify
           image: {{ include "exivity.image" (set $ "name" "edify") }}
@@ -59,6 +61,26 @@ spec:
               value: "{{ .Values.logLevel.backend }}"
             - name:  ENABLE_PROMETHEUS
               value: "{{ .Values.prometheus.metricServer.enabled }}"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-postgres-secret
+                  key: POSTGRES_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: MQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: MQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
             {{- if .Values.service.edify.tmpPath }}
             - name: EXIVITY_EDIFY_TMP_PATH
               value: "{{ .Values.service.edify.tmpPath }}"

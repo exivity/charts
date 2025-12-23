@@ -14,6 +14,7 @@ spec:
   template:
     metadata:
       annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/use/configmap.yaml") . | sha256sum }}
         checksum/postgres-secret: {{ include (print $.Template.BasePath "/postgres-secret.yaml") . | sha256sum }}
         checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
       labels:
@@ -23,7 +24,11 @@ spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "use") | indent 8 }}
       volumes:
-        {{- include "exivity.configVolume" . | nindent 8 }}
+        {{- include "exivity.configTemplateVolume" (dict "configMapName" (printf "%s-config-use" (include "exivity.fullname" $))) | nindent 8 }}
+        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
+        - name: config-file
+          configMap:
+            name: {{ include "exivity.fullname" $ -}}-config-use
         - name: etl-config
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-etl-config
@@ -47,8 +52,9 @@ spec:
           secret:
             secretName: {{ include "exivity.fullname" $ -}}-use-certificates
       {{- end }}
+      {{- include "exivity.initPermissions" (dict "root" . "component" "use" "volumes" (list "etl-config" "exported" "extracted" "import" "log")) | nindent 6 }}
       initContainers:
-        {{- include "exivity.initConfigContainer" (set $ "data" (dict "appname" "use" "path" "/exivity/program/bin/use" "queue" "EXTRACT")) | nindent 8 }}
+        {{- include "exivity.initConfigInjector" . | nindent 8 }}
         {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "use" "volumes" (list "etl-config" "exported" "extracted" "import" "log")) | nindent 8 }}
       {{- if gt (len (default "" .Values.service.use.caCertificates)) 0 }}
         - name: install-ca-cert
@@ -103,6 +109,26 @@ spec:
               value: "{{ .Values.logLevel.backend }}"
             - name:  ENABLE_PROMETHEUS
               value: "{{ .Values.prometheus.metricServer.enabled }}"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-postgres-secret
+                  key: POSTGRES_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: MQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: MQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "exivity.fullname" $ }}-rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
           {{- include "exivity.probes" $ | indent 10}}
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:
