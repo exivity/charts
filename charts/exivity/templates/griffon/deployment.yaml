@@ -26,9 +26,6 @@ spec:
       volumes:
         {{- include "exivity.configTemplateVolume" (dict "configMapName" (printf "%s-config-shared" (include "exivity.fullname" $))) | nindent 8 }}
         {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
-        - name: config-file
-          configMap:
-            name: {{ include "exivity.fullname" $ -}}-config-shared
         - name: config
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-griffon-config

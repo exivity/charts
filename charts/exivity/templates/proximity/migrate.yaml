@@ -27,7 +27,7 @@ spec:
       volumes:
         {{- include "exivity.configTemplateVolume" (dict "configMapName" (printf "%s-config-shared" (include "exivity.fullname" $))) | nindent 8 }}
         {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
-        - name: etl-config
+        - name: config
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-etl-config
       initContainers:
@@ -39,7 +39,7 @@ spec:
           resources:
             {{- toYaml .Values.service.proximityMigrate.resources | nindent 12 }}
           volumeMounts:
-            - name:      etl-config
+            - name:      config
               mountPath: /exivity/home/system/config
             {{- include "exivity.configVolumeMount" . | nindent 12 }}
           command: [php]

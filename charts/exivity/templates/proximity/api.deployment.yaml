@@ -34,9 +34,6 @@ spec:
       volumes:
         {{- include "exivity.configTemplateVolume" (dict "configMapName" (printf "%s-config-shared" (include "exivity.fullname" $))) | nindent 8 }}
         {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
-        - name: config-shared
-          configMap:
-            name: {{ include "exivity.fullname" $ -}}-config-shared
         - name: licence-pub
           configMap:
             name: {{ include "exivity.fullname" $ -}}-licence-pub
