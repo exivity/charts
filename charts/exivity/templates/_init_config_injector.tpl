@@ -13,11 +13,15 @@ Can be used by all deployments
       set -e
       echo "Injecting secrets into config.json..."
       
-      sed -e "s|{{ "{{" }}DB_USER{{ "}}" }}|$DB_USER|g" \
-          -e "s|{{ "{{" }}DB_PASSWORD{{ "}}" }}|$DB_PASSWORD|g" \
-          -e "s|{{ "{{" }}MQ_USER{{ "}}" }}|$MQ_USER|g" \
-          -e "s|{{ "{{" }}MQ_PASSWORD{{ "}}" }}|$MQ_PASSWORD|g" \
-          /config-template/config.json > /config/config.json
+      jq --arg db_user "$DB_USER" \
+         --arg db_password "$DB_PASSWORD" \
+         --arg mq_user "$MQ_USER" \
+         --arg mq_password "$MQ_PASSWORD" \
+         '.db.parameters.user = $db_user | 
+          .db.parameters.password = $db_password | 
+          .mq.user = $mq_user | 
+          .mq.password = $mq_password' \
+         /config-template/config.json > /config/config.json
       
       echo "Config generated successfully"
   env:

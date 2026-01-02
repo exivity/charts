@@ -52,7 +52,6 @@ spec:
           secret:
             secretName: {{ include "exivity.fullname" $ -}}-use-certificates
       {{- end }}
-      {{- include "exivity.initPermissions" (dict "root" . "component" "use" "volumes" (list "etl-config" "exported" "extracted" "import" "log")) | nindent 6 }}
       initContainers:
         {{- include "exivity.initConfigInjector" . | nindent 8 }}
         {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "use" "volumes" (list "etl-config" "exported" "extracted" "import" "log")) | nindent 8 }}

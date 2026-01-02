@@ -50,7 +50,7 @@ spec:
           volumeMounts:
             - name:      config
               mountPath: /exivity/home/system/config
-            {{- include "exivity.configVolumeMount" . | indent 12 }}
+            {{- include "exivity.configVolumeMount" . | nindent 12 }}
             - name:      log
               mountPath: /exivity/home/log/chronos
           {{- include "exivity.probes" $ | nindent 10 }}
