@@ -13,18 +13,19 @@ spec:
       {{- include "exivity.matchLabels" $ | indent 6 }}
   template:
     metadata:
+      annotations:
+        checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/postgres-secret: {{ include (print $.Template.BasePath "/postgres-secret.yaml") . | sha256sum }}
+        checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/rabbitmq-secret.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/component: griffon
         {{- include "exivity.labels" $ | indent 8 }}
-      annotations:
-        checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "griffon") | indent 8 }}
       volumes:
-        - name: config-file
-          configMap:
-            name: {{ include "exivity.fullname" $ -}}-config-shared
+        {{- include "exivity.configTemplateVolume" (dict "configMapName" (printf "%s-config-shared" (include "exivity.fullname" $))) | nindent 8 }}
+        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
         - name: config
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-griffon-config
@@ -32,7 +33,9 @@ spec:
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-griffon-log
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
-      {{- include "exivity.initPermissions" (dict "root" . "component" "griffon" "volumes" (list "config" "log")) | nindent 6 }}
+      initContainers:
+        {{- include "exivity.initConfigInjector" . | nindent 8 }}
+        {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "griffon" "volumes" (list "config" "log")) | nindent 8 }}
       containers:
         - name:            griffon
           image: {{ include "exivity.image" (set $ "name" "griffon") }}
@@ -45,10 +48,9 @@ spec:
             - name:  ENABLE_PROMETHEUS
               value: "{{ .Values.prometheus.metricServer.enabled }}"
           volumeMounts:
-            - name:      config-file
-              mountPath: /exivity/home/system
             - name:      config
               mountPath: /exivity/home/system/config
+            {{- include "exivity.configVolumeMount" . | nindent 12 }}
             - name:      log
               mountPath: /exivity/home/log/griffon
           {{- include "exivity.probes" $ | indent 10}}

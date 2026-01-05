@@ -13,15 +13,19 @@ spec:
       {{- include "exivity.matchLabels" $ | indent 6 }}
   template:
     metadata:
+      annotations:
+        checksum/{{- include "exivity.fullname" $ -}}-config-transcript: {{ include (print $.Template.BasePath "/transcript/configmap.yaml") . | sha256sum }}
+        checksum/postgres-secret: {{ include (print $.Template.BasePath "/postgres-secret.yaml") . | sha256sum }}
+        checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/rabbitmq-secret.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/component: transcript
         {{- include "exivity.labels" $ | indent 8 }}
-      annotations:
-        checksum/{{- include "exivity.fullname" $ -}}-config-transcript: {{ include (print $.Template.BasePath "/transcript/configmap.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "transcript") | indent 8 }}
       volumes:
+        {{- include "exivity.configTemplateVolume" (dict "configMapName" (printf "%s-config-transcript" (include "exivity.fullname" $))) | nindent 8 }}
+        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
         - name: config-file
           configMap:
             name: {{ include "exivity.fullname" $ -}}-config-transcript
@@ -44,7 +48,9 @@ spec:
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-report
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
-      {{- include "exivity.initPermissions" (dict "root" . "component" "transcript" "volumes" (list "config" "exported" "extracted" "import" "log" "report")) | nindent 6 }}
+      initContainers:
+        {{- include "exivity.initConfigInjector" . | nindent 8 }}
+        {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "transcript" "volumes" (list "config" "exported" "extracted" "import" "log" "report")) | nindent 8 }}
       containers:
         - name:            transcript
           image: {{ include "exivity.image" (set $ "name" "transcript") }}
@@ -54,8 +60,7 @@ spec:
           volumeMounts:
             - name:      config
               mountPath: /exivity/home/system/config
-            - name:      config-file
-              mountPath: /exivity/home/system
+            {{- include "exivity.configVolumeMount" . | nindent 12 }}
             - name:      exported
               mountPath: /exivity/home/exported
             - name:      extracted

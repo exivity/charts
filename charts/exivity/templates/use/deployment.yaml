@@ -13,15 +13,19 @@ spec:
       {{- include "exivity.matchLabels" $ | indent 6 }}
   template:
     metadata:
+      annotations:
+        checksum/{{- include "exivity.fullname" $ -}}-config-use: {{ include (print $.Template.BasePath "/use/configmap.yaml") . | sha256sum }}
+        checksum/postgres-secret: {{ include (print $.Template.BasePath "/postgres-secret.yaml") . | sha256sum }}
+        checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/rabbitmq-secret.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/component: use
         {{- include "exivity.labels" $ | indent 8 }}
-      annotations:
-        checksum/{{- include "exivity.fullname" $ -}}-config-use: {{ include (print $.Template.BasePath "/use/configmap.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "use") | indent 8 }}
       volumes:
+        {{- include "exivity.configTemplateVolume" (dict "configMapName" (printf "%s-config-use" (include "exivity.fullname" $))) | nindent 8 }}
+        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
         - name: config-file
           configMap:
             name: {{ include "exivity.fullname" $ -}}-config-use
@@ -49,7 +53,8 @@ spec:
             secretName: {{ include "exivity.fullname" $ -}}-use-certificates
       {{- end }}
       initContainers:
-      {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "use" "volumes" (list "etl-config" "exported" "extracted" "import" "log")) | nindent 8 }}
+        {{- include "exivity.initConfigInjector" . | nindent 8 }}
+        {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "use" "volumes" (list "etl-config" "exported" "extracted" "import" "log")) | nindent 8 }}
       {{- if gt (len (default "" .Values.service.use.caCertificates)) 0 }}
         - name: install-ca-cert
           image: {{ include "exivity.image" (set $ "name" "use") }}
@@ -76,8 +81,7 @@ spec:
           resources:
             {{- toYaml .Values.service.use.resources | nindent 12 }}
           volumeMounts:
-            - name:      config-file
-              mountPath: /exivity/home/system
+            {{- include "exivity.configVolumeMount" . | nindent 12 }}
             - name:      etl-config
               mountPath: /exivity/home/system/config
             - name:      exported

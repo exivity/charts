@@ -320,9 +320,9 @@
         },
         "sslmode": {
           "type": "string",
-          "default": "",
+          "default": "disable",
           "title": "The sslmode Schema",
-          "examples": [""]
+          "examples": ["disable"]
         }
       },
       "examples": [
@@ -423,9 +423,9 @@
         },
         "vhost": {
           "type": "string",
-          "default": "",
+          "default": "/",
           "title": "The vhost Schema",
-          "examples": [""]
+          "examples": ["/"]
         },
         "secure": {
           "type": "boolean",
@@ -535,6 +535,7 @@
         "tag",
         "pullPolicy",
         "pullSecrets",
+        "configGenerator",
         "glass",
         "proximityApi",
         "proximityMigrate",
@@ -575,6 +576,46 @@
           "title": "The pullSecrets Schema",
           "items": {},
           "examples": [[]]
+        },
+        "configGenerator": {
+          "type": "object",
+          "default": {},
+          "title": "The configGenerator Schema",
+          "required": ["registry", "repository", "tag", "pullPolicy"],
+          "properties": {
+            "registry": {
+              "type": "string",
+              "default": "",
+              "title": "The registry Schema",
+              "examples": ["docker.io"]
+            },
+            "repository": {
+              "type": "string",
+              "default": "exivity/jq",
+              "title": "The repository Schema",
+              "examples": ["exivity/jq"]
+            },
+            "tag": {
+              "type": "string",
+              "default": "",
+              "title": "The tag Schema",
+              "examples": ["3.7.0"]
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "",
+              "title": "The pullPolicy Schema",
+              "examples": ["IfNotPresent", "Always", "Never"]
+            }
+          },
+          "examples": [
+            {
+              "registry": "ghcr.io",
+              "repository": "exivity/jq",
+              "tag": "sha-9d8fe68",
+              "pullPolicy": "IfNotPresent"
+            }
+          ]
         },
         "glass": {
           "type": "object",
