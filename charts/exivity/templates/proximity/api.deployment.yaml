@@ -24,7 +24,7 @@ spec:
         checksum/{{- include "exivity.fullname" $ -}}-proximity-api-env: {{ include (print $.Template.BasePath "/proximity/api.env.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         checksum/postgres-secret: {{ include (print $.Template.BasePath "/postgres-secret.yaml") . | sha256sum }}
-        checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/rabbitmq-secret.yaml") . | sha256sum }}
         {{- if .Values.ldap.tlsCacert }}
         checksum/{{- include "exivity.fullname" $ -}}-ldap-tls-cert: {{ include (print $.Template.BasePath "/proximity/api.secret.yaml") . | sha256sum }}
         {{- end }}

@@ -16,7 +16,7 @@ spec:
       annotations:
         checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         checksum/postgres-secret: {{ include (print $.Template.BasePath "/postgres-secret.yaml") . | sha256sum }}
-        checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/rabbitmq-secret.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/component: chronos
         {{- include "exivity.labels" $ | indent 8 }}

@@ -4,7 +4,7 @@ NFS_CHART_VERSION := 1.8.0
 
 INGRESS_HOSTNAME := exivity.local
 
-HELM_TIMEOUT := 15m
+HELM_TIMEOUT := 10m
 
 # Define Minikube start with a specific driver
 minikube-start:
