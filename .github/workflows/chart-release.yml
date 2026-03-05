@@ -19,7 +19,7 @@ jobs:
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo add exivity-bitnami https://exivity.github.io/bitnami-charts
 
       - name: Run chart-releaser
         uses: exivity/chart-releaser-action@v1.1.0
