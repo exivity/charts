@@ -31,6 +31,36 @@ spec:
         - name: log
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-proximity-cli-log
+        - name: log-proximity-api
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-proximity-api-log
+        - name: log-chronos
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-chronos-log
+        - name: log-edify
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-edify-log
+        - name: log-executor
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-executor-log
+        - name: log-glass
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-glass-log
+        - name: log-griffon
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-griffon-log
+        - name: log-horizon
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-horizon-log
+        - name: log-pigeon
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-pigeon-log
+        - name: log-transcript
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-transcript-log
+        - name: log-use
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-use-log
         - name: config
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-etl-config
@@ -47,7 +77,7 @@ spec:
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-exported
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
-      {{- include "exivity.initPermissions" (dict "root" . "component" "proximityCli" "volumes" (list "log" "config" "import" "report" "extracted" "exported")) | nindent 6 }}
+      {{- include "exivity.initPermissions" (dict "root" . "component" "proximityCli" "volumes" (list "log" "log-proximity-api" "log-chronos" "log-edify" "log-executor" "log-glass" "log-griffon" "log-horizon" "log-pigeon" "log-transcript" "log-use" "config" "import" "report" "extracted" "exported")) | nindent 6 }}
       containers:
         - name:            proximity-cli
           image: {{ include "exivity.image" (set $ "name" "proximityCli") }}
@@ -65,8 +95,28 @@ spec:
               mountPath: /exivity/home/system/extracted
             - name:      log
               mountPath: /exivity/home/log/proximity
+            - name:      log-proximity-api
+              mountPath: /exivity/home/log/proximity-api
+            - name:      log-chronos
+              mountPath: /exivity/home/log/chronos
             - name:      log
               mountPath: /exivity/home/log/merlin
+            - name:      log-pigeon
+              mountPath: /exivity/home/log/pigeon
+            - name:      log-edify
+              mountPath: /exivity/home/log/edify
+            - name:      log-executor
+              mountPath: /exivity/home/log/executor
+            - name:      log-glass
+              mountPath: /exivity/home/log/glass
+            - name:      log-griffon
+              mountPath: /exivity/home/log/griffon
+            - name:      log-horizon
+              mountPath: /exivity/home/log/horizon
+            - name:      log-transcript
+              mountPath: /exivity/home/log/transcript
+            - name:      log-use
+              mountPath: /exivity/home/log/use
             - name:      import
               mountPath: /exivity/home/import
             - name:      report
