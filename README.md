@@ -10,6 +10,10 @@ This Helm chart deploys Exivity, a comprehensive cloud metering and billing solu
 - Helm 3.0+
 - A StorageClass that supports ReadWriteMany access mode (for shared storage)
 
+## Best Practices
+
+For prescriptive guidance on single-node, multi-node, and multi-site deployments, see the Exivity Kubernetes best-practice documentation on [docs.exivity.com](https://docs.exivity.com/).
+
 ## Getting Started
 
 ### 1. Add the Helm Repository
@@ -58,11 +62,11 @@ helm upgrade --install exivity exivity/exivity \
     --set storage.storageClass=nfs-client
 ```
 
-#### Longhorn Storage (Beta Support)
+#### Longhorn Storage
 
 If you're using Longhorn, you can install Exivity with:
 
-> **Note**: Longhorn support is currently in beta. While it works, we cannot ensure the same level of stability as NFS storage solutions.
+> **Note**: Longhorn is the preferred storage option for HA deployments when it is available at the customer site. For multi-node deployments, configure Longhorn with three replicas per volume.
 
 ```bash
 helm upgrade --install exivity exivity/exivity \
@@ -116,6 +120,9 @@ For detailed configuration options, see the [examples](./charts/exivity/examples
 - [External PostgreSQL](./charts/exivity/examples/separate-postgresql.yaml) - Use external PostgreSQL
 - [External RabbitMQ](./charts/exivity/examples/separate-rabbitmq.yaml) - Use external RabbitMQ
 - [Larger PostgreSQL](./charts/exivity/examples/larger-postgresql.yaml) - Scale PostgreSQL resources
+- [Best Practice: Single Node](./charts/exivity/examples/best-practice-single-node.yaml) - Starting values for single-node deployments
+- [Best Practice: Multi Node](./charts/exivity/examples/best-practice-multi-node.yaml) - Starting values for multi-node HA deployments
+- [Best Practice: Multi Site Active/Passive](./charts/exivity/examples/best-practice-multi-site-active-passive.yaml) - Starting values for GitOps-managed active/passive deployments
 
 ## Accessing Exivity
 

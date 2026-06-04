@@ -1,0 +1,116 @@
+# Best-practice starting values for a multi-node, single-site HA deployment.
+# This file assumes PostgreSQL is deployed separately and RabbitMQ runs
+# site-local in the same Kubernetes cluster.
+# Replace all placeholder values before production use.
+
+licence: "your-production-license"
+
+secret:
+  appKey: "replace-with-production-app-key"
+  jwtSecret: "replace-with-production-jwt-secret"
+
+ingress:
+  enabled: true
+  host: exivity.example.com
+  ingressClassName: nginx
+  trustedProxy: ""
+  tls:
+    enabled: true
+    secret: "exivity-tls"
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+
+storage:
+  # Preferred for HA deployments when available at the customer site.
+  # Configure the Longhorn StorageClass with three replicas per volume.
+  storageClass: "longhorn"
+  sharedVolumeAccessMode: ReadWriteMany
+  pvcSizes:
+    log:
+      chronos: 10Gi
+      edify: 10Gi
+      executor: 10Gi
+      glass: 10Gi
+      griffon: 10Gi
+      horizon: 10Gi
+      pigeon: 10Gi
+      proximityApi: 10Gi
+      proximityCli: 10Gi
+      transcript: 10Gi
+      use: 10Gi
+    config:
+      etl: 1Gi
+      griffon: 1Gi
+      chronos: 1Gi
+    data:
+      exported: 100Gi
+      extracted: 100Gi
+      import: 20Gi
+      report: 20Gi
+
+postgresql:
+  enabled: false
+  global:
+    postgresql:
+      auth:
+        database: exivity
+        username: exivity
+        password: "replace-with-postgresql-password"
+        postgresPassword: ""
+  # Recommended self-hosted option: CloudNativePG with a 50Gi instance volume.
+  host: "exivity-rw.postgresql.svc.cluster.local"
+  port: 5432
+  sslmode: "require"
+
+rabbitmq:
+  # Exivity uses RabbitMQ for transient communication and work coordination,
+  # so a site-local in-cluster RabbitMQ instance is recommended by default.
+  enabled: true
+  clustering:
+    enabled: false
+  auth:
+    username: user
+    password: "replace-with-rabbitmq-password"
+  # Use an external RabbitMQ instance only when required by customer standards.
+  # When rabbitmq.enabled is false, set host, port, vhost, and secure here.
+  host: ""
+  port: 5672
+  vhost: ""
+  secure: false
+
+service:
+  glass:
+    replicas: 2
+  proximityApi:
+    replicas: 2
+  edify:
+    replicas: 2
+  horizon:
+    replicas: 2
+  pigeon:
+    replicas: 2
+  # Keep workflow and ETL-style services singleton unless Exivity confirms
+  # the desired scaling pattern for the customer workload.
+  chronos:
+    replicas: 1
+  executor:
+    replicas: 1
+  griffon:
+    replicas: 1
+  proximityCli:
+    replicas: 1
+  transcript:
+    replicas: 1
+  use:
+    replicas: 1
+
+logfiles:
+  deleteDays: 90
+  compressDays: 14
+
+prometheus:
+  metricServer:
+    enabled: true
+    serviceMonitor:
+      enabled: true

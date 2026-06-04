@@ -1,0 +1,78 @@
+# Best-practice starting values for a single-node Kubernetes deployment.
+# Replace all placeholder values before production use.
+
+licence: "your-production-license"
+
+secret:
+  appKey: "replace-with-production-app-key"
+  jwtSecret: "replace-with-production-jwt-secret"
+
+ingress:
+  enabled: true
+  host: exivity.example.com
+  ingressClassName: nginx
+  trustedProxy: ""
+  tls:
+    enabled: true
+    secret: "exivity-tls"
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+
+storage:
+  # Use an RWX-capable storage class, for example an NFSv4-backed provisioner.
+  storageClass: "nfs-client"
+  sharedVolumeAccessMode: ReadWriteMany
+  pvcSizes:
+    log:
+      chronos: 5Gi
+      edify: 5Gi
+      executor: 5Gi
+      glass: 5Gi
+      griffon: 5Gi
+      horizon: 5Gi
+      pigeon: 5Gi
+      proximityApi: 5Gi
+      proximityCli: 5Gi
+      transcript: 5Gi
+      use: 5Gi
+    config:
+      etl: 1Gi
+      griffon: 1Gi
+      chronos: 1Gi
+    data:
+      exported: 50Gi
+      extracted: 50Gi
+      import: 10Gi
+      report: 10Gi
+
+postgresql:
+  enabled: true
+  primary:
+    persistence:
+      size: 25Gi
+  global:
+    postgresql:
+      auth:
+        database: exivity
+        username: exivity
+        password: "replace-with-postgresql-password"
+        postgresPassword: "replace-with-postgresql-admin-password"
+
+rabbitmq:
+  enabled: true
+  clustering:
+    enabled: false
+  auth:
+    username: user
+    password: "replace-with-rabbitmq-password"
+
+logfiles:
+  deleteDays: 90
+  compressDays: 14
+
+prometheus:
+  metricServer:
+    enabled: true
+    serviceMonitor:
+      enabled: false

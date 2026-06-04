@@ -1,0 +1,127 @@
+# Best-practice starting values for a multi-site active/passive deployment.
+# Use this as a GitOps-managed overlay. Site-specific values should be kept in
+# separate overlays, for example values-site-a.yaml and values-site-b.yaml.
+# Replace all placeholder values before production use.
+
+licence: "your-production-license"
+
+secret:
+  appKey: "replace-with-production-app-key"
+  jwtSecret: "replace-with-production-jwt-secret"
+
+ingress:
+  enabled: true
+  host: exivity.example.com
+  ingressClassName: nginx
+  trustedProxy: ""
+  tls:
+    enabled: true
+    secret: "exivity-tls"
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+
+storage:
+  # Use an independent Longhorn deployment per site. Do not stretch Longhorn
+  # across sites. Configure three replicas per volume within each site.
+  storageClass: "longhorn"
+  sharedVolumeAccessMode: ReadWriteMany
+  pvcSizes:
+    log:
+      chronos: 10Gi
+      edify: 10Gi
+      executor: 10Gi
+      glass: 10Gi
+      griffon: 10Gi
+      horizon: 10Gi
+      pigeon: 10Gi
+      proximityApi: 10Gi
+      proximityCli: 10Gi
+      transcript: 10Gi
+      use: 10Gi
+    config:
+      etl: 1Gi
+      griffon: 1Gi
+      chronos: 1Gi
+    data:
+      exported: 100Gi
+      extracted: 100Gi
+      import: 20Gi
+      report: 20Gi
+
+postgresql:
+  enabled: false
+  global:
+    postgresql:
+      auth:
+        database: exivity
+        username: exivity
+        password: "replace-with-postgresql-password"
+        postgresPassword: ""
+  # Site A active example: point to the primary PostgreSQL endpoint.
+  # Site B passive example: point to the promoted PostgreSQL endpoint during failover.
+  host: "exivity-rw.postgresql.svc.cluster.local"
+  port: 5432
+  sslmode: "require"
+
+rabbitmq:
+  # Use one independent site-local RabbitMQ instance per site. RabbitMQ state
+  # is not replicated between sites and the cluster must not be stretched.
+  enabled: true
+  clustering:
+    enabled: false
+  auth:
+    username: user
+    password: "replace-with-rabbitmq-password"
+  # Use an external RabbitMQ instance only when required by customer standards.
+  # When rabbitmq.enabled is false, set host, port, vhost, and secure here.
+  host: ""
+  port: 5672
+  vhost: ""
+  secure: false
+
+service:
+  # Active site values: set stateless services to 2 or more and singleton
+  # workflow services to 1.
+  # Passive site values: set every Exivity service replica below to 0 until
+  # GitOps promotes the site during failover.
+  glass:
+    replicas: 2
+  proximityApi:
+    replicas: 2
+  edify:
+    replicas: 2
+  horizon:
+    replicas: 2
+  pigeon:
+    replicas: 2
+  chronos:
+    replicas: 1
+  executor:
+    replicas: 1
+  griffon:
+    replicas: 1
+  proximityCli:
+    replicas: 1
+  transcript:
+    replicas: 1
+  use:
+    replicas: 1
+
+logfiles:
+  deleteDays: 90
+  compressDays: 14
+
+prometheus:
+  metricServer:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+
+# Required GitOps failover sequence:
+# 1. Stop routing traffic to the failed active site.
+# 2. Scale the failed active site Exivity replicas to 0 if reachable.
+# 3. Promote or restore PostgreSQL in the passive site.
+# 4. Validate RabbitMQ and shared data volumes in the passive site.
+# 5. Scale the passive site Exivity replicas above 0.
+# 6. Switch DNS, GSLB, or load balancer traffic to the promoted site.
