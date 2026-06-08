@@ -22,7 +22,7 @@ ingress:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
 
 storage:
-  # Preferred for HA deployments when available at the customer site.
+  # Preferred for HA deployments when available in your environment.
   # Configure the Longhorn StorageClass with three replicas per volume.
   storageClass: "longhorn"
   sharedVolumeAccessMode: ReadWriteMany
@@ -57,6 +57,7 @@ postgresql:
         database: exivity
         username: exivity
         password: "replace-with-postgresql-password"
+        # Not required when using an external database.
         postgresPassword: ""
   # Recommended self-hosted option: CloudNativePG with a 50Gi instance volume.
   host: "exivity-rw.postgresql.svc.cluster.local"
@@ -67,12 +68,14 @@ rabbitmq:
   # Exivity uses RabbitMQ for transient communication and work coordination,
   # so a site-local in-cluster RabbitMQ instance is recommended by default.
   enabled: true
+  # A single-pod RabbitMQ deployment is sufficient because Exivity uses RabbitMQ
+  # for transient work coordination, not as the primary system of record.
   clustering:
     enabled: false
   auth:
     username: user
     password: "replace-with-rabbitmq-password"
-  # Use an external RabbitMQ instance only when required by customer standards.
+  # Use an external RabbitMQ instance only when required by your platform standards.
   # When rabbitmq.enabled is false, set host, port, vhost, and secure here.
   host: ""
   port: 5672
@@ -91,7 +94,7 @@ service:
   pigeon:
     replicas: 2
   # Keep workflow and ETL-style services singleton unless Exivity confirms
-  # the desired scaling pattern for the customer workload.
+  # the desired scaling pattern for your workload.
   chronos:
     replicas: 1
   executor:

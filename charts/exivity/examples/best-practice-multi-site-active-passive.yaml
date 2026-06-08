@@ -57,6 +57,7 @@ postgresql:
         database: exivity
         username: exivity
         password: "replace-with-postgresql-password"
+        # Not required when using an external database.
         postgresPassword: ""
   # Site A active example: point to the primary PostgreSQL endpoint.
   # Site B passive example: point to the promoted PostgreSQL endpoint during failover.
@@ -68,12 +69,14 @@ rabbitmq:
   # Use one independent site-local RabbitMQ instance per site. RabbitMQ state
   # is not replicated between sites and the cluster must not be stretched.
   enabled: true
+  # A single-pod RabbitMQ deployment is sufficient because Exivity uses RabbitMQ
+  # for transient work coordination, not as the primary system of record.
   clustering:
     enabled: false
   auth:
     username: user
     password: "replace-with-rabbitmq-password"
-  # Use an external RabbitMQ instance only when required by customer standards.
+  # Use an external RabbitMQ instance only when required by your platform standards.
   # When rabbitmq.enabled is false, set host, port, vhost, and secure here.
   host: ""
   port: 5672

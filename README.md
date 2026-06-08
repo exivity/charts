@@ -66,7 +66,7 @@ helm upgrade --install exivity exivity/exivity \
 
 If you're using Longhorn, you can install Exivity with:
 
-> **Note**: Longhorn is the preferred storage option for HA deployments when it is available at the customer site. For multi-node deployments, configure Longhorn with three replicas per volume.
+> **Note**: Longhorn is the preferred storage option for HA deployments when it is available in your environment. For multi-node deployments, configure Longhorn with three replicas per volume.
 
 ```bash
 helm upgrade --install exivity exivity/exivity \

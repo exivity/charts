@@ -20,7 +20,10 @@ ingress:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
 
 storage:
-  # Use an RWX-capable storage class, for example an NFSv4-backed provisioner.
+  # Use an RWX-capable storage class. For an in-cluster NFSv4 server, the recommended
+  # provisioner is https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner
+  # (Helm chart: nfs-server-provisioner). For managed NFS, point storageClass at the
+  # provisioner that fronts it.
   storageClass: "nfs-client"
   sharedVolumeAccessMode: ReadWriteMany
   pvcSizes:
