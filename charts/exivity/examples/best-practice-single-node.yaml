@@ -25,6 +25,7 @@ storage:
   # is sufficient and simpler to operate.
   #
   # Examples of suitable provisioners:
+  #   - Docker Desktop's built-in "hostpath" StorageClass.
   #   - K3s' built-in "local-path" StorageClass.
   #   - https://github.com/rancher/local-path-provisioner installed standalone.
   #
