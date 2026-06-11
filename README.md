@@ -8,7 +8,11 @@ This Helm chart deploys Exivity, a comprehensive cloud metering and billing solu
 
 - Kubernetes 1.20+
 - Helm 3.0+
-- A StorageClass that supports ReadWriteMany access mode (for shared storage)
+- A StorageClass that supports ReadWriteMany access mode (recommended for multi-node HA; ReadWriteOnce can be sufficient for single-node deployments)
+
+## Best Practices
+
+For prescriptive guidance on single-node, multi-node, and multi-site deployments, see the Exivity Kubernetes best-practice documentation on [docs.exivity.com](https://docs.exivity.com/).
 
 ## Getting Started
 
@@ -31,7 +35,7 @@ helm upgrade --install exivity exivity/exivity \
     --set storage.storageClass=<your-storage-class>
 ```
 
-Replace `<your-storage-class>` with your preferred storage class that supports ReadWriteMany access mode.
+Replace `<your-storage-class>` with your preferred storage class. Multi-node deployments require storage that supports ReadWriteMany access mode. Single-node deployments can use ReadWriteOnce storage when all pods run on the same node. For local-path style storage, plan PVC sizes against actual node disk capacity because these provisioners may not reserve or enforce aggregate free space across PVCs.
 
 ### 3. Storage Solutions
 
@@ -58,11 +62,11 @@ helm upgrade --install exivity exivity/exivity \
     --set storage.storageClass=nfs-client
 ```
 
-#### Longhorn Storage (Beta Support)
+#### Longhorn Storage
 
 If you're using Longhorn, you can install Exivity with:
 
-> **Note**: Longhorn support is currently in beta. While it works, we cannot ensure the same level of stability as NFS storage solutions.
+> **Note**: Longhorn is the preferred storage option for HA deployments when it is available in your environment. For multi-node deployments, configure Longhorn with three replicas per volume.
 
 ```bash
 helm upgrade --install exivity exivity/exivity \
@@ -116,6 +120,9 @@ For detailed configuration options, see the [examples](./charts/exivity/examples
 - [External PostgreSQL](./charts/exivity/examples/separate-postgresql.yaml) - Use external PostgreSQL
 - [External RabbitMQ](./charts/exivity/examples/separate-rabbitmq.yaml) - Use external RabbitMQ
 - [Larger PostgreSQL](./charts/exivity/examples/larger-postgresql.yaml) - Scale PostgreSQL resources
+- [Best Practice: Single Node](./charts/exivity/examples/best-practice-single-node.yaml) - Starting values for single-node deployments
+- [Best Practice: Multi Node](./charts/exivity/examples/best-practice-multi-node.yaml) - Starting values for multi-node HA deployments
+- [Best Practice: Multi Site Active/Passive](./charts/exivity/examples/best-practice-multi-site-active-passive.yaml) - Starting values for GitOps-managed active/passive deployments
 
 ## Accessing Exivity
 

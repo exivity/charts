@@ -1,0 +1,110 @@
+# Best-practice starting values for a single-node Kubernetes deployment.
+# Replace all placeholder values before production use.
+
+# Set to the actual licence for production environments.
+# For evaluation purposes, use "demo", but note that "demo" will not allow you to run reports.
+# For a trial license, please contact license@exivity.com.
+licence: ""
+
+secret:
+  # Random values are generated on installation if not set.
+  # Specify stable values for production so secrets do not change unexpectedly
+  # during reinstall or disaster recovery scenarios.
+  appKey: ""
+  jwtSecret: ""
+
+ingress:
+  enabled: true
+  host: exivity.local
+  ingressClassName: nginx
+  trustedProxy: ""
+  tls:
+    enabled: true
+    secret: "exivity-tls"
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+
+storage:
+  # Single-node deployments can use provisioner-backed ReadWriteOnce storage
+  # because all Exivity pods are scheduled to the same Kubernetes node. This is
+  # the simplest default for non-HA single-node environments.
+  #
+  # Local path style provisioners usually do not track or reserve aggregate disk
+  # capacity across PVCs. Plan PVC sizes against the actual node disk capacity
+  # and monitor free space on the node to avoid over-provisioning.
+  #
+  # Examples of suitable provisioners:
+  #   - Docker Desktop's built-in "hostpath" StorageClass.
+  #   - K3s' built-in "local-path" StorageClass.
+  #   - https://github.com/rancher/local-path-provisioner installed standalone.
+  #
+  # Use NAS/NFS instead when you already operate a reliable NAS platform, want
+  # storage decoupled from the Kubernetes node, prefer easier node rebuild or
+  # replacement, or expect to migrate this deployment to a multi-node cluster
+  # later. NAS/NFS does not by itself make Exivity HA when Kubernetes itself is
+  # still single-node. Longhorn is generally more useful for multi-node HA
+  # deployments where replicas can be spread across nodes.
+  storageClass: "local-path"
+  sharedVolumeAccessMode: ReadWriteOnce
+  pvcSizes:
+    log:
+      chronos: 5Gi
+      edify: 5Gi
+      executor: 5Gi
+      glass: 5Gi
+      griffon: 5Gi
+      horizon: 5Gi
+      pigeon: 5Gi
+      proximityApi: 5Gi
+      proximityCli: 5Gi
+      transcript: 5Gi
+      use: 5Gi
+    config:
+      etl: 1Gi
+      griffon: 1Gi
+      chronos: 1Gi
+    data:
+      exported: 50Gi
+      extracted: 50Gi
+      import: 10Gi
+      report: 10Gi
+
+postgresql:
+  enabled: true
+  primary:
+    persistence:
+      size: 25Gi
+  global:
+    postgresql:
+      auth:
+        database: exivity
+        username: exivity
+        password: "replace-with-postgresql-password"
+        postgresPassword: "replace-with-postgresql-admin-password"
+
+rabbitmq:
+  # Embedded RabbitMQ is acceptable for evaluation and small single-node
+  # deployments. Note: the embedded dependency is the Bitnami RabbitMQ chart,
+  # which now ships through the unsupported bitnamilegacy registry following
+  # the Bitnami container catalog changes on 2025-09-29. For long-term
+  # production use, prefer running RabbitMQ outside the Exivity chart with the
+  # RabbitMQ Cluster Operator
+  # (https://www.rabbitmq.com/kubernetes/operator/operator-overview)
+  # or a managed RabbitMQ.
+  enabled: true
+  clustering:
+    enabled: false
+  auth:
+    username: user
+    password: "replace-with-rabbitmq-password"
+
+logfiles:
+  deleteDays: 90
+  compressDays: 14
+
+prometheus:
+  metricServer:
+    enabled: true
+    serviceMonitor:
+      enabled: false

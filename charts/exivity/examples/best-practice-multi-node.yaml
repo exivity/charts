@@ -1,0 +1,127 @@
+# Best-practice starting values for a multi-node, single-site HA deployment.
+# This file assumes PostgreSQL is deployed separately and that RabbitMQ runs
+# site-local in the same Kubernetes cluster but outside the Exivity Helm chart
+# (for example, via the RabbitMQ Cluster Operator).
+# Replace all placeholder values before production use.
+
+# Set to the actual licence for production environments.
+# For evaluation purposes, use "demo", but note that "demo" will not allow you to run reports.
+# For a trial license, please contact license@exivity.com.
+licence: ""
+
+secret:
+  # Random values are generated on installation if not set.
+  # Specify stable values for production so secrets do not change unexpectedly
+  # during reinstall or disaster recovery scenarios.
+  appKey: ""
+  jwtSecret: ""
+
+ingress:
+  enabled: true
+  host: exivity.local
+  ingressClassName: nginx
+  trustedProxy: ""
+  tls:
+    enabled: true
+    secret: "exivity-tls"
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+
+storage:
+  # Preferred for HA deployments when available in your environment.
+  # Configure the Longhorn StorageClass with three replicas per volume.
+  storageClass: "longhorn"
+  sharedVolumeAccessMode: ReadWriteMany
+  pvcSizes:
+    log:
+      chronos: 10Gi
+      edify: 10Gi
+      executor: 10Gi
+      glass: 10Gi
+      griffon: 10Gi
+      horizon: 10Gi
+      pigeon: 10Gi
+      proximityApi: 10Gi
+      proximityCli: 10Gi
+      transcript: 10Gi
+      use: 10Gi
+    config:
+      etl: 1Gi
+      griffon: 1Gi
+      chronos: 1Gi
+    data:
+      exported: 100Gi
+      extracted: 100Gi
+      import: 20Gi
+      report: 20Gi
+
+postgresql:
+  enabled: false
+  global:
+    postgresql:
+      auth:
+        database: exivity
+        username: exivity
+        password: "replace-with-postgresql-password"
+        # Not required when using an external database.
+        postgresPassword: ""
+  # Recommended self-hosted option: CloudNativePG with a 50Gi instance volume.
+  host: "exivity-rw.postgresql.svc.cluster.local"
+  port: 5432
+  sslmode: "require"
+
+rabbitmq:
+  # Site-local in-cluster RabbitMQ is the default recommendation for multi-node
+  # deployments. The embedded chart dependency is the Bitnami RabbitMQ chart,
+  # which now ships through the unsupported bitnamilegacy registry following
+  # the Bitnami container catalog changes on 2025-09-29. For production, deploy
+  # RabbitMQ in-cluster outside the Exivity chart with the RabbitMQ Cluster
+  # Operator (https://www.rabbitmq.com/kubernetes/operator/operator-overview)
+  # and connect Exivity to it through the values below. External or managed
+  # RabbitMQ is also valid when required by your platform standards.
+  enabled: false
+  auth:
+    username: user
+    password: "replace-with-rabbitmq-password"
+  # Connection values for the in-cluster RabbitMQ deployment used by Exivity.
+  host: "exivity.rabbitmq.svc.cluster.local"
+  port: 5672
+  vhost: "/"
+  secure: false
+
+service:
+  glass:
+    replicas: 2
+  proximityApi:
+    replicas: 2
+  edify:
+    replicas: 2
+  horizon:
+    replicas: 2
+  pigeon:
+    replicas: 2
+  # Keep workflow and ETL-style services singleton unless Exivity confirms
+  # the desired scaling pattern for your workload.
+  chronos:
+    replicas: 1
+  executor:
+    replicas: 1
+  griffon:
+    replicas: 1
+  proximityCli:
+    replicas: 1
+  transcript:
+    replicas: 1
+  use:
+    replicas: 1
+
+logfiles:
+  deleteDays: 90
+  compressDays: 14
+
+prometheus:
+  metricServer:
+    enabled: true
+    serviceMonitor:
+      enabled: true
