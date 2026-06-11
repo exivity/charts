@@ -77,16 +77,15 @@ rabbitmq:
   #
   # The embedded chart dependency is the Bitnami RabbitMQ chart, which now
   # ships through the unsupported bitnamilegacy registry following the Bitnami
-  # container catalog changes on 2025-09-29. For production multi-site
-  # deployments, run RabbitMQ outside the Exivity chart in each site. The
-  # recommended option is the RabbitMQ Cluster Operator
-  # (https://www.rabbitmq.com/kubernetes/operator/operator-overview), or a
-  # managed RabbitMQ provided by your platform.
+  # container catalog changes on 2025-09-29. For production, deploy RabbitMQ
+  # site-local but outside the Exivity chart with the RabbitMQ Cluster Operator
+  # (https://www.rabbitmq.com/kubernetes/operator/operator-overview). External
+  # or managed RabbitMQ is also valid when required by your platform standards.
   enabled: false
   auth:
     username: user
     password: "replace-with-rabbitmq-password"
-  # Connection values for the site-local external RabbitMQ deployment.
+  # Connection values for the site-local in-cluster RabbitMQ deployment.
   host: "exivity.rabbitmq.svc.cluster.local"
   port: 5672
   vhost: "/"

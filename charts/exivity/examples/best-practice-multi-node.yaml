@@ -1,6 +1,7 @@
 # Best-practice starting values for a multi-node, single-site HA deployment.
-# This file assumes PostgreSQL is deployed separately and RabbitMQ runs
-# site-local in the same Kubernetes cluster.
+# This file assumes PostgreSQL is deployed separately and that RabbitMQ runs
+# site-local in the same Kubernetes cluster but outside the Exivity Helm chart
+# (for example, via the RabbitMQ Cluster Operator).
 # Replace all placeholder values before production use.
 
 # Set to the actual licence for production environments.
@@ -71,18 +72,19 @@ postgresql:
   sslmode: "require"
 
 rabbitmq:
-  # The embedded RabbitMQ dependency is the Bitnami RabbitMQ chart, which now
-  # ships through the unsupported bitnamilegacy registry following the Bitnami
-  # container catalog changes on 2025-09-29. For production multi-node
-  # deployments, run RabbitMQ outside the Exivity chart and connect to it as an
-  # external service. The recommended option is the RabbitMQ Cluster Operator
-  # (https://www.rabbitmq.com/kubernetes/operator/operator-overview), or a
-  # managed RabbitMQ provided by your platform.
+  # Site-local in-cluster RabbitMQ is the default recommendation for multi-node
+  # deployments. The embedded chart dependency is the Bitnami RabbitMQ chart,
+  # which now ships through the unsupported bitnamilegacy registry following
+  # the Bitnami container catalog changes on 2025-09-29. For production, deploy
+  # RabbitMQ in-cluster outside the Exivity chart with the RabbitMQ Cluster
+  # Operator (https://www.rabbitmq.com/kubernetes/operator/operator-overview)
+  # and connect Exivity to it through the values below. External or managed
+  # RabbitMQ is also valid when required by your platform standards.
   enabled: false
   auth:
     username: user
     password: "replace-with-rabbitmq-password"
-  # Connection values for the external RabbitMQ deployment used by Exivity.
+  # Connection values for the in-cluster RabbitMQ deployment used by Exivity.
   host: "exivity.rabbitmq.svc.cluster.local"
   port: 5672
   vhost: "/"

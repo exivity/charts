@@ -39,11 +39,12 @@ storage:
   #   - K3s' built-in "local-path" StorageClass.
   #   - https://github.com/rancher/local-path-provisioner installed standalone.
   #
-  # Use NAS/NFS instead when the customer already operates a reliable NAS
-  # platform, wants storage decoupled from the Kubernetes node, or expects to
-  # migrate this deployment to a multi-node cluster later. Longhorn is generally
-  # more useful for multi-node HA deployments where replicas can be spread across
-  # nodes.
+  # Use NAS/NFS instead when you already operate a reliable NAS platform, want
+  # storage decoupled from the Kubernetes node, prefer easier node rebuild or
+  # replacement, or expect to migrate this deployment to a multi-node cluster
+  # later. NAS/NFS does not by itself make Exivity HA when Kubernetes itself is
+  # still single-node. Longhorn is generally more useful for multi-node HA
+  # deployments where replicas can be spread across nodes.
   storageClass: "local-path"
   sharedVolumeAccessMode: ReadWriteOnce
   pvcSizes:
