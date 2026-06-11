@@ -20,12 +20,19 @@ ingress:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
 
 storage:
-  # Use an RWX-capable storage class. For an in-cluster NFSv4 server, the recommended
-  # provisioner is https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner
-  # (Helm chart: nfs-server-provisioner). For managed NFS, point storageClass at the
-  # provisioner that fronts it.
-  storageClass: "nfs-client"
-  sharedVolumeAccessMode: ReadWriteMany
+  # Single-node deployments do not require RWX. All Exivity pods are scheduled
+  # to the same node, so a local-path or HostPath provisioner with ReadWriteOnce
+  # is sufficient and simpler to operate.
+  #
+  # Examples of suitable provisioners:
+  #   - K3s' built-in "local-path" StorageClass.
+  #   - https://github.com/rancher/local-path-provisioner installed standalone.
+  #
+  # Choose RWX (e.g. the NFS Ganesha server and external provisioner at
+  # https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner)
+  # only if you anticipate scaling to multiple nodes later.
+  storageClass: "local-path"
+  sharedVolumeAccessMode: ReadWriteOnce
   pvcSizes:
     log:
       chronos: 5Gi
