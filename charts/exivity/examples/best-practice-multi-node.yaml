@@ -101,8 +101,16 @@ service:
     replicas: 2
   pigeon:
     replicas: 2
-  # Keep workflow and ETL-style services singleton unless Exivity confirms
-  # the desired scaling pattern for your workload.
+  # transcript and use consume RabbitMQ queues; multiple replicas distribute
+  # load. Avoid scheduling the same logical task for the same period twice in
+  # parallel because that can produce overlapping writes regardless of replica
+  # count.
+  transcript:
+    replicas: 2
+  use:
+    replicas: 2
+  # Keep the workflow, scheduling, dispatch, and CLI services singleton because
+  # multiple replicas would duplicate work.
   chronos:
     replicas: 1
   executor:
@@ -110,10 +118,6 @@ service:
   griffon:
     replicas: 1
   proximityCli:
-    replicas: 1
-  transcript:
-    replicas: 1
-  use:
     replicas: 1
 
 logfiles:
