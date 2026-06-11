@@ -70,6 +70,14 @@ postgresql:
         postgresPassword: "replace-with-postgresql-admin-password"
 
 rabbitmq:
+  # Embedded RabbitMQ is acceptable for evaluation and small single-node
+  # deployments. Note: the embedded dependency is the Bitnami RabbitMQ chart,
+  # which now ships through the unsupported bitnamilegacy registry following
+  # the Bitnami container catalog changes on 2025-09-29. For long-term
+  # production use, prefer running RabbitMQ outside the Exivity chart with the
+  # RabbitMQ Cluster Operator
+  # (https://www.rabbitmq.com/kubernetes/operator/operator-overview)
+  # or a managed RabbitMQ.
   enabled: true
   clustering:
     enabled: false

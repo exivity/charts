@@ -65,21 +65,21 @@ postgresql:
   sslmode: "require"
 
 rabbitmq:
-  # Exivity uses RabbitMQ for transient communication and work coordination,
-  # so a site-local in-cluster RabbitMQ instance is recommended by default.
-  enabled: true
-  # A single-pod RabbitMQ deployment is sufficient because Exivity uses RabbitMQ
-  # for transient work coordination, not as the primary system of record.
-  clustering:
-    enabled: false
+  # The embedded RabbitMQ dependency is the Bitnami RabbitMQ chart, which now
+  # ships through the unsupported bitnamilegacy registry following the Bitnami
+  # container catalog changes on 2025-09-29. For production multi-node
+  # deployments, run RabbitMQ outside the Exivity chart and connect to it as an
+  # external service. The recommended option is the RabbitMQ Cluster Operator
+  # (https://www.rabbitmq.com/kubernetes/operator/operator-overview), or a
+  # managed RabbitMQ provided by your platform.
+  enabled: false
   auth:
     username: user
     password: "replace-with-rabbitmq-password"
-  # Use an external RabbitMQ instance only when required by your platform standards.
-  # When rabbitmq.enabled is false, set host, port, vhost, and secure here.
-  host: ""
+  # Connection values for the external RabbitMQ deployment used by Exivity.
+  host: "exivity.rabbitmq.svc.cluster.local"
   port: 5672
-  vhost: ""
+  vhost: "/"
   secure: false
 
 service:
