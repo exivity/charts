@@ -8,7 +8,7 @@ This Helm chart deploys Exivity, a comprehensive cloud metering and billing solu
 
 - Kubernetes 1.20+
 - Helm 3.0+
-- A StorageClass that supports ReadWriteMany access mode (for shared storage)
+- A StorageClass that supports ReadWriteMany access mode (recommended for multi-node HA; ReadWriteOnce can be sufficient for single-node deployments)
 
 ## Best Practices
 
