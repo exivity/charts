@@ -95,16 +95,19 @@ service:
     replicas: 2
   proximityApi:
     replicas: 2
+  # edify, horizon, pigeon, transcript, and use consume RabbitMQ queues
+  # (REPORT, BUDGET, PIGEON/WORKFLOW_EVENT/REPORT_PUBLISHED, TRANSFORM, and
+  # EXTRACT respectively). RabbitMQ delivers each queued job to a single
+  # consumer, so multiple replicas distribute load and increase throughput.
+  # Avoid scheduling the same logical task for the same period twice in
+  # parallel because that can produce overlapping writes regardless of replica
+  # count.
   edify:
     replicas: 2
   horizon:
     replicas: 2
   pigeon:
     replicas: 2
-  # transcript and use consume RabbitMQ queues; multiple replicas distribute
-  # load. Avoid scheduling the same logical task for the same period twice in
-  # parallel because that can produce overlapping writes regardless of replica
-  # count.
   transcript:
     replicas: 2
   use:
