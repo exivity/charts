@@ -6,8 +6,11 @@
 licence: "your-production-license"
 
 secret:
-  appKey: "replace-with-production-app-key"
-  jwtSecret: "replace-with-production-jwt-secret"
+  # Random values are generated on installation if not set.
+  # Specify stable values for production so secrets do not change unexpectedly
+  # during reinstall or disaster recovery scenarios.
+  appKey: ""
+  jwtSecret: ""
 
 ingress:
   enabled: true
