@@ -18,7 +18,7 @@ secret:
 
 ingress:
   enabled: true
-  host: exivity.example.com
+  host: exivity.local
   ingressClassName: nginx
   trustedProxy: ""
   tls:
