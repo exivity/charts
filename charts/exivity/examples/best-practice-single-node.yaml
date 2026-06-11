@@ -1,7 +1,10 @@
 # Best-practice starting values for a single-node Kubernetes deployment.
 # Replace all placeholder values before production use.
 
-licence: "your-production-license"
+# Set to the actual licence for production environments.
+# For evaluation purposes, use "demo", but note that "demo" will not allow you to run reports.
+# For a trial license, please contact license@exivity.com.
+licence: ""
 
 secret:
   # Random values are generated on installation if not set.
