@@ -35,7 +35,7 @@ helm upgrade --install exivity exivity/exivity \
     --set storage.storageClass=<your-storage-class>
 ```
 
-Replace `<your-storage-class>` with your preferred storage class that supports ReadWriteMany access mode.
+Replace `<your-storage-class>` with your preferred storage class. Multi-node deployments require storage that supports ReadWriteMany access mode. Single-node deployments can use ReadWriteOnce storage when all pods run on the same node. For local-path style storage, plan PVC sizes against actual node disk capacity because these provisioners may not reserve or enforce aggregate free space across PVCs.
 
 ### 3. Storage Solutions
 

@@ -20,18 +20,24 @@ ingress:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
 
 storage:
-  # Single-node deployments do not require RWX. All Exivity pods are scheduled
-  # to the same node, so a local-path or HostPath provisioner with ReadWriteOnce
-  # is sufficient and simpler to operate.
+  # Single-node deployments can use provisioner-backed ReadWriteOnce storage
+  # because all Exivity pods are scheduled to the same Kubernetes node. This is
+  # the simplest default for non-HA single-node environments.
+  #
+  # Local path style provisioners usually do not track or reserve aggregate disk
+  # capacity across PVCs. Plan PVC sizes against the actual node disk capacity
+  # and monitor free space on the node to avoid over-provisioning.
   #
   # Examples of suitable provisioners:
   #   - Docker Desktop's built-in "hostpath" StorageClass.
   #   - K3s' built-in "local-path" StorageClass.
   #   - https://github.com/rancher/local-path-provisioner installed standalone.
   #
-  # Choose RWX (e.g. the NFS Ganesha server and external provisioner at
-  # https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner)
-  # only if you anticipate scaling to multiple nodes later.
+  # Use NAS/NFS instead when the customer already operates a reliable NAS
+  # platform, wants storage decoupled from the Kubernetes node, or expects to
+  # migrate this deployment to a multi-node cluster later. Longhorn is generally
+  # more useful for multi-node HA deployments where replicas can be spread across
+  # nodes.
   storageClass: "local-path"
   sharedVolumeAccessMode: ReadWriteOnce
   pvcSizes:
