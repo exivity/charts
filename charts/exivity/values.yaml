@@ -4,13 +4,17 @@ nameOverride: ""
 # Set to the actual licence for production environments.
 # For evaluation purposes, use "demo", but note that "demo" will not allow you to run reports.
 # For a trial license, please contact license@exivity.com.
+#
+# Can be specified as:
+# 1. Direct value: licence: "your-license-key"
+# 2. Secret reference: licence: {secretName: "exivity-secrets", key: "LICENCE"}
 licence: "demo"
 
 # Secret keys used for application security. Random values are generated on installation if not set.
 # Random values are generated on installation if not set, but it's recommended to specify values for production.
 secret:
-  appKey: "" # Used to encrypt application data. Specify a value for production. Max length: 64 characters.
-  jwtSecret: "" # Used for signing JWTs. Specify a value for production.
+  appKey: "" # Encrypts application data (max 64 chars). Direct value OR {secretName: "secrets", key: "APP_KEY"}
+  jwtSecret: "" # Signs JWTs. Direct value OR {secretName: "secrets", key: "JWT_SECRET"}
 
 ingress:
   enabled: true # Indicates if ingress is enabled.
@@ -92,17 +96,10 @@ storage:
 # and setting the LDAPTLS_CACERT environment variable to enable LDAP over TLS.
 # Both tlsCacert and tlsCacertPath must be provided together to enable LDAP TLS.
 ldap:
-  # PEM certificate content for LDAP TLS validation.
-  # When empty, LDAP TLS functionality is disabled.
-  # tlsCacert: |
-  #   -----BEGIN CERTIFICATE-----
-  #   [Your Root CA certificate here]
-  #   -----END CERTIFICATE-----
-
-  # Path where the LDAP TLS certificate will be mounted in the container.
-  # This path will be set as the LDAPTLS_CACERT environment variable.
-  # Only used when tlsCacert is provided. Default: "/etc/ssl/certs/ldap.pem"
-  tlsCacertPath: "/etc/ssl/certs/ldap.pem"
+  # LDAP TLS CA certificate. Empty disables TLS.
+  # Direct value: multiline PEM string OR Secret reference: {secretName: "ldap-certs", key: "CA_CERT"}
+  tlsCacert: ""
+  tlsCacertPath: "/etc/ssl/certs/ldap.pem" # Certificate mount path (sets LDAPTLS_CACERT)
 
 # Configuration for PostgreSQL, either as an embedded database using the Bitnami PostgreSQL chart or an external database.
 # It is recommended to use an external PostgreSQL server for production environments to ensure scalability and manageability.
@@ -119,10 +116,10 @@ postgresql:
   global:
     postgresql:
       auth:
-        database: exivity # Database name for both external and embedded databases.
-        username: exivity # Username for accessing the database.
-        password: Password12! # Password for the database user.
-        postgresPassword: Password13! # Root password for PostgreSQL, optional when using an external database.
+        database: exivity
+        username: exivity # Direct value OR Secret reference: {secretName: "db-secret", key: "USERNAME"}
+        password: Password12! # Direct value OR Secret reference: {secretName: "db-secret", key: "PASSWORD"}
+        postgresPassword: Password13! # Root password (optional for external DB)
 
   # Configuration for using an external PostgreSQL database.
   host: "" # Hostname of the external database server, if applicable.
@@ -159,8 +156,8 @@ rabbitmq:
     enabled: false # Determines if clustering is enabled for RabbitMQ.
 
   auth:
-    username: user # Username for RabbitMQ authentication.
-    password: pass # Password for RabbitMQ authentication.
+    username: user # Direct value OR Secret reference: {secretName: "mq-secret", key: "USERNAME"}
+    password: pass # Direct value OR Secret reference: {secretName: "mq-secret", key: "PASSWORD"}
 
   # Configuration for using an external RabbitMQ server.
   host: "" # Hostname of the external RabbitMQ server, if applicable.
