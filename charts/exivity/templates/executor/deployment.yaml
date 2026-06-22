@@ -13,15 +13,19 @@ spec:
       {{- include "exivity.matchLabels" $ | indent 6 }}
   template:
     metadata:
+      annotations:
+        checksum/{{- include "exivity.fullname" $ -}}-config-executor: {{ include (print $.Template.BasePath "/executor/configmap.yaml") . | sha256sum }}
+        checksum/postgres-secret: {{ include (print $.Template.BasePath "/postgres-secret.yaml") . | sha256sum }}
+        checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/rabbitmq-secret.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/component: executor
         {{- include "exivity.labels" $ | indent 8 }}
-      annotations:
-        checksum/{{- include "exivity.fullname" $ -}}-config-executor: {{ include (print $.Template.BasePath "/executor/configmap.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "executor") | indent 8 }}
       volumes:
+        {{- include "exivity.configTemplateVolume" (dict "configMapName" (printf "%s-config-executor" (include "exivity.fullname" $))) | nindent 8 }}
+        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
         - name: config-file
           configMap:
             name: {{ include "exivity.fullname" $ -}}-config-executor
@@ -44,7 +48,9 @@ spec:
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-executor-log
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
-      {{- include "exivity.initPermissions" (dict "root" . "component" "executor" "volumes" (list "config" "import" "report" "exported" "extracted" "log")) | nindent 6 }}
+      initContainers:
+        {{- include "exivity.initConfigInjector" . | nindent 8 }}
+        {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "executor" "volumes" (list "config" "import" "report" "exported" "extracted" "log")) | nindent 8 }}
       containers:
         - name:            executor
           image: {{ include "exivity.image" (set $ "name" "executor") }}
@@ -59,8 +65,7 @@ spec:
           volumeMounts:
             - name:      config
               mountPath: /exivity/home/system/config
-            - name:      config-file
-              mountPath: /exivity/home/system
+            {{- include "exivity.configVolumeMount" . | nindent 12 }}
             - name:      exported
               mountPath: /exivity/home/exported
             - name:      extracted

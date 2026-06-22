@@ -15,14 +15,39 @@ spec:
   ttlSecondsAfterFinished: 300
   template:
     metadata:
+      annotations:
+        checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/postgres-secret: {{ include (print $.Template.BasePath "/postgres-secret.yaml") . | sha256sum }}
+        checksum/rabbitmq-secret: {{ include (print $.Template.BasePath "/rabbitmq-secret.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/component: dummy-data
         {{- include "exivity.labels" $ | indent 8 }}
-      annotations:
-        checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "dummyData") | indent 8 }}
+      volumes:
+        {{- include "exivity.configTemplateVolume" (dict "configMapName" (printf "%s-config-shared" (include "exivity.fullname" $))) | nindent 8 }}
+        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
+        - name: preset-file
+          configMap:
+            name: {{ include "exivity.fullname" $ -}}-dummy-data-preset
+        - name: config
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-etl-config
+        - name: import
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-import
+        - name: report
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-report
+        - name: exported
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-exported
+        - name: extracted
+          persistentVolumeClaim:
+            claimName: {{ include "exivity.fullname" $ -}}-extracted
+      initContainers:
+        {{- include "exivity.initConfigInjector" . | nindent 8 }}
       containers:
         - name:            dummy-data
           image:           {{ include "exivity.image" (set $ "name" "dummyData") }}
@@ -39,8 +64,7 @@ spec:
           volumeMounts:
             - name:      config
               mountPath: /exivity/home/system/config
-            - name:      config-file
-              mountPath: /exivity/home/system
+            {{- include "exivity.configVolumeMount" . | nindent 12 }}
             - name:      exported
               mountPath: /exivity/home/exported
             - name:      extracted
@@ -51,28 +75,6 @@ spec:
               mountPath: /exivity/home/system/report
             - name:      preset-file
               mountPath: /exivity/home/system/preset
-      volumes:
-        - name: preset-file
-          configMap:
-            name: {{ include "exivity.fullname" $ -}}-dummy-data-preset
-        - name: config-file
-          configMap:
-            name: {{ include "exivity.fullname" $ -}}-config-shared
-        - name: config
-          persistentVolumeClaim:
-            claimName: {{ include "exivity.fullname" $ -}}-etl-config
-        - name: import
-          persistentVolumeClaim:
-            claimName: {{ include "exivity.fullname" $ -}}-import
-        - name: report
-          persistentVolumeClaim:
-            claimName: {{ include "exivity.fullname" $ -}}-report
-        - name: exported
-          persistentVolumeClaim:
-            claimName: {{ include "exivity.fullname" $ -}}-exported
-        - name: extracted
-          persistentVolumeClaim:
-            claimName: {{ include "exivity.fullname" $ -}}-extracted
       restartPolicy: Never
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:

@@ -29,6 +29,7 @@ jobs:
           - proximity-cli
           - transcript
           - use
+          - jq
     steps:
       - name: release images with tags
         uses: exivity/actions/retag-image@main
