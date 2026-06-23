@@ -2,6 +2,26 @@ apiVersion: v1
 entries:
   exivity:
   - apiVersion: v2
+    created: "2026-06-23T10:10:45.546420968Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://exivity.github.io/bitnami-charts
+      version: 17.0.2
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://exivity.github.io/bitnami-charts
+      version: 16.0.17
+    description: Full Financial Visibility - Any Resource
+    digest: 1ed805f127d5f7753a0539b2451ae16e19c69b7a55c7b26c17c960abae138d10
+    home: https://exivity.com/
+    name: exivity
+    sources:
+    - https://github.com/exivity/charts/tree/main/charts/exivity
+    urls:
+    - https://github.com/exivity/charts/releases/download/exivity-3.39.2/exivity-3.39.2.tgz
+    version: 3.39.2
+  - apiVersion: v2
     created: "2026-06-19T11:47:28.084511556Z"
     dependencies:
     - condition: postgresql.enabled
