@@ -33,7 +33,7 @@ jobs:
     steps:
       - name: Refuse manual replacement of planned maintenance images
         env:
-          GH_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
+          GH_TOKEN: ${{ secrets.MAINTENANCE_READ_TOKEN }}
           TARGET_TAG: ${{ inputs.target-tag }}
         run: |
           if [[ "$TARGET_TAG" =~ ^exivity-([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
