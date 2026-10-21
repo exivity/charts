@@ -14,6 +14,13 @@ const [repo, ref = process.env.GITHUB_REF_NAME] = process.argv.slice(2);
 function api(path) {
   return JSON.parse(execFileSync("gh", ["api", path], { encoding: "utf8" }));
 }
+function file(path) {
+  return execFileSync(
+    "gh",
+    ["api", path, "-H", "Accept: application/vnd.github.raw+json"],
+    { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 },
+  );
+}
 const markerPath = ".maintenance-release.json";
 const version = ref?.startsWith("exivity-")
   ? "v" + ref.slice(8)
@@ -78,10 +85,10 @@ if (!existsSync(markerPath)) {
         "boundary.mjs",
         "release.mjs",
       ]) {
-        const file = api(
+        const contents = file(
           `repos/exivity/exivity/contents/.github/maintenance/${name}?ref=${commit}`,
         );
-        writeFileSync(join(dir, name), Buffer.from(file.content, "base64"));
+        writeFileSync(join(dir, name), contents);
       }
       const checkout = execFileSync("git", ["rev-parse", "HEAD"], {
         encoding: "utf8",
@@ -91,10 +98,9 @@ if (!existsSync(markerPath)) {
         [join(dir, "cli.mjs"), "guard", repo, checkout, ref],
         { stdio: "inherit" },
       );
-      const planFile = api(
-        `repos/exivity/exivity/contents/release-plan.json?ref=${commit}`,
+      const plan = JSON.parse(
+        file(`repos/exivity/exivity/contents/release-plan.json?ref=${commit}`),
       );
-      const plan = JSON.parse(Buffer.from(planFile.content, "base64"));
       if (process.env.GITHUB_ENV) {
         appendFileSync(
           process.env.GITHUB_ENV,
