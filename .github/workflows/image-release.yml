@@ -24,7 +24,7 @@ jobs:
       - name: Verify maintenance images before allowing any legacy promotion
         id: guard
         env:
-          GH_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
+          GH_TOKEN: ${{ secrets.MAINTENANCE_READ_TOKEN }}
         run:
           node .github/scripts/maintenance-guard.mjs charts "$GITHUB_REF_NAME"
       - id: inventory

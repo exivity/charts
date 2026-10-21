@@ -2,6 +2,13 @@ name: Release Charts
 
 on:
   workflow_dispatch:
+    inputs:
+      maintenance_tag:
+        description:
+          "Existing approved maintenance tag to retry; leave empty for an
+          ordinary release"
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -10,10 +17,23 @@ jobs:
   helm-release:
     runs-on: ubuntu-latest
     steps:
+      - name: Validate an explicit maintenance retry tag
+        if: inputs.maintenance_tag != ''
+        env:
+          MAINTENANCE_TAG: ${{ inputs.maintenance_tag }}
+        run: |
+          [[ "$MAINTENANCE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || {
+            echo 'A maintenance retry requires an existing vX.Y.Z tag.' >&2
+            exit 1
+          }
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref:
+            ${{ inputs.maintenance_tag && format('refs/tags/{0}',
+            inputs.maintenance_tag) || github.ref }}
 
       - uses: actions/setup-node@v4
         with:
@@ -22,9 +42,18 @@ jobs:
       - name: Verify all maintenance release images
         id: guard
         env:
-          GH_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
-        run:
-          node .github/scripts/maintenance-guard.mjs charts "$GITHUB_REF_NAME"
+          GH_TOKEN: ${{ secrets.MAINTENANCE_READ_TOKEN }}
+          MAINTENANCE_TAG: ${{ inputs.maintenance_tag }}
+          RELEASE_REF: ${{ inputs.maintenance_tag || github.ref_name }}
+        run: |
+          test -n "$GH_TOKEN" || {
+            echo 'Configure the read-only MAINTENANCE_READ_TOKEN secret.' >&2
+            exit 1
+          }
+          if [[ -n "$MAINTENANCE_TAG" ]]; then
+            node -e 'const m = require("./.maintenance-release.json"); const tag = process.env.MAINTENANCE_TAG; if (m.version !== tag || m.planRef !== `maintenance-plan-${tag}`) throw Error("The selected tag is not the requested maintenance package")'
+          fi
+          node .github/scripts/maintenance-guard.mjs charts "$RELEASE_REF"
 
       - name: Configure Git
         run: |
