@@ -7,28 +7,39 @@ on:
   workflow_dispatch:
 
 jobs:
+  release-inputs:
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      maintenance: ${{ steps.guard.outputs.maintenance }}
+      images: ${{ steps.inventory.outputs.images }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: sudo apt-get update && sudo apt-get install -y skopeo
+      - name: Verify maintenance images before allowing any legacy promotion
+        id: guard
+        env:
+          GH_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
+        run:
+          node .github/scripts/maintenance-guard.mjs charts "$GITHUB_REF_NAME"
+      - id: inventory
+        run: echo "images=$(jq -c . release-images.json)" >> "$GITHUB_OUTPUT"
+
   image-release:
+    needs: release-inputs
     permissions:
       contents: read
       packages: read
-    if: ${{ github.ref_type == 'tag' }}
+    if: needs.release-inputs.outputs.maintenance == 'false'
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        name:
-          - chronos
-          - db
-          - db-backup
-          - edify
-          - executor
-          - glass
-          - griffon
-          - horizon
-          - pigeon
-          - proximity-api
-          - proximity-cli
-          - transcript
-          - use
+        name: ${{ fromJSON(needs.release-inputs.outputs.images) }}
     steps:
       - name: release images with tags
         uses: exivity/actions/retag-image@main

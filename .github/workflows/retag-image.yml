@@ -31,6 +31,19 @@ jobs:
   retag-image:
     runs-on: ubuntu-latest
     steps:
+      - name: Refuse manual replacement of planned maintenance images
+        env:
+          GH_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
+          TARGET_TAG: ${{ inputs.target-tag }}
+        run: |
+          if [[ "$TARGET_TAG" =~ ^exivity-([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            PLAN_TAG="maintenance-plan-v${BASH_REMATCH[1]}"
+            if gh api "repos/exivity/exivity/git/ref/tags/$PLAN_TAG" >/dev/null 2>/tmp/plan-error; then
+              echo 'This release is controlled by a maintenance plan; use its publisher.' >&2
+              exit 1
+            fi
+            grep -q 'HTTP 404' /tmp/plan-error
+          fi
       - name: release images with tags
         uses: exivity/actions/retag-image@main
         with:
