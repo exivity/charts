@@ -79,4 +79,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
           CR_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
-        run: bash .github/scripts/publish-maintenance-chart.sh
+        run: |
+          # Older approved tags have a publisher that does not create this directory.
+          mkdir -p .cr-index
+          bash .github/scripts/publish-maintenance-chart.sh
