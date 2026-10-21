@@ -26,23 +26,6 @@ jobs:
         run:
           node .github/scripts/maintenance-guard.mjs charts "$GITHUB_REF_NAME"
 
-      - name: Check previously published maintenance chart
-        id: existing
-        if: steps.guard.outputs.maintenance == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
-        run: |
-          VERSION=$(jq -r .version .maintenance-release.json)
-          TAG="exivity-${VERSION#v}"
-          if gh api "repos/$GITHUB_REPOSITORY/releases/tags/$TAG" > /tmp/chart-release.json 2>/tmp/chart-release-error; then
-            mkdir -p /tmp/previous-chart
-            gh release download "$TAG" --pattern maintenance-plan.sha256 --dir /tmp/previous-chart
-            test "$(cat /tmp/previous-chart/maintenance-plan.sha256)" = "$MAINTENANCE_PLAN_HASH"
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          else
-            grep -q 'HTTP 404' /tmp/chart-release-error
-          fi
-
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
@@ -50,18 +33,21 @@ jobs:
           helm repo add exivity-bitnami https://exivity.github.io/bitnami-charts
 
       - name: Run chart-releaser
-        if: steps.existing.outputs.skip != 'true'
+        if: steps.guard.outputs.maintenance != 'true'
         uses: exivity/chart-releaser-action@v1.1.0
         env:
           CR_TOKEN: "${{ secrets.GH_BOT_TOKEN }}"
 
-      - name: Record the maintenance plan on the published chart
-        if:
-          steps.guard.outputs.maintenance == 'true' &&
-          steps.existing.outputs.skip != 'true'
+      - name: Install the pinned maintenance chart releaser
+        if: steps.guard.outputs.maintenance == 'true'
+        run: |
+          CR_DIR=$(mktemp -d)
+          curl --fail --silent --show-error --location https://github.com/helm/chart-releaser/releases/download/v1.1.1/chart-releaser_1.1.1_linux_amd64.tar.gz | tar -xz -C "$CR_DIR" cr
+          echo "$CR_DIR" >> "$GITHUB_PATH"
+
+      - name: Publish the exact maintenance chart and update its index
+        if: steps.guard.outputs.maintenance == 'true'
         env:
           GH_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
-        run: |
-          VERSION=$(jq -r .version .maintenance-release.json)
-          printf '%s\n' "$MAINTENANCE_PLAN_HASH" > maintenance-plan.sha256
-          gh release upload "exivity-${VERSION#v}" maintenance-plan.sha256
+          CR_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
+        run: bash .github/scripts/publish-maintenance-chart.sh
