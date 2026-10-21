@@ -28,9 +28,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.8"
+          python-version: "3.12"
 
       - name: Install Dependencies
         run: |
@@ -46,6 +46,9 @@ jobs:
       - name: Start Minikube
         run: make minikube-start
 
+      - name: Wait for ingress admission webhook
+        run: bash .github/scripts/wait-for-ingress.sh
+
       - name: Install Helm
         run: |
           curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
@@ -60,3 +63,10 @@ jobs:
 
       - name: Run Tests
         run: make test
+
+      - name: Show cluster diagnostics on failure
+        if: failure()
+        run: |
+          kubectl get pods -A -o wide || true
+          kubectl get events -A --sort-by=.metadata.creationTimestamp || true
+          kubectl describe pods -n ingress-nginx || true
