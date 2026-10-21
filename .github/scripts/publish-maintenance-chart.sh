@@ -14,7 +14,7 @@ OWNER="${GITHUB_REPOSITORY%/*}"
 REPOSITORY="${GITHUB_REPOSITORY#*/}"
 TEMP_DIR=$(mktemp -d)
 trap 'rm -rf "$TEMP_DIR"' EXIT
-mkdir -p .cr-release-packages
+mkdir -p .cr-release-packages .cr-index
 
 if gh api "repos/$GITHUB_REPOSITORY/releases/tags/$TAG" > "$TEMP_DIR/release.json" 2> "$TEMP_DIR/error"; then
   gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern maintenance-plan.sha256 --dir "$TEMP_DIR"

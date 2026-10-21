@@ -34,6 +34,8 @@ if(name==='gh' && args[1]==='download') {
 }
 if(name==='cr' && args[0]==='package') fs.writeFileSync('.cr-release-packages/exivity-3.39.3.tgz','new archive');
 if(name==='cr' && args[0]===fail) process.exit(2);
+// chart-releaser v1.1.1 creates the file, but not its parent directory.
+if(name==='cr' && args[0]==='index') fs.writeFileSync('.cr-index/index.yaml','generated index');
 `;
   for (const name of ["cr", "gh", "git"])
     writeFileSync(join(dir, "bin", name), mock, { mode: 0o755 });
