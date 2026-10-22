@@ -1,1 +1,0 @@
-{{- template "exivity.config" (set $ "data" (dict nil nil)) }}
