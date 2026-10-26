@@ -40,11 +40,14 @@
         "appKey": {
           "type": "string",
           "default": "",
-          "title": "The appKey Schema",
+          "title": "Laravel Application Key",
+          "description": "The application encryption key used by Laravel for encrypting and decrypting sensitive data with AES-256-CBC cipher. This value can be left empty for automatic generation during installation or specified as a base64-encoded key with the 'base64:' prefix (standard Laravel format). If an invalid or incorrectly formatted key is provided, a Laravel RuntimeException will be thrown. A valid key can be generated using: php artisan key:generate --show",
           "examples": [
-            "ieR3rai9aijeghingo9LeaCaipah4lohxiliekaem3chahph0iemeeghai3ohfah"
+            "",
+            "ZC9GxTNHyDyYOZYidN240FuhsB0QJxZs",
+            "base64:MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI="
           ],
-          "maxLength": 64
+          "pattern": "^(|[a-zA-Z0-9]{32}|base64:[A-Za-z0-9+/]{16,88}={0,2})$"
         },
         "jwtSecret": {
           "type": "string",
