@@ -17,22 +17,19 @@ spec:
         app.kubernetes.io/component: edify
         {{- include "exivity.labels" $ | indent 8 }}
       annotations:
-        checksum/{{- include "exivity.fullname" $ -}}-config-edify: {{ include (print $.Template.BasePath "/edify/configmap.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-licence-pub: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-licence-key: {{ include (print $.Template.BasePath "/proximity/api.secret.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "edify") | indent 8 }}
       volumes:
-        - name: config-file
-          projected:
-            sources:
-              - configMap:
-                  name: {{ include "exivity.fullname" $ -}}-config-edify
-              - configMap:
-                  name: {{ include "exivity.fullname" $ -}}-licence-pub
-              - secret:
-                  name: {{ include "exivity.fullname" $ -}}-licence-key
+        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
+        - name: licence-pub
+          configMap:
+            name: {{ include "exivity.fullname" $ -}}-licence-pub
+        - name: licence-key
+          secret:
+            secretName: {{ include "exivity.secretRefName" (dict "value" $.Values.licence "defaultName" (printf "%s-licence-key" (include "exivity.fullname" $)) "context" $) }}
         - name: config
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-etl-config
@@ -46,7 +43,9 @@ spec:
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-report
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
-      {{- include "exivity.initPermissions" (dict "root" . "component" "edify" "volumes" (list "config" "extracted" "log" "report")) | nindent 6 }}
+      initContainers:
+        {{- include "exivity.initConfigContainer" (dict "root" . "appname" "edify" "path" "/exivity/program/bin/edify" "queue" "REPORT") | nindent 8 }}
+        {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "edify" "volumes" (list "config" "extracted" "log" "report")) | nindent 8 }}
       containers:
         - name:            edify
           image: {{ include "exivity.image" (set $ "name" "edify") }}
@@ -65,8 +64,13 @@ spec:
           volumeMounts:
             - name:      config
               mountPath: /exivity/home/system/config
-            - name:      config-file
-              mountPath: /exivity/home/system
+            {{- include "exivity.configGeneratedVolumeMount" . | nindent 12 }}
+            - name:      licence-pub
+              mountPath: /exivity/home/system/license.pub
+              subPath:   license.pub
+            - name:      licence-key
+              mountPath: /exivity/home/system/license.key
+              subPath:   license.key
             - name:      extracted
               mountPath: /exivity/home/system/extracted
             - name:      log

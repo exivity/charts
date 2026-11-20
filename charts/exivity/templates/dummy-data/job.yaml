@@ -18,46 +18,14 @@ spec:
       labels:
         app.kubernetes.io/component: dummy-data
         {{- include "exivity.labels" $ | indent 8 }}
-      annotations:
-        checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "dummyData") | indent 8 }}
-      containers:
-        - name:            dummy-data
-          image:           {{ include "exivity.image" (set $ "name" "dummyData") }}
-          imagePullPolicy: {{ .Values.service.dummyData.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
-          env:
-            - name:  PROXIMITY_API
-              value: "{{ include "exivity.fullname" $ -}}-proximity-api:{{- .Values.service.proximityApi.servicePort }}"
-            - name: PRESET_FILE_PATH
-              value: /exivity/home/system/preset/preset.yaml
-            - name: EXIVITY_HOME_PATH
-              value: /exivity/home
-          resources:
-            {{- toYaml .Values.service.dummyData.resources | nindent 12 }}
-          volumeMounts:
-            - name:      config
-              mountPath: /exivity/home/system/config
-            - name:      config-file
-              mountPath: /exivity/home/system
-            - name:      exported
-              mountPath: /exivity/home/exported
-            - name:      extracted
-              mountPath: /exivity/home/system/extracted
-            - name:      import
-              mountPath: /exivity/home/import
-            - name:      report
-              mountPath: /exivity/home/system/report
-            - name:      preset-file
-              mountPath: /exivity/home/system/preset
       volumes:
+        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
         - name: preset-file
           configMap:
             name: {{ include "exivity.fullname" $ -}}-dummy-data-preset
-        - name: config-file
-          configMap:
-            name: {{ include "exivity.fullname" $ -}}-config-shared
         - name: config
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-etl-config
@@ -73,6 +41,35 @@ spec:
         - name: extracted
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-extracted
+      initContainers:
+        {{- include "exivity.initConfigContainer" (dict "root" . "appname" "" "path" "" "queue" "") | nindent 8 }}
+      containers:
+        - name:            dummy-data
+          image:           {{ include "exivity.image" (set $ "name" "dummyData") }}
+          imagePullPolicy: {{ .Values.service.dummyData.pullPolicy | default .Values.service.pullPolicy | default "IfNotPresent" }}
+          env:
+            - name:  PROXIMITY_API
+              value: "{{ include "exivity.fullname" $ -}}-proximity-api:{{- .Values.service.proximityApi.servicePort }}"
+            - name: PRESET_FILE_PATH
+              value: /exivity/home/system/preset/preset.yaml
+            - name: EXIVITY_HOME_PATH
+              value: /exivity/home
+          resources:
+            {{- toYaml .Values.service.dummyData.resources | nindent 12 }}
+          volumeMounts:
+            {{- include "exivity.configGeneratedVolumeMount" . | nindent 12 }}
+            - name:      config
+              mountPath: /exivity/home/system/config
+            - name:      exported
+              mountPath: /exivity/home/exported
+            - name:      extracted
+              mountPath: /exivity/home/system/extracted
+            - name:      import
+              mountPath: /exivity/home/import
+            - name:      report
+              mountPath: /exivity/home/system/report
+            - name:      preset-file
+              mountPath: /exivity/home/system/preset
       restartPolicy: Never
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:

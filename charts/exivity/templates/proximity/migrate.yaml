@@ -18,19 +18,17 @@ spec:
         app.kubernetes.io/component: proximity-migration
         {{- include "exivity.labels" . | indent 8 }}
       annotations:
-        checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "proximityMigrate") | indent 8 }}
       volumes:
-        - name: config-shared
-          configMap:
-            name: {{ include "exivity.fullname" . }}-config-shared
-            readOnly: true
+        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
         - name: config
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-etl-config
+      initContainers:
+        {{- include "exivity.initConfigContainer" (dict "root" . "appname" "" "path" "" "queue" "") | nindent 8 }}
       containers:
         - name: proximity-migration
           image: {{ include "exivity.image" (set $ "name" "proximityMigrate") }}
@@ -38,8 +36,7 @@ spec:
           resources:
             {{- toYaml .Values.service.proximityMigrate.resources | nindent 12 }}
           volumeMounts:
-            - name: config-shared
-              mountPath: /exivity/home/system
+            {{- include "exivity.configGeneratedVolumeMount" . | nindent 12 }}
             - name:      config
               mountPath: /exivity/home/system/config
           command: [php]
@@ -48,9 +45,7 @@ spec:
             - exivity:migrate-db
           envFrom:
             - secretRef:
-                name: {{ include "exivity.fullname" . }}-app-key
-            - secretRef:
-                name: {{ include "exivity.fullname" $ -}}-jwt-secret
+                name: {{ include "exivity.secretRefName" (dict "value" $.Values.secret.jwtSecret "defaultName" (printf "%s-jwt-secret" (include "exivity.fullname" $)) "context" $) }}
       restartPolicy: Never
       {{- with .Values.service.pullSecrets }}
       imagePullSecrets:

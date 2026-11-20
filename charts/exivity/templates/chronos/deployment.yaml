@@ -16,15 +16,11 @@ spec:
       labels:
         app.kubernetes.io/component: chronos
         {{- include "exivity.labels" $ | indent 8 }}
-      annotations:
-        checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       securityContext:
         {{- include "exivity.securityContext" (dict "root" . "component" "chronos") | indent 8 }}
       volumes:
-        - name: config-file
-          configMap:
-            name: {{ include "exivity.fullname" $ -}}-config-shared
+        {{- include "exivity.configGeneratedVolume" . | nindent 8 }}
         - name: config
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-chronos-config
@@ -32,7 +28,9 @@ spec:
           persistentVolumeClaim:
             claimName: {{ include "exivity.fullname" $ -}}-chronos-log
         {{- include "exivity.permissionScriptVolume" . | nindent 8 }}
-      {{- include "exivity.initPermissions" (dict "root" . "component" "chronos" "volumes" (list "config" "log")) | nindent 6 }}
+      initContainers:
+        {{- include "exivity.initConfigContainer" (dict "root" . "appname" "" "path" "" "queue" "") | nindent 8 }}
+        {{- include "exivity.initPermissionsContainer" (dict "root" . "component" "chronos" "volumes" (list "config" "log")) | nindent 8 }}
       containers:
         - name:            chronos
           image: {{ include "exivity.image" (set $ "name" "chronos") }}
@@ -47,8 +45,7 @@ spec:
           volumeMounts:
             - name:      config
               mountPath: /exivity/home/system/config
-            - name:      config-file
-              mountPath: /exivity/home/system
+            {{- include "exivity.configGeneratedVolumeMount" . | nindent 12 }}
             - name:      log
               mountPath: /exivity/home/log/chronos
           {{- include "exivity.probes" $ | indent 10}}

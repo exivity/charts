@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "exivity.fullname" . }}-rabbitmq-config
+  labels:
+    app.kubernetes.io/component: rabbitmq-config
+    {{- include "exivity.labels" . | nindent 4 }}
+data:
+  RABBITMQ_HOST: {{ .Values.rabbitmq.host | default (printf "%s-%s" (include "exivity.fullname" .) (.Values.rabbitmq.nameOverride | default "rabbitmq")) | quote }}
+  RABBITMQ_PORT: {{ .Values.rabbitmq.port | default 5672 | toString | quote }}
+  RABBITMQ_SECURE: {{ .Values.rabbitmq.secure | default false | toString | quote }}
+  RABBITMQ_VHOST: {{ .Values.rabbitmq.vhost | default "/" | quote }}
