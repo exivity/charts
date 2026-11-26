@@ -82,7 +82,7 @@ helm upgrade --install exivity exivity/exivity \
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `licence` | Exivity license key (use "demo" for evaluation) | `"demo"` |
+| `licence` | Exivity license key or activation token (use "demo" for evaluation) | `"demo"` |
 | `storage.storageClass` | Storage class for persistent volumes | `""` |
 | `ingress.enabled` | Enable ingress | `true` |
 | `ingress.host` | Hostname for the ingress | `"exivity"` |
@@ -92,7 +92,7 @@ helm upgrade --install exivity exivity/exivity \
 Create a `values.yaml` file:
 
 ```yaml
-licence: "your-license-key"
+licence: "your-license-key-or-activation-token"
 storage:
   storageClass: "nfs-client"
 ingress:

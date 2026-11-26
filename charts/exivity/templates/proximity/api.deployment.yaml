@@ -18,7 +18,6 @@ spec:
         {{- include "exivity.labels" $ | indent 8 }}
       annotations:
         checksum/{{- include "exivity.fullname" $ -}}-config-shared: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-        checksum/{{- include "exivity.fullname" $ -}}-licence-pub: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-licence-key: {{ include (print $.Template.BasePath "/proximity/api.secret.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-lock: {{ include (print $.Template.BasePath "/proximity/api.configmap.yaml") . | sha256sum }}
         checksum/{{- include "exivity.fullname" $ -}}-proximity-api-env: {{ include (print $.Template.BasePath "/proximity/api.env.yaml") . | sha256sum }}
@@ -35,8 +34,6 @@ spec:
             sources:
               - configMap:
                   name: {{ include "exivity.fullname" $ -}}-config-shared
-              - configMap:
-                  name: {{ include "exivity.fullname" $ -}}-licence-pub
               - secret:
                   name: {{ include "exivity.fullname" $ -}}-licence-key
         - name: exivity-lock
