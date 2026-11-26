@@ -1,7 +1,7 @@
 # -- Override deployment name (e.g., useful when deploying multiple instances of the application).
 nameOverride: ""
 
-# Set to the actual licence for production environments.
+# Set to the actual licence for production environments: a licence key or an activation token.
 # For evaluation purposes, use "demo", but note that "demo" will not allow you to run reports.
 # For a trial license, please contact license@exivity.com.
 licence: "demo"
